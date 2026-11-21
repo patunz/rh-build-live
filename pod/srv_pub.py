@@ -17,9 +17,10 @@ FONTE = 'Levent Alpöge, https://alpo.ge/ (archivio pubblicato senza licenza; qu
 PER_INDIRIZZO, IN_TUTTO, FINESTRA = 40, 240, 60.0   # richieste di /file al minuto
 MAX_ENUNCIATI, MAX_CARATTERI = 60, 6000
 
-MOD = r'(?:@\[[^\]]*\]\s*)?(?:(?:private|protected|noncomputable|nonrec|public)\s+)*'
-RT = re.compile(r'^[ \t]*' + MOD + r'(theorem|lemma)\s+(\S+)', re.M)
-RD = re.compile(r'^[ \t]*' + MOD + r'(?:def|abbrev|structure|class|instance|inductive)\b', re.M)
+RX_LINE = re.compile(
+    r'^[ \t]*(?:(namespace|end)\s+(\S+)'
+    r'|(?:@\[[^\]]*\]\s*)?(?:(?:private|protected|noncomputable|nonrec|public|scoped|local|unsafe)\s+)*'
+    r'(theorem|lemma|def|abbrev|structure|class|inductive|instance)\s+([^\s:({\[]+))', re.M)
 _names = []
 _viste = collections.defaultdict(collections.deque)
 _lock = threading.Lock()
@@ -69,9 +70,23 @@ def enunciato(text, start):
 def file_info(i):
     name = names()[i]
     text = open(SRC + name.replace('.', '/') + '.lean', encoding='utf-8', errors='replace').read()
-    decls = [{'k': m.group(1), 'n': m.group(2), 's': enunciato(text, m.end())} for m in RT.finditer(text)]
-    return {'name': name, 'lines': text.count('\n') + 1, 'bytes': len(text.encode('utf-8')), 'defs': len(RD.findall(text)),
-            'ndecl': len(decls), 'decls': decls[:MAX_ENUNCIATI], 'fonte': FONTE}
+    # si seguono i blocchi namespace/end per dare a ogni teorema il nome completo (`full`), che serve alla pagina
+    # per aprirsi sul teorema giusto; delle altre dichiarazioni si tiene solo il conteggio
+    stack, decls, defs = [], [], 0
+    for m in RX_LINE.finditer(text):
+        if m.group(1) == 'namespace':
+            stack.append(m.group(2))
+        elif m.group(1) == 'end':
+            if stack and stack[-1].split('.')[-1] == m.group(2).split('.')[-1]:
+                stack.pop()
+        elif m.group(3) in ('theorem', 'lemma'):
+            raw = m.group(4)
+            decls.append({'k': m.group(3), 'n': raw, 'full': raw[7:] if raw.startswith('_root_.') else '.'.join(stack + [raw]),
+                          's': enunciato(text, m.end())})
+        else:
+            defs += 1
+    return {'name': name, 'lines': text.count('\n') + 1, 'bytes': len(text.encode('utf-8')), 'defs': defs,
+            'ndecl': len(decls), 'ntot': len(decls), 'decls': decls[:MAX_ENUNCIATI], 'fonte': FONTE}
 
 
 class H(http.server.BaseHTTPRequestHandler):
