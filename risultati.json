@@ -3,8 +3,8 @@
   "nota": "Ricostruzione di Lucio Patone, condotta con Claude (Anthropic) come assistente. I risultati compariranno qui man mano che i controlli si chiudono.",
   "controlli": [
     {"nome": "Build completo fino a Main", "auto": "build", "stato": "in corso", "esito": "", "link": ""},
-    {"nome": "Assiomi usati dai teoremi finali (#print axioms)", "stato": "in attesa del build", "esito": "", "link": ""},
-    {"nome": "Ricontrollo indipendente con lean4checker", "stato": "in attesa del build", "esito": "", "link": ""},
-    {"nome": "Confronto degli .olean con un altro build", "stato": "in attesa del build", "esito": "", "link": ""}
+    {"nome": "Assiomi usati dai teoremi finali (Audit.lean di A. Sutherland)", "stato": "in attesa del build", "esito": "", "link": ""},
+    {"nome": "Confronto degli .olean con il manifest di A. Sutherland", "stato": "parziale, completo a build finito", "esito": "", "link": ""},
+    {"nome": "Ricontrollo con lean4checker", "stato": "da decidere", "esito": "", "link": ""}
   ]
 }

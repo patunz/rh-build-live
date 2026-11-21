@@ -9,9 +9,11 @@ build in progress. The checks that matter come after the build, and their
 outcomes will be added here as they close:
 
 1. the build reaching `Main` with no errors;
-2. the axioms the final theorems depend on (`#print axioms`);
-3. an independent re-check with `lean4checker`;
-4. a comparison of the resulting `.olean` files with another build.
+2. the axioms the final theorems depend on (A. Sutherland's `Audit.lean`);
+3. a comparison of the resulting `.olean` files with A. Sutherland's manifest
+   (partial so far, complete once the build ends).
+
+A re-check with `lean4checker` is not decided yet.
 
 The page text is in Italian.
 
@@ -57,8 +59,8 @@ Riemann (175.187 file; materiale originale su <https://alpo.ge/>).
 **Questa pagina non afferma nulla sulla correttezza della dimostrazione.**
 Mostra un build in corso. I controlli che contano vengono dopo, e i loro esiti
 saranno aggiunti qui man mano che si chiudono: il build fino a `Main` senza
-errori, gli assiomi usati dai teoremi finali, il ricontrollo con
-`lean4checker`, il confronto degli `.olean` con un altro build.
+errori, gli assiomi usati dai teoremi finali, il confronto degli `.olean` con
+il manifest di A. Sutherland (per ora parziale).
 
 I sorgenti e i file compilati dell'archivio non sono ridistribuiti, perché
 l'archivio non dichiara una licenza: qui ci sono solo i nomi dei moduli e il
