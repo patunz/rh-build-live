@@ -158,10 +158,10 @@ const on = new Array(8).fill(true);
 // geometria
 let W = 0, H = 0, dpr = 1, x0 = 0, x1f = 0, y0 = 0, y1 = 0, TD = 1800, dockT = 0, dockK = 0;
 // disegno progressivo, selezione, scheda
-let queue = [], qi = 0, hot = -1, sel = null, panel = null, firstLoad = true;
+let queue = [], qi = 0, hot = -1, sel = null, panel = null, info = null, decl = 0, firstLoad = true;
 // base: indirizzo del pod (null = istantanea in data/); frozen: istante a cui è ferma l'istantanea; checks: risultati.json
 let base = null, frozen = null, checks = null;
-const tab = { build: 'checks', file: 'time' };
+const tab = { build: 'checks', file: 'stmt' };
 // scorrimento nel tempo: view è l'istante che si sta guardando (null = presente); drawnFor dice fin dove è disegnata la trama
 let view = null, drawnFor = Infinity, playing = false, speed = 300, maxDur = 0, lastFrame = 0, idleAt = 0;
 const cv = {}, cx = {};
@@ -298,9 +298,13 @@ function pick(i) {
   }
   const step = Math.min(150, 1700 / Math.max(1, back.length));
   sel = { i, back, fwd, step, t0: performance.now(), tConv: (back.length - 1) * step + 520, anc, nUsers, waiting };
-  panel = 'file'; dockT = sidePx() ? 1 : 0;
+  info = null; decl = 0; panel = 'file'; dockT = sidePx() ? 1 : 0;
   $('tip').hidden = true;
   renderPanel();
+  if (base != null) fetch(base + '/file?i=' + i, { signal: AbortSignal.timeout(20000) })
+    .then((r) => (r.ok ? r.json() : { error: r.status }))
+    .then((d) => { if (sel && sel.i === i) { info = d; renderPanel(); } })
+    .catch(() => { if (sel && sel.i === i) { info = { error: true }; renderPanel(); } });
 }
 function closePanel() { sel = null; panel = null; dockT = 0; renderPanel(); }
 
@@ -444,6 +448,51 @@ cv.fx.addEventListener('mouseleave', () => { hot = -1; $('tip').hidden = true; }
 cv.fx.addEventListener('click', (e) => { const i = hit(e); if (i >= 0) pick(i); else if (panel === 'file') closePanel(); });
 addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel) closePanel(); });
 
+// legge la forma dell'enunciato: gli argomenti tra parentesi sono le premesse, ciò che segue i due punti è la tesi;
+// anche i "per ogni" e le implicazioni in testa alla tesi sono premesse
+function parse(text) {
+  const open = '([{⦃', all = '([{⦃⟨', allc = ')]}⦄⟩', hyps = [];
+  let broken = false;
+  const binders = (str) => {
+    const list = []; let i = 0; const n = str.length;
+    const skip = () => { while (i < n && str[i] === ' ') i++; };
+    skip();
+    while (i < n && open.includes(str[i])) {
+      let dp = 0, j = i;
+      for (; j < n; j++) { if (all.includes(str[j])) dp++; else if (allc.includes(str[j])) { dp--; if (dp === 0) break; } }
+      if (j >= n) { broken = true; i = n; break; }
+      const inner = str.slice(i + 1, j);
+      let c = -1, d2 = 0;
+      for (let q = 0; q < inner.length; q++) { const ch = inner[q]; if (all.includes(ch)) d2++; else if (allc.includes(ch)) d2--; else if (ch === ':' && d2 === 0 && inner[q + 1] !== '=') { c = q; break; } }
+      list.push({ b: str[i], names: c < 0 ? '' : inner.slice(0, c).trim(), type: (c < 0 ? inner : inner.slice(c + 1)).trim() });
+      i = j + 1; skip();
+    }
+    return { list, rest: str.slice(i) };
+  };
+  const top = (str, mark) => { let dp = 0; for (let q = 0; q < str.length; q++) { const ch = str[q]; if (all.includes(ch)) dp++; else if (allc.includes(ch)) dp--; else if (dp === 0 && ch === mark) return q; } return -1; };
+  let { list, rest } = binders(text);
+  hyps.push(...list);
+  rest = rest.trim();
+  if (rest[0] === ':') rest = rest.slice(1).trim();
+  for (let guard = 0; guard < 40 && rest; guard++) {
+    if (rest[0] === '∀') {
+      const r2 = rest.slice(1).trim(), b = binders(r2), r3 = b.rest.trim();
+      if (b.list.length && r3[0] === ',') { hyps.push(...b.list); rest = r3.slice(1).trim(); continue; }
+      const c = top(r2, ',');
+      if (c < 0) break;
+      hyps.push({ b: '∀', names: '', type: r2.slice(0, c).trim() });
+      rest = r2.slice(c + 1).trim();
+      continue;
+    }
+    if (/^[∃λ]|^fun\b/.test(rest)) break;
+    const a = top(rest, '→'), c = top(rest, ',');
+    if (a < 0 || (c >= 0 && c < a)) break;
+    hyps.push({ b: '→', names: '', type: rest.slice(0, a).trim() });
+    rest = rest.slice(a + 1).trim();
+  }
+  return { hyps, concl: rest, broken };
+}
+
 // ---- scheda agganciata a destra: un file, oppure lo stato del build
 const rows = (list) => { const dl = el('dl', 'rows'); for (const [k, v] of list) { dl.append(el('dt', '', k), el('dd', '', v)); } return dl; };
 const fileButton = (i, note) => { const li = el('li'), b = el('button'); b.type = 'button'; const dot = el('i'); dot.style.background = hex(COL[lib[i]]); b.append(dot, el('b', '', short(i)), el('span', '', note)); b.onclick = () => pick(i); li.append(b); return li; };
@@ -466,7 +515,7 @@ function renderPanel() {
     eyebrow.textContent = M.libs[lib[i]]; eyebrow.style.color = accent;
     top.append(eyebrow, x);
     head.append(top, el('h2', '', nm ? parts.pop() : 'file n. ' + i), el('div', 'path', parts.join(' / ')));
-    defs = [['time', 'Tempi', tabTimes], ['link', 'Legami', tabLinks], ['src', 'Sorgente', tabSource]];
+    defs = [['stmt', 'Enunciato', tabStatement], ['time', 'Tempi', tabTimes], ['link', 'Legami', tabLinks], ['src', 'Sorgente', tabSource]];
   } else {
     eyebrow.textContent = 'Il build';
     top.append(eyebrow, x);
@@ -485,6 +534,49 @@ function renderPanel() {
   if (panel === 'build') body.scrollTop = keep;
 }
 
+function tabStatement(body, accent) {
+  if (base == null) { body.append(el('div', 'note', 'Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.')); return; }
+  if (!info) { body.append(el('div', 'note', 'Leggo l\'enunciato dalla macchina del build.')); return; }
+  if (info.error) { body.append(el('div', 'note', info.error === 429 ? 'Troppe richieste in questo momento: riprova tra un minuto.' : 'L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.')); return; }
+  if (!info.ndecl) { body.append(el('div', '', 'Questo file non enuncia teoremi: contiene ' + info.defs + ' definizioni su ' + nf(info.lines) + ' righe.')); return; }
+  decl = Math.max(0, Math.min(decl, info.decls.length - 1));
+  const d = info.decls[decl], P = parse(d.s);
+  if (info.decls.length > 1) {
+    const nav = el('div', 'nav'), a = el('button', '', '‹'), b = el('button', '', '›');
+    a.type = b.type = 'button'; a.setAttribute('aria-label', 'Enunciato precedente'); b.setAttribute('aria-label', 'Enunciato successivo');
+    a.disabled = decl === 0; b.disabled = decl === info.decls.length - 1;
+    a.onclick = () => { decl--; renderPanel(); }; b.onclick = () => { decl++; renderPanel(); };
+    nav.append(a, el('span', '', (d.k === 'lemma' ? 'Lemma ' : 'Teorema ') + (decl + 1) + ' di ' + info.ndecl), b);
+    body.append(nav);
+  }
+  body.append(el('div', 'thm', d.n));
+  const proof = el('div', 'proof'), spine = el('span', 'spine');
+  spine.style.animationDuration = (0.5 + Math.min(P.hyps.length, 12) * 0.14).toFixed(2) + 's';
+  proof.append(spine);
+  P.hyps.forEach((h, j) => {
+    const m = h.type.match(/\b(Formalism|GroundTheory|Development|ReciprocityTheory|CompanionTheory|PositivityTheory|Lemmata)\./);
+    const c = m ? hex(COL[M.libs.indexOf(m[1])]) : '#9aa4c4', row = el('div', 'prem'), dot = el('i');
+    dot.style.borderColor = c; dot.style.borderRadius = h.b === '[' ? '2px' : '50%'; dot.style.background = h.b === '(' || h.b === '→' ? c : 'transparent';
+    row.style.animationDelay = (0.2 + Math.min(j, 12) * 0.14).toFixed(2) + 's';
+    row.append(dot, el('b', '', h.names || (h.b === '[' ? 'struttura richiesta' : h.b === '→' ? 'se vale' : h.b === '∀' ? 'per ogni' : 'argomento')), el('span', 'mono', h.type));
+    proof.append(row);
+  });
+  const th = el('div', 'thesis'), big = el('i');
+  big.style.background = accent; th.style.borderColor = accent;
+  th.style.animationDelay = (0.3 + Math.min(P.hyps.length, 12) * 0.14).toFixed(2) + 's';
+  th.append(big, el('span', 'sub', 'Tesi'), el('span', 'mono', P.concl || 'La tesi non si isola dal testo: l\'enunciato usa una forma che questa lettura non riconosce.'));
+  proof.append(th);
+  body.append(proof);
+  body.append(el('div', 'note', (P.hyps.length ? P.hyps.length + ' premesse. Pallino pieno: esplicita. Vuoto: implicita. Quadrato: struttura richiesta. Il colore indica l\'area da cui viene.' : 'Nessuna premessa: l\'enunciato è solo la tesi.') + (P.broken ? ' Le parentesi non si chiudono: la lettura si ferma prima della fine.' : '') + (info.ndecl > info.decls.length ? ' Il file ha ' + info.ndecl + ' enunciati; qui i primi ' + info.decls.length + '.' : '')));
+  body.append(source());
+}
+// riga di attribuzione: il testo arriva dal server insieme all'enunciato
+function source() {
+  const n = el('div', 'note', 'Fonte: ' + info.fonte + '. Le dimostrazioni non sono riprodotte. '), a = el('a', '', 'Archivio originale');
+  a.href = 'https://alpo.ge/'; a.rel = 'noopener'; a.style.color = 'inherit';
+  n.append(a, '.');
+  return n;
+}
 function tabTimes(body, accent) {
   const i = sel.i, s = st(i), e = en(i), done = isDone(i);
   let last = NaN;
@@ -507,7 +599,7 @@ function tabSource(body) {
   const i = sel.i;
   body.append(rows([['Livello', lvl[i] + ' di ' + (LV - 1)],
     ['Esito', !isDone(i) ? 'in compilazione' : FL[i] & 1 ? 'compilato, con avvisi di stile' : 'compilato, senza avvisi']]));
-  const n = el('div', 'note', 'Il testo dei sorgenti non è riprodotto qui: l\'archivio originale non dichiara una licenza. Si scarica da '), a = el('a', '', 'alpo.ge');
+  const n = el('div', 'note', 'Dei sorgenti qui si citano solo gli enunciati dei teoremi, con attribuzione: le dimostrazioni non sono riprodotte, perché l\'archivio originale non dichiara una licenza. Si scarica da '), a = el('a', '', 'alpo.ge');
   a.href = 'https://alpo.ge/'; a.rel = 'noopener'; a.style.color = 'inherit';
   n.append(a, '.');
   body.append(n);
