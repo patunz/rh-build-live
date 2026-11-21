@@ -355,7 +355,7 @@ function parse(text) {
 // ---- scheda a destra: un sottoblocco, un suo file, oppure la traccia dell'autore
 const rows = (list) => { const dl = el('dl', 'rows'); for (const [k, v] of list) dl.append(el('dt', '', k), el('dd', '', v)); return dl; };
 const TIPI = { theorem: 'Teorema', lemma: 'Lemma', def: 'Definizione', abbrev: 'Abbreviazione', structure: 'Struttura', class: 'Classe', inductive: 'Tipo induttivo', instance: 'Istanza' };
-const getFile = (i) => (base == null ? Promise.resolve({ error: 'off' }) : fetch(base + '/file?i=' + i, { signal: AbortSignal.timeout(20000) }).then((r) => (r.ok ? r.json() : { error: r.status })));
+const getFile = (i) => (!stmtOn ? Promise.resolve({ error: 'spenti' }) : base == null ? Promise.resolve({ error: 'off' }) : fetch(base + '/file?i=' + i, { signal: AbortSignal.timeout(20000) }).then((r) => (r.ok ? r.json() : { error: r.status })));
 function openFile(i, name, copie, focus) {
   file = { i, name, copie }; info = null; extra = null; decl = 0; tab = 'enunciato'; renderPanel();
   getFile(i).then((d) => { if (file && file.i === i) { info = d; if (d.error) { renderPanel(); return; } decl = Math.max(0, d.decls.findIndex((x) => x.k === 'theorem' || x.k === 'lemma')); if (focus) { const j = d.decls.findIndex((x) => x.full === focus); if (j >= 0) decl = j; } if (d.name) file.name = d.name.split('.').pop(); renderPanel(); } }).catch(() => { if (file && file.i === i) { info = { error: true }; renderPanel(); } });
@@ -447,7 +447,7 @@ function panelHyp(body, s) {
 }
 function panelStatement(body, accent) {
   if (!info) { body.append(el('div', 'note', 'Leggo il sorgente dal pod.')); return; }
-  if (info.error) { body.append(el('div', 'note', info.error === 'off' ? 'Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.' : info.error === 429 ? 'Troppe richieste in questo momento: riprova tra un minuto.' : 'L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.')); return; }
+  if (info.error) { body.append(el('div', 'note', info.error === 'spenti' ? 'Gli enunciati non sono mostrati: prima chiediamo il permesso all\'autore dell\'archivio.' : info.error === 'off' ? 'Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.' : info.error === 429 ? 'Troppe richieste in questo momento: riprova tra un minuto.' : 'L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.')); return; }
   body.append(rows([['Righe', nf(info.lines)], ['Teoremi e lemmi', String(info.ndecl)], ['Definizioni', String(info.defs)]]));
   if (extra && extra.decls && extra.decls.length) {
     body.append(el('div', 'sub', 'Enunciato per esteso'), el('div', 'thm', extra.decls[0].n.split('.').pop()));
@@ -531,7 +531,7 @@ function panelTrace(body) {
 
 // ---- dati: gli statici stanno accanto alla pagina; eventi ed enunciati arrivano dalla macchina del build (live.json),
 // e per gli eventi c'è l'istantanea in data/ quando la macchina non risponde
-let base = null;
+let base = null, stmtOn = false;
 async function pollEvents() {
   const r = await (base != null ? fetch(base + '/events?from=' + nEv, { signal: AbortSignal.timeout(30000) }) : fetch('data/events.bin'));
   if (!r.ok) throw new Error('events');
@@ -549,7 +549,7 @@ async function boot() {
   } catch (e) { $('status').textContent = 'I dati dell\'architettura non sono raggiungibili. Ricarica la pagina per riprovare.'; return; }
   layout(); tween = 1;
   addEventListener('resize', () => { clearTimeout(layout.t); layout.t = setTimeout(() => { remember(); layout(); tween = 1; }, 150); });
-  try { base = (await (await fetch('live.json?' + Date.now())).json()).base || null; } catch (e) { base = null; }
+  try { const lj = await (await fetch('live.json?' + Date.now())).json(); base = lj.base || null; stmtOn = lj.enunciati === true; } catch (e) { base = null; }
   if (base != null) { try { await pollEvents(); } catch (e) { base = null; } }
   if (base != null) setInterval(() => pollEvents().catch(() => {}), 30000);
   else await pollEvents().catch(() => { $('status').textContent = 'I dati del build non sono raggiungibili: la figura mostra solo la struttura.'; });
