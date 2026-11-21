@@ -31,8 +31,8 @@ the slider to go back in time.
   `depoff.u32`, `deps.u32`, `names.txt`) are static files in this repository.
 - `live.json` holds the address of the build machine. While the build runs,
   the page reads three things from it: finished files (`/events`), files being
-  compiled (`/now.json`), machine status (`/sys.json`) and, on a click, the
-  theorem statements of one file (`/file`, rate-limited). The server is
+  compiled (`/now.json`) and machine status (`/sys.json`); `/file` (theorem
+  statements of one file, rate-limited) is currently switched off. The server is
   `pod/srv_pub.py`: read-only, nothing else.
 - `data/` is the last saved snapshot (`istantanea.sh` refreshes it). The page
   falls back to it when the machine does not answer, and will keep working as
@@ -48,9 +48,10 @@ the slider to go back in time.
 
 The archive's sources and compiled files are not redistributed: the archive
 declares no licence. This repository holds only module names and the import
-graph derived from them. While the build machine is up, the page also quotes
-the *statements* of the theorems in a file, one file at a time, attributed to
-Levent Alpöge; proofs are never served.
+graph derived from them. The page can also quote the *statements* of the
+theorems in a file, attributed to Levent Alpöge and never the proofs; this is
+switched off (`"enunciati"` in `live.json`, and on the server) until the
+author has been asked.
 
 ## Who
 
@@ -72,8 +73,8 @@ il manifest di A. Sutherland (per ora parziale).
 
 I sorgenti e i file compilati dell'archivio non sono ridistribuiti, perché
 l'archivio non dichiara una licenza: nel repository ci sono solo i nomi dei
-moduli e il grafo degli import che se ne ricava. Finché la macchina del build
-è accesa, la pagina cita anche i soli enunciati dei teoremi di un file, uno
-alla volta, attribuiti a Levent Alpöge; le dimostrazioni non sono mai esposte.
+moduli e il grafo degli import che se ne ricava. La pagina può anche citare i
+soli enunciati dei teoremi di un file, attribuiti a Levent Alpöge e mai le
+dimostrazioni; la funzione è spenta finché non abbiamo chiesto all'autore.
 
 Lucio Patone, con Claude (Anthropic) come assistente.
