@@ -84,10 +84,10 @@ dl.rows dd{margin:0;font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
-<canvas id="cv" role="img" aria-label="Architettura della dimostrazione: una colonna per teoria sull'asse dei livelli di dipendenza, larga quanto i file che ha a ogni livello, con nastri per gli import tra teorie"></canvas>
+<canvas id="cv" role="img" aria-label="Architettura dell'archivio: una colonna per teoria sull'asse dei livelli di dipendenza, larga quanto i file che ha a ogni livello, con nastri per gli import tra teorie"></canvas>
 <div id="head">
-<div class="eyebrow">Architettura dell'archivio Lean di Alpöge</div>
-<h1>Architettura</h1>
+<div class="eyebrow" id="eyebrow">Architettura dell'archivio Lean di Alpöge</div>
+<h1 id="h1">Architettura</h1>
 <div id="lede">Ogni colonna è una teoria: una barra per livello, lunga quanto i file che ha a quell'altezza, con la stessa scala per tutte. Dove non c'è barra non ci sono file. La parte piena è già compilata nel nostro build. I nastri sono gli import da una teoria all'altra. Fai clic su una colonna per aprirla.</div>
 <div id="crumb" hidden><button type="button" id="bUp">Tutte le teorie</button><b id="crumbName"></b></div>
 </div>
@@ -99,19 +99,33 @@ dl.rows dd{margin:0;font-variant-numeric:tabular-nums}
 <button type="button" class="ic" id="bTrace" aria-pressed="false" hidden>Traccia dell'autore</button>
 <button type="button" class="ic" id="bFlow" aria-pressed="true">Nastri</button>
 <span class="sep" aria-hidden="true"></span>
-<a class="ic" href="./">Tracciato del build</a>
+<a class="ic" id="aBuild" href="./">Tracciato del build</a>
+<button type="button" class="ic" id="bLang"></button>
 <button type="button" class="ic" id="bFull" title="Schermo intero" aria-label="Schermo intero"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"></path></svg></button>
 </div>
 </div>
 <script>
 (() => {
 'use strict';
+// lingua: ?lang= nell'indirizzo, poi la scelta salvata, poi quella del browser; italiano solo se chiesto
+let EN = true;
+{ let l = new URLSearchParams(location.search).get('lang'); if (!l) { try { l = localStorage.getItem('lang'); } catch (e) {} } EN = !/^it/i.test(l || navigator.language || 'en'); }
+const T = (it, en) => (EN ? en : it);
+document.documentElement.lang = EN ? 'en' : 'it';
+// le etichette italiane dentro i dati, in inglese
+const DATI = { 'Langlands locale': 'local Langlands', 'Siegel–Weil, formula di massa': 'Siegel–Weil, mass formula', 'altezze': 'heights', 'campi di funzioni, Frobenius': 'function fields, Frobenius', 'caratteri di Dirichlet': 'Dirichlet characters', 'caratteri di Hecke': 'Hecke characters', 'cristallino, Hodge p-adico': 'crystalline, p-adic Hodge', 'determinante': 'determinant', 'funzioni L': 'L-functions', 'gruppi unitari': 'unitary groups', 'letteratura, teoremi pubblicati': 'literature, published theorems', 'modularità, patching': 'modularity, patching', 'moltiplicazione complessa': 'complex multiplication', 'pendenze di Bost': 'Bost slopes', 'serie discrete': 'discrete series', 'somme di Gauss': 'Gauss sums', 'zeri, non annullamento': 'zeros, non-vanishing', 'EveryCharacter ⇒ ipotesi di Riemann': 'EveryCharacter ⇒ Riemann hypothesis', 'Ipotesi di letteratura': 'Literature hypotheses', 'letteratura + VWin ⇒ EveryCharacter': 'literature + VWin ⇒ EveryCharacter' };
+const dato = (s) => DATI[s] || s.replace(/^Altre(?= ·|$)/, 'Others').replace(/ · altri$/, ' · others');
+function translateData() {
+  for (const x of A.teorie) x.nome = dato(x.nome);
+  for (const s of A.subs) { s.nome = dato(s.nome); if (s.chiavi) for (const k of s.chiavi) k[0] = dato(k[0]); }
+  for (const s of A.spina) s.etichetta = dato(s.etichetta);
+}
 const HUE = [[200,205,220],[248,134,176],[150,220,230],[246,180,98],[160,200,120],[94,214,180],[120,170,250],[230,160,220],[235,200,120],[208,220,104],[186,150,250],[248,128,112],[170,180,255]];
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 const rgb = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
 const hex = (c) => 'rgb(' + c.join(',') + ')';
-const nf = (n) => Math.round(n).toLocaleString('it-IT');
+const nf = (n) => Math.round(n).toLocaleString(EN ? 'en-GB' : 'it-IT');
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const cv = $('cv'), cx = cv.getContext('2d');
 
@@ -142,7 +156,7 @@ function layout() {
       const h = new Float64Array(LV), v = []; let n = 0;
       for (const s of small) { n += s.file; for (let l = 0; l < LV; l++) h[l] += s.hist[l]; }
       for (let l = 0; l < LV; l++) for (let q = 0; q < h[l]; q += 20) v.push(l);
-      items.push({ key: 'm' + open, kind: 'misc', subs: small, teoria: open, nome: small.length + ' blocchi minori', hist: h, med: v[v.length >> 1] || 0, file: n });
+      items.push({ key: 'm' + open, kind: 'misc', subs: small, teoria: open, nome: small.length + T(' blocchi minori', ' minor blocks'), hist: h, med: v[v.length >> 1] || 0, file: n });
     }
   }
   else for (const t of A.teorie) {
@@ -189,7 +203,7 @@ function draw(t) {
     cx.strokeStyle = 'rgba(154,164,196,0.1)'; cx.beginPath(); cx.moveTo(x0, y); cx.lineTo(x1, y); cx.stroke();
     cx.textAlign = 'right'; cx.fillStyle = '#9aa4c4'; cx.fillText(String(lv), x0 - 10 * d, y);
   }
-  if (innerWidth >= 760) { cx.save(); cx.translate(22 * d, (y0 + y1) / 2); cx.rotate(-Math.PI / 2); cx.textAlign = 'center'; cx.fillText('livello di dipendenza', 0, 0); cx.restore(); }
+  if (innerWidth >= 760) { cx.save(); cx.translate(22 * d, (y0 + y1) / 2); cx.rotate(-Math.PI / 2); cx.textAlign = 'center'; cx.fillText(T('livello di dipendenza', 'dependency level'), 0, 0); cx.restore(); }
   const hot = hover ? hover.c : null, focusKey = selSub >= 0 ? 's' + selSub : null;
   // nastri: import da un blocco a un altro, dal livello medio dei file importati a quello di chi importa
   if (flows) {
@@ -283,8 +297,8 @@ cv.addEventListener('mousemove', (e) => {
   if (!hover) { tip.hidden = true; return; }
   const c = hover.c, tot = c.hist[hover.lv], dn = doneHist(c)[hover.lv];
   tip.firstChild.textContent = hover.hyp ? hover.hyp.nome.split('.').slice(-1)[0] : (c.kind === 'sub' ? c.sub.nome : c.nome);
-  tip.lastChild.textContent = hover.hyp ? 'Struttura di ipotesi al livello ' + hover.hyp.lv + '. Campi: ' + (hover.hyp.campi.join(', ') || 'non letti') + '.'
-    : nf(c.file) + ' file. Al livello ' + hover.lv + ': ' + nf(tot) + ' file, ' + nf(dn) + ' compilati.';
+  tip.lastChild.textContent = hover.hyp ? T('Struttura di ipotesi al livello ', 'Hypothesis structure at level ') + hover.hyp.lv + T('. Campi: ', '. Fields: ') + (hover.hyp.campi.join(', ') || T('non letti', 'not read')) + '.'
+    : nf(c.file) + T(' file. Al livello ', ' files. At level ') + hover.lv + ': ' + nf(tot) + T(' file, ', ' files, ') + nf(dn) + T(' compilati.', ' compiled.');
   tip.hidden = false;
   tip.style.left = Math.max(8, Math.min(e.clientX + 16, innerWidth - 356)) + 'px';
   tip.style.top = Math.max(8, Math.min(e.clientY + 18, innerHeight - 110)) + 'px';
@@ -354,7 +368,7 @@ function parse(text) {
 
 // ---- scheda a destra: un sottoblocco, un suo file, oppure la traccia dell'autore
 const rows = (list) => { const dl = el('dl', 'rows'); for (const [k, v] of list) dl.append(el('dt', '', k), el('dd', '', v)); return dl; };
-const TIPI = { theorem: 'Teorema', lemma: 'Lemma', def: 'Definizione', abbrev: 'Abbreviazione', structure: 'Struttura', class: 'Classe', inductive: 'Tipo induttivo', instance: 'Istanza' };
+const TIPI = { theorem: T('Teorema', 'Theorem'), lemma: 'Lemma', def: T('Definizione', 'Definition'), abbrev: T('Abbreviazione', 'Abbreviation'), structure: T('Struttura', 'Structure'), class: T('Classe', 'Class'), inductive: T('Tipo induttivo', 'Inductive type'), instance: T('Istanza', 'Instance') };
 const getFile = (i) => (!stmtOn ? Promise.resolve({ error: 'spenti' }) : base == null ? Promise.resolve({ error: 'off' }) : fetch(base + '/file?i=' + i, { signal: AbortSignal.timeout(20000) }).then((r) => (r.ok ? r.json() : { error: r.status })));
 function openFile(i, name, copie, focus) {
   file = { i, name, copie }; info = null; extra = null; decl = 0; tab = 'enunciato'; renderPanel();
@@ -367,20 +381,20 @@ function renderPanel() {
   if (!panel) return;
   p.textContent = '';
   const head = el('header'), top = el('div', 'row'), x = el('button', 'x'), eyebrow = el('div', 'eyebrow'), body = el('div', 'body scroll');
-  x.type = 'button'; x.setAttribute('aria-label', 'Chiudi la scheda');
+  x.type = 'button'; x.setAttribute('aria-label', T('Chiudi la scheda', 'Close the panel'));
   x.innerHTML = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"></path></svg>';
   x.onclick = closePanel;
   if (panel === 'trace') {
-    eyebrow.textContent = 'Dal PDF, non dai sorgenti'; eyebrow.style.color = '#ffd98a';
-    top.append(eyebrow, x); head.append(top, el('h2', '', 'Traccia dell\'autore'));
+    eyebrow.textContent = T('Dal PDF, non dai sorgenti', 'From the PDF, not from the sources'); eyebrow.style.color = '#ffd98a';
+    top.append(eyebrow, x); head.append(top, el('h2', '', T('Traccia dell\'autore', 'The author\'s outline')));
     p.append(head, body); panelTrace(body); return;
   }
   if (panel === 'misc') {
     const small = A.subs.filter((q) => q.teoria === open).sort((a, b) => b.file - a.file).slice(MAXCOL);
     eyebrow.textContent = A.teorie[open].nome; eyebrow.style.color = hex(col(open));
-    top.append(eyebrow, x); head.append(top, el('h2', '', small.length + ' blocchi minori'), el('div', 'path', 'I sottoblocchi troppo piccoli per avere una colonna propria'));
+    top.append(eyebrow, x); head.append(top, el('h2', '', small.length + T(' blocchi minori', ' minor blocks')), el('div', 'path', T('I sottoblocchi troppo piccoli per avere una colonna propria', 'Sub-blocks too small to have a column of their own')));
     const ul = el('ul', 'list');
-    for (const q of small) { const li = el('li'), b = el('button'); b.type = 'button'; b.append(el('b', '', label(q)), el('span', '', nf(q.file) + ' file · liv. ' + q.lo + '–' + q.hi)); b.onclick = () => showSub(q.id); li.append(b); ul.append(li); }
+    for (const q of small) { const li = el('li'), b = el('button'); b.type = 'button'; b.append(el('b', '', label(q)), el('span', '', nf(q.file) + T(' file · liv. ', ' files · lev. ') + q.lo + '–' + q.hi)); b.onclick = () => showSub(q.id); li.append(b); ul.append(li); }
     body.append(ul); p.append(head, body); return;
   }
   const s = A.subs[selSub], accent = hex(col(s.teoria));
@@ -388,12 +402,12 @@ function renderPanel() {
   top.append(eyebrow, x);
   if (file) {
     head.append(top, el('h2', '', file.name), el('div', 'path', info && info.name ? info.name.split('.').slice(0, -1).join(' / ') : s.nome));
-    const back = el('button', 'back', 'Torna a ' + label(s)); back.type = 'button'; back.onclick = () => { file = null; tab = 'portanti'; renderPanel(); };
+    const back = el('button', 'back', T('Torna a ', 'Back to ') + label(s)); back.type = 'button'; back.onclick = () => { file = null; tab = 'portanti'; renderPanel(); };
     body.append(back); p.append(head, body); panelStatement(body, accent); return;
   }
-  head.append(top, el('h2', '', label(s)), el('div', 'path', s.tipo === 'gruppo' ? 'Gruppo di file che si importano tra loro; il nome sono le parole che li distinguono' : s.tipo === 'resto' ? 'File della teoria che non formano un blocco riconoscibile' : 'Spazio dei nomi ' + s.nome));
+  head.append(top, el('h2', '', label(s)), el('div', 'path', s.tipo === 'gruppo' ? T('Gruppo di file che si importano tra loro; il nome sono le parole che li distinguono', 'A group of files that import one another; the name is the words that set them apart') : s.tipo === 'resto' ? T('File della teoria che non formano un blocco riconoscibile', 'Files of the theory that do not form a recognisable block') : T('Spazio dei nomi ', 'Namespace ') + s.nome));
   const tabs = el('div', 'tabs'); tabs.setAttribute('role', 'tablist');
-  for (const [id, name, fn] of [['blocco', 'Blocco', panelBlock], ['portanti', 'Snodi e vertici', panelTop], ['ipotesi', 'Ipotesi', panelHyp]]) {
+  for (const [id, name, fn] of [['blocco', T('Blocco', 'Block'), panelBlock], ['portanti', T('Snodi e vertici', 'Hubs and peaks'), panelTop], ['ipotesi', T('Ipotesi', 'Hypotheses'), panelHyp]]) {
     const b = el('button', '', name + (id === 'ipotesi' ? ' ' + s.ipotesi.length : ''));
     b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(id === tab));
     if (id === tab) { b.style.borderBottomColor = accent; fn(body, s, accent); }
@@ -404,18 +418,18 @@ function renderPanel() {
 }
 function panelBlock(body, s) {
   let dn = 0; for (let l = 0; l < LV; l++) dn += done[s.id][l];
-  body.append(rows([['File', nf(s.file)], ['Compilati', nf(dn) + ' (' + Math.round((dn / s.file) * 100) + '%)'], ['Dichiarazioni', nf(s.decl)],
-    ['Livelli', 'da ' + s.lo + ' a ' + s.hi + ', mediana ' + s.med], ['Strutture di ipotesi', String(s.ipotesi.length)]]));
+  body.append(rows([[T('File', 'Files'), nf(s.file)], [T('Compilati', 'Compiled'), nf(dn) + ' (' + Math.round((dn / s.file) * 100) + '%)'], [T('Dichiarazioni', 'Declarations'), nf(s.decl)],
+    [T('Livelli', 'Levels'), T('da ', 'from ') + s.lo + T(' a ', ' to ') + s.hi + T(', mediana ', ', median ') + s.med], [T('Strutture di ipotesi', 'Hypothesis structures'), String(s.ipotesi.length)]]));
   if (s.chiavi.length) {
-    body.append(el('div', 'sub', 'Nomi che ricorrono nelle dichiarazioni'));
+    body.append(el('div', 'sub', T('Nomi che ricorrono nelle dichiarazioni', 'Names that recur in the declarations')));
     const ch = el('div', 'chips');
     for (const [k, n] of s.chiavi) { const c = el('span', '', k); c.append(el('small', '', nf(n))); ch.append(c); }
-    body.append(ch, el('div', 'note', 'Numero di file in cui la parola compare nel nome del file o di una dichiarazione. Sono nomi, non un riassunto di cosa fa il blocco.'));
+    body.append(ch, el('div', 'note', T('Numero di file in cui la parola compare nel nome del file o di una dichiarazione. Sono nomi, non un riassunto di cosa fa il blocco.', 'Number of files where the word appears in the name of the file or of a declaration. These are names, not a summary of what the block does.')));
   }
   const fin = [], fout = [];
   for (const [a, b, n] of A.flussiSubs) { if (b === s.id) fin.push([a, n]); else if (a === s.id) fout.push([b, n]); }
-  const flowList = (title, list) => { if (!list.length) return; body.append(el('div', 'sub', title)); const ul = el('ul', 'list'); for (const [id, n] of list.slice(0, 8)) { const li = el('li'), b = el('button'); b.type = 'button'; b.append(el('b', '', A.subs[id].nome), el('span', '', nf(n) + ' import')); b.onclick = () => showSub(id); li.append(b); ul.append(li); } body.append(ul); };
-  flowList('Poggia su', fin); flowList('Lo usano', fout);
+  const flowList = (title, list) => { if (!list.length) return; body.append(el('div', 'sub', title)); const ul = el('ul', 'list'); for (const [id, n] of list.slice(0, 8)) { const li = el('li'), b = el('button'); b.type = 'button'; b.append(el('b', '', A.subs[id].nome), el('span', '', nf(n) + T(' import', ' imports'))); b.onclick = () => showSub(id); li.append(b); ul.append(li); } body.append(ul); };
+  flowList(T('Poggia su', 'Rests on'), fin); flowList(T('Lo usano', 'Used by'), fout);
 }
 function panelTop(body, s) {
   const section = (title, why, list) => {
@@ -424,70 +438,70 @@ function panelTop(body, s) {
     const ul = el('ul', 'list');
     for (const f of list) {
       const li = el('li'), b = el('button'), side = el('span'); b.type = 'button';
-      side.append(el('div', '', 'liv. ' + f.lv), el('div', '', nf(f.sotto) + ' sotto · ' + nf(f.sopra) + ' sopra'));
+      side.append(el('div', '', T('liv. ', 'lev. ') + f.lv), el('div', '', nf(f.sotto) + T(' sotto · ', ' below · ') + nf(f.sopra) + T(' sopra', ' above')));
       b.append(el('b', '', f.n), side);
       b.onclick = () => openFile(f.i, f.n, f.copie || [], f.full); li.append(b); ul.append(li);
     }
     body.append(ul);
   };
-  section(s.snodiTeoremi ? 'Snodi tra i teoremi' : 'Snodi', s.snodiTeoremi ? 'Teoremi che poggiano su molte dichiarazioni e sono usati da molte: raccolgono tanto lavoro e lo passano avanti. Sono i primi posti dove guardare.' : 'Hanno molto sotto e molto sopra insieme: raccolgono tanto lavoro e lo passano a molti. Sono i primi posti dove guardare.', s.snodi);
-  section('Vertici', 'I file più alti del blocco: dove il suo lavoro culmina.', s.vertici);
-  section('Fondamenta', 'I più usati dal resto del progetto. Di solito lemmi di base.', s.fondamenta);
-  body.append(el('div', 'note', (s.snodiTeoremi ? 'Per gli snodi, "sotto" e "sopra" contano le dichiarazioni raggiunte seguendo le citazioni lette nel testo delle dimostrazioni: una lettura testuale, precisa al 98% circa ma incompleta, perché tattiche automatiche e notazione col punto usano lemmi senza nominarli. ' : '') + 'Per vertici e fondamenta contano i file, seguendo gli import, e sono esatti. Uno snodo è centrale nel grafo: è un indizio su dove guardare, non la prova che sia centrale nell\'idea.'));
+  section(s.snodiTeoremi ? T('Snodi tra i teoremi', 'Hubs among the theorems') : T('Snodi', 'Hubs'), s.snodiTeoremi ? T('Teoremi che poggiano su molte dichiarazioni e sono usati da molte: raccolgono tanto lavoro e lo passano avanti. Sono i primi posti dove guardare.', 'Theorems that rest on many declarations and are used by many: they gather a lot of work and pass it on. They are the first places to look.') : T('Hanno molto sotto e molto sopra insieme: raccolgono tanto lavoro e lo passano a molti. Sono i primi posti dove guardare.', 'They have a lot below and a lot above at once: they gather a lot of work and pass it on to many. They are the first places to look.'), s.snodi);
+  section(T('Vertici', 'Peaks'), T('I file più alti del blocco: dove il suo lavoro culmina.', 'The highest files of the block: where its work culminates.'), s.vertici);
+  section(T('Fondamenta', 'Foundations'), T('I più usati dal resto del progetto. Di solito lemmi di base.', 'The most used by the rest of the project. Usually basic lemmas.'), s.fondamenta);
+  body.append(el('div', 'note', (s.snodiTeoremi ? T('Per gli snodi, "sotto" e "sopra" contano le dichiarazioni raggiunte seguendo le citazioni lette nel testo delle dimostrazioni: una lettura testuale, precisa al 98% circa ma incompleta, perché tattiche automatiche e notazione col punto usano lemmi senza nominarli. ', 'For hubs, "below" and "above" count the declarations reached by following the citations read in the text of the proofs: a textual reading, about 98% precise but incomplete, because automatic tactics and dot notation use lemmas without naming them. ') : '') + T('Per vertici e fondamenta contano i file, seguendo gli import, e sono esatti. Uno snodo è centrale nel grafo: è un indizio su dove guardare, non la prova che sia centrale nell\'idea.', 'For peaks and foundations they count files, following the imports, and are exact. A hub is central in the graph: it is a hint about where to look, not proof that it is central to the idea.')));
 }
 function panelHyp(body, s) {
-  if (!s.ipotesi.length) { body.append(el('div', 'note', 'Nessuna struttura di ipotesi in questo blocco.')); return; }
-  body.append(el('div', 'note', 'Strutture che raccolgono come ipotesi risultati presi dalla letteratura. Non sono assiomi: il teorema finale non ha ipotesi, quindi da qualche parte vengono soddisfatte. Dove, non l\'abbiamo ancora tracciato per tutte.'));
+  if (!s.ipotesi.length) { body.append(el('div', 'note', T('Nessuna struttura di ipotesi in questo blocco.', 'No hypothesis structures in this block.'))); return; }
+  body.append(el('div', 'note', T('Strutture che raccolgono come ipotesi risultati presi dalla letteratura. Non sono assiomi: il teorema finale non ha ipotesi, quindi da qualche parte vengono soddisfatte. Dove, non l\'abbiamo ancora tracciato per tutte.', 'Structures that collect, as hypotheses, results taken from the literature. They are not axioms: the final theorem has no hypotheses, so somewhere they are discharged. Where, we have not yet traced for all of them.')));
   for (const h of s.ipotesi) {
-    const b = el('button', 'back', h.nome.split('.').slice(-2).join('.') + ' · liv. ' + h.lv); b.type = 'button'; b.style.alignSelf = 'stretch'; b.style.textAlign = 'left';
+    const b = el('button', 'back', h.nome.split('.').slice(-2).join('.') + T(' · liv. ', ' · lev. ') + h.lv); b.type = 'button'; b.style.alignSelf = 'stretch'; b.style.textAlign = 'left';
     b.onclick = () => openFile(h.i, h.nome.split('.').slice(-1)[0], []);
     body.append(b);
     if (h.campi.length) body.append(el('div', 'note mono', h.campi.join(' · ')));
   }
 }
 function panelStatement(body, accent) {
-  if (!info) { body.append(el('div', 'note', 'Leggo il sorgente dal pod.')); return; }
-  if (info.error) { body.append(el('div', 'note', info.error === 'spenti' ? 'Gli enunciati dei teoremi non sono mostrati. L\'archivio è di Levent Alpöge ed è pubblicato senza licenza: gli abbiamo chiesto il permesso di citarli qui, con attribuzione, e aspettiamo la sua risposta. L\'archivio si scarica da alpo.ge.' : info.error === 'off' ? 'Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.' : info.error === 429 ? 'Troppe richieste in questo momento: riprova tra un minuto.' : 'L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.')); return; }
-  body.append(rows([['Righe', nf(info.lines)], ['Teoremi e lemmi', String(info.ndecl)], ['Definizioni', String(info.defs)]]));
+  if (!info) { body.append(el('div', 'note', T('Leggo il sorgente dal pod.', 'Reading from the build machine.'))); return; }
+  if (info.error) { body.append(el('div', 'note', info.error === 'spenti' ? T('Gli enunciati dei teoremi non sono mostrati. L\'archivio è di Levent Alpöge ed è pubblicato senza licenza: gli abbiamo chiesto il permesso di citarli qui, con attribuzione, e aspettiamo la sua risposta. L\'archivio si scarica da alpo.ge.', 'Theorem statements are not shown. The archive is by Levent Alpöge and was published without a licence: we have asked his permission to quote them here, with attribution, and are waiting for his answer. The archive can be downloaded from alpo.ge.') : info.error === 'off' ? T('Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.', 'Statements are read from the build machine, which is not connected right now.') : info.error === 429 ? T('Troppe richieste in questo momento: riprova tra un minuto.', 'Too many requests right now: try again in a minute.') : T('L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.', 'The statement cannot be reached right now. Try again shortly.'))); return; }
+  body.append(rows([[T('Righe', 'Lines'), nf(info.lines)], [T('Teoremi e lemmi', 'Theorems and lemmas'), String(info.ndecl)], [T('Definizioni', 'Definitions'), String(info.defs)]]));
   if (extra && extra.decls && extra.decls.length) {
-    body.append(el('div', 'sub', 'Enunciato per esteso'), el('div', 'thm', extra.decls[0].n.split('.').pop()));
+    body.append(el('div', 'sub', T('Enunciato per esteso', 'Statement in full')), el('div', 'thm', extra.decls[0].n.split('.').pop()));
     diagram(body, extra.decls[0].s, accent);
-    body.append(el('div', 'note', 'Viene da una delle ' + nf(A.copie.n) + ' copie di enunciato: file che riscrivono un risultato in forma leggibile e lo chiudono richiamando questo.'));
+    body.append(el('div', 'note', T('Viene da una delle ', 'It comes from one of the ') + nf(A.copie.n) + T(' copie di enunciato: file che riscrivono un risultato in forma leggibile e lo chiudono richiamando questo.', ' statement copies: files that restate a result in readable form and close it by invoking this one.')));
   }
-  if (!info.decls.length) { body.append(el('div', '', 'Questo file non contiene dichiarazioni.')); return; }
+  if (!info.decls.length) { body.append(el('div', '', T('Questo file non contiene dichiarazioni.', 'This file contains no declarations.'))); return; }
   decl = Math.max(0, Math.min(decl, info.decls.length - 1));
   const d = info.decls[decl];
-  body.append(el('div', 'sub', 'Dichiarazioni del file'));
+  body.append(el('div', 'sub', T('Dichiarazioni del file', 'Declarations in the file')));
   if (info.decls.length > 1) {
     const nav = el('div', 'nav'), a = el('button', '', '‹'), b = el('button', '', '›');
-    a.type = b.type = 'button'; a.setAttribute('aria-label', 'Enunciato precedente'); b.setAttribute('aria-label', 'Enunciato successivo');
+    a.type = b.type = 'button'; a.setAttribute('aria-label', T('Enunciato precedente', 'Previous statement')); b.setAttribute('aria-label', T('Enunciato successivo', 'Next statement'));
     a.disabled = decl === 0; b.disabled = decl === info.decls.length - 1;
     a.onclick = () => { decl--; renderPanel(); }; b.onclick = () => { decl++; renderPanel(); };
-    nav.append(a, el('span', '', (TIPI[d.k] || d.k) + ', ' + (decl + 1) + ' di ' + (info.ntot || info.decls.length)), b);
+    nav.append(a, el('span', '', (TIPI[d.k] || d.k) + ', ' + (decl + 1) + T(' di ', ' of ') + (info.ntot || info.decls.length)), b);
     body.append(nav);
   }
   body.append(el('div', 'thm', d.n));
   diagram(body, d.s, accent);
-  if (info.fonte) { const n = el('div', 'note', 'Fonte: ' + info.fonte + '. Le dimostrazioni non sono riprodotte. '), a = el('a', '', 'Archivio originale'); a.href = 'https://alpo.ge/'; a.rel = 'noopener'; a.style.color = 'inherit'; n.append(a, '.'); body.append(n); }
-  if (d.d === undefined) { if (info.grafo === false) body.append(el('div', 'note', 'Il grafo delle citazioni non è caricato sul pod.')); return; }
+  if (info.fonte) { const n = el('div', 'note', 'Fonte: ' + info.fonte + T('. Le dimostrazioni non sono riprodotte. ', '. Proofs are not reproduced. ')), a = el('a', '', T('Archivio originale', 'Original archive')); a.href = 'https://alpo.ge/'; a.rel = 'noopener'; a.style.color = 'inherit'; n.append(a, '.'); body.append(n); }
+  if (d.d === undefined) { if (info.grafo === false) body.append(el('div', 'note', T('Il grafo delle citazioni non è caricato sul pod.', 'The citation graph is not loaded on the build machine.'))); return; }
   // cosa cita e da chi è citato questo teorema, dal grafo delle citazioni lette nel testo
-  body.append(rows([['Poggia su', nf(d.sotto) + ' dichiarazioni'], ['La usano', nf(d.sopra) + ' dichiarazioni']]));
+  body.append(rows([[T('Poggia su', 'Rests on'), nf(d.sotto) + T(' dichiarazioni', ' declarations')], [T('La usano', 'Used by'), nf(d.sopra) + T(' dichiarazioni', ' declarations')]]));
   const vicini = (title, list, tot, key) => {
     if (!tot) return;
     body.append(el('div', 'sub', title + ' (' + nf(tot) + ')'));
     const ul = el('ul', 'list');
     for (const v of list) {
       const li = el('li'), b = el('button'); b.type = 'button';
-      b.append(el('b', '', v.n.split('.').slice(-2).join('.')), el('span', '', nf(v[key]) + (key === 'sotto' ? ' sotto' : ' sopra')));
+      b.append(el('b', '', v.n.split('.').slice(-2).join('.')), el('span', '', nf(v[key]) + (key === 'sotto' ? T(' sotto', ' below') : T(' sopra', ' above'))));
       b.title = v.n;
       b.onclick = () => openFile(v.f, v.n.split('.').pop(), [], v.n); li.append(b); ul.append(li);
     }
     body.append(ul);
-    if (tot > list.length) body.append(el('div', 'note', 'E altre ' + nf(tot - list.length) + '.'));
+    if (tot > list.length) body.append(el('div', 'note', T('E altre ', 'And more: ') + nf(tot - list.length) + '.'));
   };
-  vicini('Cita direttamente', d.cita, d.ncita, 'sotto');
-  vicini('Citato da', d.citato, d.ncitato, 'sopra');
-  body.append(el('div', 'note', 'Citazioni lette nel testo della dimostrazione, non dall\'elaborazione di Lean: quelle mostrate sono quasi sempre vere, ma possono mancarne.'));
+  vicini(T('Cita direttamente', 'Cites directly'), d.cita, d.ncita, 'sotto');
+  vicini(T('Citato da', 'Cited by'), d.citato, d.ncitato, 'sopra');
+  body.append(el('div', 'note', T('Citazioni lette nel testo della dimostrazione, non dall\'elaborazione di Lean: quelle mostrate sono quasi sempre vere, ma possono mancarne.', 'Citations read in the text of the proof, not from Lean\'s elaboration: the ones shown are almost always true, but some may be missing.')));
 }
 function diagram(body, text, accent) {
   const P = parse(text), proof = el('div', 'proof'), spine = el('span', 'spine');
@@ -497,13 +511,13 @@ function diagram(body, text, accent) {
     const row = el('div', 'prem'), dot = el('i');
     dot.style.borderRadius = h.b === '[' ? '2px' : '50%'; dot.style.background = h.b === '(' || h.b === '→' ? '#9aa4c4' : 'transparent';
     row.style.animationDelay = (0.2 + Math.min(j, 12) * 0.14).toFixed(2) + 's';
-    row.append(dot, el('b', '', h.names || (h.b === '[' ? 'struttura richiesta' : h.b === '→' ? 'se vale' : h.b === '∀' ? 'per ogni' : 'argomento')), el('span', 'mono', h.type));
+    row.append(dot, el('b', '', h.names || (h.b === '[' ? T('struttura richiesta', 'required structure') : h.b === '→' ? T('se vale', 'if') : h.b === '∀' ? T('per ogni', 'for all') : 'argomento')), el('span', 'mono', h.type));
     proof.append(row);
   });
   const th = el('div', 'thesis'), big = el('i');
   big.style.background = accent; th.style.borderColor = accent;
   th.style.animationDelay = (0.3 + Math.min(P.hyps.length, 12) * 0.14).toFixed(2) + 's';
-  th.append(big, el('span', 'sub', 'Tesi'), el('span', 'mono', P.concl || 'La tesi non si isola dal testo.'));
+  th.append(big, el('span', 'sub', T('Tesi', 'Conclusion')), el('span', 'mono', P.concl || T('La tesi non si isola dal testo.', 'The conclusion could not be isolated from the text.')));
   proof.append(th);
   body.append(proof);
 }
@@ -513,7 +527,7 @@ function panelTrace(body) {
   for (const p of A.passi) {
     const li = el('li'), b = el('button'); b.type = 'button'; b.setAttribute('aria-current', String(step === p.n));
     b.style.alignItems = 'flex-start';
-    const txt = el('b'); txt.append(el('div', '', p.testo), el('div', 'note', p.data + ' · ' + (p.file ? nf(p.file) + ' file' : 'non localizzato')));
+    const txt = el('b'); txt.append(el('div', '', p.testo), el('div', 'note', p.data + ' · ' + (p.file ? nf(p.file) + T(' file', ' files') : T('non localizzato', 'not located'))));
     if (!p.file) txt.classList.add('off');
     b.append(el('em', '', String(p.n)), txt);
     b.onclick = () => { step = step === p.n ? -1 : p.n; renderPanel(); };
@@ -521,7 +535,7 @@ function panelTrace(body) {
     if (step === p.n) {
       const more = el('div', 'note'); more.style.padding = '0 10px 8px 42px';
       more.append(el('div', 'mono', 'cercato: ' + p.cerca));
-      for (const [sid, n, lv] of p.dove) { const a = el('button', 'back', A.subs[sid].nome + ' · ' + nf(n) + ' file · liv. medio ' + Math.round(lv)); a.type = 'button'; a.style.marginTop = '6px'; a.style.display = 'block'; a.style.textAlign = 'left'; a.onclick = () => showSub(sid); more.append(a); }
+      for (const [sid, n, lv] of p.dove) { const a = el('button', 'back', A.subs[sid].nome + ' · ' + nf(n) + T(' file · liv. medio ', ' files · mean lev. ') + Math.round(lv)); a.type = 'button'; a.style.marginTop = '6px'; a.style.display = 'block'; a.style.textAlign = 'left'; a.onclick = () => showSub(sid); more.append(a); }
       li.append(more);
     }
     ul.append(li);
@@ -538,22 +552,35 @@ async function pollEvents() {
   const buf = await r.arrayBuffer(), dv = new DataView(buf), n = Math.floor(buf.byteLength / 12);
   for (let k = 0; k < n; k++) { const i = dv.getUint32(k * 12, true) & 0x3FFFFFFF; if (i < blk.length && blk[i] !== 65535) done[blk[i]][lvl[i]]++; }
   nEv += n; nDone += n;
-  $('status').textContent = nf(A.lavoro) + ' file di lavoro matematico in ' + A.teorie.length + ' teorie. Fuori dalla figura ' + nf(A.copie.n) + ' copie di enunciato. Compilati finora ' + nf(nDone) + ' file su ' + nf(A.n) + '.';
+  $('status').textContent = nf(A.lavoro) + T(' file di lavoro matematico in ', ' files of mathematical work in ') + A.teorie.length + T(' teorie. Fuori dalla figura ', ' theories. Outside the figure ') + nf(A.copie.n) + T(' copie di enunciato. Compilati finora ', ' statement copies. Compiled so far ') + nf(nDone) + T(' file su ', ' files out of ') + nf(A.n) + '.';
 }
 async function boot() {
   try {
     const bin = (name) => fetch(name).then((r) => { if (!r.ok) throw new Error(name); return r.arrayBuffer(); });
     const a = await Promise.all([fetch('arch.json').then((r) => r.json()), bin('blk.u16'), bin('level.u8')]);
-    A = a[0]; LV = A.livelli; blk = new Uint16Array(a[1]); lvl = new Uint8Array(a[2]);
+    A = a[0]; if (EN) translateData(); LV = A.livelli; blk = new Uint16Array(a[1]); lvl = new Uint8Array(a[2]);
     done = A.subs.map(() => new Float64Array(LV));
-  } catch (e) { $('status').textContent = 'I dati dell\'architettura non sono raggiungibili. Ricarica la pagina per riprovare.'; return; }
+  } catch (e) { $('status').textContent = T('I dati dell\'architettura non sono raggiungibili. Ricarica la pagina per riprovare.', 'The architecture data cannot be reached. Reload the page to try again.'); return; }
   layout(); tween = 1;
   addEventListener('resize', () => { clearTimeout(layout.t); layout.t = setTimeout(() => { remember(); layout(); tween = 1; }, 150); });
   try { const lj = await (await fetch('live.json?' + Date.now())).json(); base = lj.base || null; stmtOn = lj.enunciati === true; } catch (e) { base = null; }
   if (base != null) { try { await pollEvents(); } catch (e) { base = null; } }
   if (base != null) setInterval(() => pollEvents().catch(() => {}), 30000);
-  else await pollEvents().catch(() => { $('status').textContent = 'I dati del build non sono raggiungibili: la figura mostra solo la struttura.'; });
+  else await pollEvents().catch(() => { $('status').textContent = T('I dati del build non sono raggiungibili: la figura mostra solo la struttura.', 'The build data cannot be reached: the figure shows the structure only.'); });
 }
+document.title = T('Archivio RH di Alpöge: l\'architettura', 'Alpöge RH archive: the architecture');
+$('eyebrow').textContent = T('Architettura dell\'archivio Lean di Alpöge', 'Architecture of Alpöge\u2019s Lean archive');
+$('h1').textContent = T('Architettura', 'Architecture');
+$('lede').textContent = T($('lede').textContent, 'Each column is a theory: one bar per level, as long as the files it has at that height, on the same scale for all. Where there is no bar there are no files. The filled part is already compiled in our build. The ribbons are the imports from one theory to another. Click a column to open it.');
+$('cv').setAttribute('aria-label', T($('cv').getAttribute('aria-label'), 'Architecture of the archive: one column per theory on the axis of dependency levels, as wide as the files it has at each level, with ribbons for the imports between theories'));
+$('bUp').textContent = T('Tutte le teorie', 'All theories');
+$('status').textContent = T('Caricamento dei dati', 'Loading data');
+$('bTrace').textContent = T('Traccia dell\'autore', 'The author\u2019s outline');
+$('bFlow').textContent = T('Nastri', 'Ribbons');
+$('aBuild').textContent = T('Tracciato del build', 'Build trace');
+$('bFull').title = T('Schermo intero', 'Full screen'); $('bFull').setAttribute('aria-label', $('bFull').title);
+$('bLang').textContent = EN ? 'IT' : 'EN';
+$('bLang').onclick = () => { const l = EN ? 'it' : 'en'; try { localStorage.setItem('lang', l); } catch (e) {} const u = new URL(location.href); u.searchParams.set('lang', l); location.href = u.href; };
 requestAnimationFrame(draw);
 boot();
 })();

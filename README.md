@@ -38,6 +38,12 @@ the slider to go back in time.
   falls back to it when the machine does not answer, and will keep working as
   a replay after the build.
 - `risultati.json` is the list of checks shown in the "Controlli" tab.
+- `architettura.html` is a second page, linked from the first: one column per
+  theory on the axis of dependency levels, ribbons for the imports between
+  theories, the hypothesis structures and the final chain. Its data
+  (`arch.json`, `blk.u16`) hold names of files and declarations, not statements
+  or proofs. It is generated from our private version by
+  `strumenti/architettura_pubblica.py`.
 - `comunita.json` holds our own texts for the "Community" panel: the threads
   of work, our contributions and the list of projects. Issue and PR titles,
   states and counts are read live from GitHub's public API in the visitor's
