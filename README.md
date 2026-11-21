@@ -15,7 +15,7 @@ outcomes will be added here as they close:
 
 A re-check with `lean4checker` is not decided yet.
 
-The page text is in Italian.
+The page is in English and Italian (button at the bottom right, or `?lang=it` / `?lang=en`).
 
 ## What you are looking at
 

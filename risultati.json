@@ -1,10 +1,12 @@
 {
   "aggiornato": "21 novembre 2026",
+  "aggiornato_en": "21 November 2026",
   "nota": "Ricostruzione di Lucio Patone, condotta con Claude (Anthropic) come assistente. I risultati compariranno qui man mano che i controlli si chiudono.",
+  "nota_en": "Rebuild by Lucio Patone, carried out with Claude (Anthropic) as an assistant. Results will appear here as the checks are closed.",
   "controlli": [
-    {"nome": "Build completo fino a Main", "auto": "build", "stato": "in corso", "esito": "", "link": ""},
-    {"nome": "Assiomi usati dai teoremi finali (Audit.lean di A. Sutherland)", "stato": "in attesa del build", "esito": "", "link": ""},
-    {"nome": "Confronto degli .olean con il manifest di A. Sutherland", "stato": "parziale, completo a build finito", "esito": "", "link": ""},
-    {"nome": "Ricontrollo con lean4checker", "stato": "da decidere", "esito": "", "link": ""}
+    {"nome": "Build completo fino a Main", "nome_en": "Complete build up to Main", "auto": "build", "stato": "in corso", "stato_en": "in progress", "esito": "", "link": ""},
+    {"nome": "Assiomi usati dai teoremi finali (Audit.lean di A. Sutherland)", "nome_en": "Axioms used by the final theorems (A. Sutherland's Audit.lean)", "stato": "in attesa del build", "stato_en": "waiting for the build", "esito": "", "link": ""},
+    {"nome": "Confronto degli .olean con il manifest di A. Sutherland", "nome_en": "Comparison of the .olean files with A. Sutherland's manifest", "stato": "parziale, completo a build finito", "stato_en": "partial, complete once the build ends", "esito": "", "link": ""},
+    {"nome": "Ricontrollo con lean4checker", "nome_en": "Re-check with lean4checker", "stato": "da decidere", "stato_en": "to be decided", "esito": "", "link": ""}
   ]
 }

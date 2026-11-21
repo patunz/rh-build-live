@@ -29,7 +29,6 @@ button:focus-visible{outline:2px solid #aebfff;outline-offset:2px}
 .eyebrow{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
 #pct{font:300 clamp(56px,9vw,112px)/.95 var(--serif);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
 #files{font:500 17px var(--serif);color:var(--fg2)}
-#lede{color:var(--mu);max-width:44ch}
 #right{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px}
 #ctl{display:flex;align-items:center;gap:2px;pointer-events:auto}
 .ic{min-width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:transparent;border:none;border-radius:18px;color:var(--mu)}
@@ -100,7 +99,7 @@ dl.rows dd{margin:0;font-variant-numeric:tabular-nums}
 .area span{color:var(--mu);font-variant-numeric:tabular-nums}
 svg text{fill:var(--mu);font:11px var(--sans)}
 [hidden]{display:none!important}
-@media (max-width:760px){#head{padding:20px 16px 0 16px}#lede{display:none}#foot{padding:8px 16px 12px}#panel:not([hidden]) ~ #foot #filters{display:none}}
+@media (max-width:760px){#head{padding:20px 16px 0 16px}#foot{padding:8px 16px 12px}#panel:not([hidden]) ~ #foot #filters{display:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -114,10 +113,9 @@ svg text{fill:var(--mu);font:11px var(--sans)}
 </div>
 <input type="range" id="scrub" min="0" max="1" step="1" value="1" aria-label="Scorri il tempo del build">
 <div id="head">
-<div class="eyebrow">Ricostruzione indipendente dell'archivio Lean di Alpöge, in corso</div>
+<div class="eyebrow" id="eyebrow">Ricostruzione indipendente dell'archivio Lean di Alpöge, in corso</div>
 <div id="pct">–</div>
 <div id="files">Caricamento dei dati</div>
-<div id="lede">Ogni tratto è un file: comincia quando Lean inizia a compilarlo e finisce quando ha finito. L'altezza è il numero di passaggi su cui poggia. I fili lo legano ai file che importa. Fai clic su un tratto per vedere da dove viene. È un build in corso: la pagina non afferma nulla sulla correttezza della dimostrazione.</div>
 </div>
 <aside id="panel" hidden></aside>
 <div id="tip" hidden><b></b><span></span></div>
@@ -133,6 +131,7 @@ svg text{fill:var(--mu);font:11px var(--sans)}
 <button type="button" class="ic txt" id="bSpeed" title="Velocità di riproduzione" aria-label="Velocità di riproduzione">×300</button>
 <span class="sep" aria-hidden="true"></span>
 <button type="button" class="ic txt" id="bChecks">Controlli</button>
+<button type="button" class="ic txt" id="bLang"></button>
 <button type="button" class="ic" id="bBuild" title="Stato del build" aria-label="Stato del build"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 13.5h11M4.5 11V7M8 11V4M11.5 11V8.5"></path></svg></button>
 <button type="button" class="ic" id="bFull" title="Schermo intero" aria-label="Schermo intero"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"></path></svg></button>
 </div>
@@ -142,12 +141,17 @@ svg text{fill:var(--mu);font:11px var(--sans)}
 <script>
 (() => {
 'use strict';
+// lingua: ?lang= nell'indirizzo, poi la scelta salvata, poi quella del browser; italiano solo se chiesto
+let EN = true;
+{ let l = new URLSearchParams(location.search).get('lang'); if (!l) { try { l = localStorage.getItem('lang'); } catch (e) {} } EN = !/^it/i.test(l || navigator.language || 'en'); }
+const T = (it, en) => (EN ? en : it), LOC = EN ? 'en-GB' : 'it-IT', DEC = EN ? '.' : ',';
+document.documentElement.lang = EN ? 'en' : 'it';
 const COL = [[246,180,98],[120,170,250],[94,214,180],[186,150,250],[248,134,176],[208,220,104],[248,128,112],[200,205,220]];
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
 const rgb = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
 const hex = (c) => 'rgb(' + c.join(',') + ')';
-const nf = (n) => Math.round(n).toLocaleString('it-IT');
+const nf = (n) => Math.round(n).toLocaleString(LOC);
 const dur = (s) => { s = Math.round(s); return s < 60 ? s + ' s' : s < 3600 ? Math.floor(s / 60) + ' min ' + String(s % 60).padStart(2, '0') + ' s' : Math.floor(s / 3600) + ' h ' + String(Math.floor((s % 3600) / 60)).padStart(2, '0') + ' min'; };
 const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -168,8 +172,8 @@ const cv = {}, cx = {};
 for (const id of ['axes', 'web', 'glow', 'art', 'fx']) { cv[id] = $(id); cx[id] = cv[id].getContext('2d'); }
 
 const now = () => (frozen != null ? frozen : Date.now() / 1000 + skew - T0);
-const clock = (sec) => new Date((T0 + sec - skew) * 1000).toLocaleTimeString('it-IT');
-const short = (i) => (names ? names[i].split('.').pop() : 'file n. ' + i);
+const clock = (sec) => new Date((T0 + sec - skew) * 1000).toLocaleTimeString(LOC);
+const short = (i) => (names ? names[i].split('.').pop() : T('file n. ', 'file no. ') + i);
 const isDone = (i) => E[i] === E[i];
 const st = (i) => (S[i] === S[i] ? S[i] : runMap.has(i) ? runMap.get(i).s : now());
 const en = (i) => (isDone(i) ? E[i] : now());
@@ -185,7 +189,7 @@ function runningAt(t) {
   return out;
 }
 function playIcon() {
-  const b = $('bPlay'), label = playing ? 'Pausa' : view == null ? 'Rivedi il build dall\'inizio' : 'Riprendi da qui';
+  const b = $('bPlay'), label = playing ? T('Pausa', 'Pause') : view == null ? T('Rivedi il build dall\'inizio', 'Replay the build from the start') : T('Riprendi da qui', 'Resume from here');
   b.title = label; b.setAttribute('aria-label', label);
   b.innerHTML = playing
     ? '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="3.5" width="2.8" height="9" rx="1"></rect><rect x="9.2" y="3.5" width="2.8" height="9" rx="1"></rect></svg>'
@@ -266,14 +270,14 @@ function axes() {
     c.textAlign = 'right'; c.fillStyle = '#9aa4c4';
     c.fillText(String(lv), x0 - 10 * d, y);
   }
-  if (innerWidth >= 760) { c.save(); c.translate(22 * d, (y0 + y1) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.fillText('livello di dipendenza', 0, 0); c.restore(); }
+  if (innerWidth >= 760) { c.save(); c.translate(22 * d, (y0 + y1) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.fillText(T('livello di dipendenza', 'dependency level'), 0, 0); c.restore(); }
   c.textAlign = 'right'; c.font = "italic 400 " + 15 * d + "px Fraunces, Georgia, serif"; c.fillStyle = '#eef0f7';
   c.fillText('riemannHypothesis', xr, Y(LV - 1) - 14 * d);
   c.font = '400 ' + 11 * d + 'px Inter, system-ui, sans-serif'; c.fillStyle = '#9aa4c4'; c.textBaseline = 'top'; c.textAlign = 'center';
   const maxTicks = Math.max(3, Math.floor((xr - x0) / (110 * d)));
   const step = [600, 900, 1800, 3600, 7200, 10800, 21600].find((s) => TD / s <= maxTicks) || 43200;
   const base = T0 - skew;
-  for (let t = Math.ceil(base / step) * step; t <= base + TD; t += step) c.fillText(new Date(t * 1000).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }), Xd(t - base), y0 + 12 * d);
+  for (let t = Math.ceil(base / step) * step; t <= base + TD; t += step) c.fillText(new Date(t * 1000).toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' }), Xd(t - base), y0 + 12 * d);
 }
 
 // clic su un file: risale i suoi import generazione per generazione, poi scende verso chi lo usa
@@ -389,7 +393,7 @@ function frame(t) {
   c.strokeStyle = 'rgba(154,164,196,0.28)'; c.lineWidth = d;
   c.beginPath(); c.moveTo(Math.round(xn) + 0.5, y1); c.lineTo(Math.round(xn) + 0.5, y0 + 6 * d); c.stroke();
   c.fillStyle = '#9aa4c4'; c.font = '400 ' + 11 * d + 'px Inter, system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'top';
-  c.fillText(live && frozen == null ? 'adesso' : clock(tn), xn, y0 + 28 * d);
+  c.fillText(live && frozen == null ? T('adesso', 'now') : clock(tn), xn, y0 + 28 * d);
   // file in compilazione: tratto ancora aperto fino ad adesso, con i fili verso ciò che importa
   for (let j = 0; j < running.length; j++) {
     const r = running[j], i = r.i;
@@ -439,7 +443,7 @@ cv.fx.addEventListener('mousemove', (e) => {
   cv.fx.style.cursor = hot >= 0 ? 'pointer' : 'default';
   if (hot < 0) { tip.hidden = true; return; }
   tip.firstChild.textContent = short(hot);
-  tip.lastChild.textContent = isDone(hot) && E[hot] > tau() ? 'A quell\'ora era in compilazione da ' + dur(tau() - S[hot]) + ', al livello ' + lvl[hot] + '.' : isDone(hot) ? 'Compilato in ' + dur(E[hot] - S[hot]) + ', livello ' + lvl[hot] + '.' : 'In compilazione da ' + dur(now() - st(hot)) + ', al livello ' + lvl[hot] + '.';
+  tip.lastChild.textContent = isDone(hot) && E[hot] > tau() ? T('A quell\'ora era in compilazione da ', 'At that time it had been compiling for ') + dur(tau() - S[hot]) + T(', al livello ', ', at level ') + lvl[hot] + '.' : isDone(hot) ? T('Compilato in ', 'Compiled in ') + dur(E[hot] - S[hot]) + T(', livello ', ', level ') + lvl[hot] + '.' : T('In compilazione da ', 'Compiling for ') + dur(now() - st(hot)) + T(', al livello ', ', at level ') + lvl[hot] + '.';
   tip.hidden = false;
   tip.style.left = Math.max(8, Math.min(e.clientX + 16, innerWidth - 356)) + 'px';
   tip.style.top = Math.max(8, Math.min(e.clientY + 18, innerHeight - 100)) + 'px';
@@ -503,7 +507,7 @@ function renderPanel() {
   const keep = p.querySelector('.body') ? p.querySelector('.body').scrollTop : 0;
   p.textContent = '';
   const head = el('header'), top = el('div', 'row'), x = el('button', 'x');
-  x.type = 'button'; x.setAttribute('aria-label', 'Chiudi la scheda');
+  x.type = 'button'; x.setAttribute('aria-label', T('Chiudi la scheda', 'Close the panel'));
   x.innerHTML = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"></path></svg>';
   x.onclick = closePanel;
   const eyebrow = el('div', 'eyebrow'), tabs = el('div', 'tabs'), body = el('div', 'body scroll');
@@ -514,13 +518,13 @@ function renderPanel() {
     accent = hex(COL[lib[i]]);
     eyebrow.textContent = M.libs[lib[i]]; eyebrow.style.color = accent;
     top.append(eyebrow, x);
-    head.append(top, el('h2', '', nm ? parts.pop() : 'file n. ' + i), el('div', 'path', parts.join(' / ')));
-    defs = [['stmt', 'Enunciato', tabStatement], ['time', 'Tempi', tabTimes], ['link', 'Legami', tabLinks], ['src', 'Sorgente', tabSource]];
+    head.append(top, el('h2', '', nm ? parts.pop() : T('file n. ', 'file no. ') + i), el('div', 'path', parts.join(' / ')));
+    defs = [['stmt', T('Enunciato', 'Statement'), tabStatement], ['time', T('Tempi', 'Timing'), tabTimes], ['link', T('Legami', 'Links'), tabLinks], ['src', T('Sorgente', 'Source'), tabSource]];
   } else {
-    eyebrow.textContent = 'Il build';
+    eyebrow.textContent = T('Il build', 'The build');
     top.append(eyebrow, x);
-    head.append(top, el('h2', '', sys && sys.exit !== '' ? (sys.exit === '0' ? 'Build terminato, controlli in corso' : 'Build terminato con errori') : 'Build in corso'));
-    defs = [['checks', 'Controlli', tabChecks], ['trend', 'Andamento', tabTrend], ['machine', 'Macchina', tabMachine], ['running', 'In corso', tabRunning]];
+    head.append(top, el('h2', '', sys && sys.exit !== '' ? (sys.exit === '0' ? T('Build terminato, controlli in corso', 'Build finished, checks in progress') : T('Build terminato con errori', 'Build finished with errors')) : T('Build in corso', 'Build in progress')));
+    defs = [['checks', T('Controlli', 'Checks'), tabChecks], ['trend', T('Andamento', 'Progress'), tabTrend], ['machine', T('Macchina', 'Machine'), tabMachine], ['running', T('In corso', 'Running'), tabRunning]];
   }
   const cur = tab[panel];
   for (const [id, label, fn] of defs) {
@@ -535,18 +539,18 @@ function renderPanel() {
 }
 
 function tabStatement(body, accent) {
-  if (base == null) { body.append(el('div', 'note', 'Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.')); return; }
-  if (!info) { body.append(el('div', 'note', 'Leggo l\'enunciato dalla macchina del build.')); return; }
-  if (info.error) { body.append(el('div', 'note', info.error === 429 ? 'Troppe richieste in questo momento: riprova tra un minuto.' : 'L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.')); return; }
-  if (!info.ndecl) { body.append(el('div', '', 'Questo file non enuncia teoremi: contiene ' + info.defs + ' definizioni su ' + nf(info.lines) + ' righe.')); return; }
+  if (base == null) { body.append(el('div', 'note', T('Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.', 'Statements are read from the build machine, which is not connected right now.'))); return; }
+  if (!info) { body.append(el('div', 'note', T('Leggo l\'enunciato dalla macchina del build.', 'Reading the statement from the build machine.'))); return; }
+  if (info.error) { body.append(el('div', 'note', info.error === 429 ? T('Troppe richieste in questo momento: riprova tra un minuto.', 'Too many requests right now: try again in a minute.') : T('L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.', 'The statement cannot be reached right now. Try again shortly.'))); return; }
+  if (!info.ndecl) { body.append(el('div', '', T('Questo file non enuncia teoremi: contiene ', 'This file states no theorems: it contains ') + info.defs + T(' definizioni su ', ' definitions in ') + nf(info.lines) + T(' righe.', ' lines.'))); return; }
   decl = Math.max(0, Math.min(decl, info.decls.length - 1));
   const d = info.decls[decl], P = parse(d.s);
   if (info.decls.length > 1) {
     const nav = el('div', 'nav'), a = el('button', '', '‹'), b = el('button', '', '›');
-    a.type = b.type = 'button'; a.setAttribute('aria-label', 'Enunciato precedente'); b.setAttribute('aria-label', 'Enunciato successivo');
+    a.type = b.type = 'button'; a.setAttribute('aria-label', T('Enunciato precedente', 'Previous statement')); b.setAttribute('aria-label', T('Enunciato successivo', 'Next statement'));
     a.disabled = decl === 0; b.disabled = decl === info.decls.length - 1;
     a.onclick = () => { decl--; renderPanel(); }; b.onclick = () => { decl++; renderPanel(); };
-    nav.append(a, el('span', '', (d.k === 'lemma' ? 'Lemma ' : 'Teorema ') + (decl + 1) + ' di ' + info.ndecl), b);
+    nav.append(a, el('span', '', (d.k === 'lemma' ? 'Lemma ' : T('Teorema ', 'Theorem ')) + (decl + 1) + T(' di ', ' of ') + info.ndecl), b);
     body.append(nav);
   }
   body.append(el('div', 'thm', d.n));
@@ -558,21 +562,21 @@ function tabStatement(body, accent) {
     const c = m ? hex(COL[M.libs.indexOf(m[1])]) : '#9aa4c4', row = el('div', 'prem'), dot = el('i');
     dot.style.borderColor = c; dot.style.borderRadius = h.b === '[' ? '2px' : '50%'; dot.style.background = h.b === '(' || h.b === '→' ? c : 'transparent';
     row.style.animationDelay = (0.2 + Math.min(j, 12) * 0.14).toFixed(2) + 's';
-    row.append(dot, el('b', '', h.names || (h.b === '[' ? 'struttura richiesta' : h.b === '→' ? 'se vale' : h.b === '∀' ? 'per ogni' : 'argomento')), el('span', 'mono', h.type));
+    row.append(dot, el('b', '', h.names || (h.b === '[' ? T('struttura richiesta', 'required structure') : h.b === '→' ? T('se vale', 'if') : h.b === '∀' ? T('per ogni', 'for all') : T('argomento', 'argument'))), el('span', 'mono', h.type));
     proof.append(row);
   });
   const th = el('div', 'thesis'), big = el('i');
   big.style.background = accent; th.style.borderColor = accent;
   th.style.animationDelay = (0.3 + Math.min(P.hyps.length, 12) * 0.14).toFixed(2) + 's';
-  th.append(big, el('span', 'sub', 'Tesi'), el('span', 'mono', P.concl || 'La tesi non si isola dal testo: l\'enunciato usa una forma che questa lettura non riconosce.'));
+  th.append(big, el('span', 'sub', T('Tesi', 'Conclusion')), el('span', 'mono', P.concl || T('La tesi non si isola dal testo: l\'enunciato usa una forma che questa lettura non riconosce.', 'The conclusion could not be isolated: the statement uses a form this reading does not recognise.')));
   proof.append(th);
   body.append(proof);
-  body.append(el('div', 'note', (P.hyps.length ? P.hyps.length + ' premesse. Pallino pieno: esplicita. Vuoto: implicita. Quadrato: struttura richiesta. Il colore indica l\'area da cui viene.' : 'Nessuna premessa: l\'enunciato è solo la tesi.') + (P.broken ? ' Le parentesi non si chiudono: la lettura si ferma prima della fine.' : '') + (info.ndecl > info.decls.length ? ' Il file ha ' + info.ndecl + ' enunciati; qui i primi ' + info.decls.length + '.' : '')));
+  body.append(el('div', 'note', (P.hyps.length ? P.hyps.length + T(' premesse. Pallino pieno: esplicita. Vuoto: implicita. Quadrato: struttura richiesta. Il colore indica l\'area da cui viene.', ' premises. Filled dot: explicit. Hollow: implicit. Square: required structure. The colour shows the area it comes from.') : T('Nessuna premessa: l\'enunciato è solo la tesi.', 'No premises: the statement is just the conclusion.')) + (P.broken ? T(' Le parentesi non si chiudono: la lettura si ferma prima della fine.', ' Brackets do not close: the reading stops before the end.') : '') + (info.ndecl > info.decls.length ? T(' Il file ha ' + info.ndecl + ' enunciati; qui i primi ' + info.decls.length + '.', ' The file has ' + info.ndecl + ' statements; these are the first ' + info.decls.length + '.') : '')));
   body.append(source());
 }
 // riga di attribuzione: il testo arriva dal server insieme all'enunciato
 function source() {
-  const n = el('div', 'note', 'Fonte: ' + info.fonte + '. Le dimostrazioni non sono riprodotte. '), a = el('a', '', 'Archivio originale');
+  const n = el('div', 'note', T('Fonte: ' + info.fonte + '. Le dimostrazioni non sono riprodotte. ', 'Source: Levent Alpöge, https://alpo.ge/ (archive published without a licence; statements only, for study). Proofs are not reproduced. ')), a = el('a', '', T('Archivio originale', 'Original archive'));
   a.href = 'https://alpo.ge/'; a.rel = 'noopener'; a.style.color = 'inherit';
   n.append(a, '.');
   return n;
@@ -585,21 +589,21 @@ function tabTimes(body, accent) {
   const bar = el('div', 'bar'), a = el('span'), b = el('span');
   a.style.cssText = 'width:' + (wait / tot) * 100 + '%;background:#4a5680'; b.style.cssText = 'width:' + ((e - s) / tot) * 100 + '%;background:' + accent;
   bar.append(a, b);
-  body.append(bar, el('div', 'note', 'In grigio l\'attesa dopo l\'ultimo import, in colore la compilazione.'));
+  body.append(bar, el('div', 'note', T('In grigio l\'attesa dopo l\'ultimo import, in colore la compilazione.', 'Grey is the wait after the last import, colour is the compilation.')));
   let slower = 0;
   for (const k of order) if (E[k] - S[k] < e - s) slower++;
-  const list = [['Inizio', clock(s) + (FL[i] & 2 ? ' (stimato)' : '')], done ? ['Fine', clock(e)] : ['In corso da', dur(e - s)]];
-  if (done) list.push(['Durata', dur(e - s)]);
-  list.push(['Attesa', last !== last ? 'nessun import interno' : wait < 1.5 ? 'partito appena pronto l\'ultimo import' : 'partito ' + dur(wait) + ' dopo l\'ultimo import'],
-    ['Confronto', 'più lungo del ' + Math.round((slower / Math.max(1, order.length)) * 100) + '% dei file compilati']);
+  const list = [[T('Inizio', 'Start'), clock(s) + (FL[i] & 2 ? T(' (stimato)', ' (estimated)') : '')], done ? [T('Fine', 'End'), clock(e)] : [T('In corso da', 'Running for'), dur(e - s)]];
+  if (done) list.push([T('Durata', 'Duration'), dur(e - s)]);
+  list.push([T('Attesa', 'Wait'), last !== last ? T('nessun import interno', 'no internal imports') : wait < 1.5 ? T('partito appena pronto l\'ultimo import', 'started as soon as the last import was ready') : T('partito ', 'started ') + dur(wait) + T(' dopo l\'ultimo import', ' after the last import')],
+    [T('Confronto', 'Comparison'), T('più lungo del ', 'longer than ') + Math.round((slower / Math.max(1, order.length)) * 100) + T('% dei file compilati', '% of compiled files')]);
   body.append(rows(list));
-  if (FL[i] & 2) body.append(el('div', 'note', 'Questo file è finito prima che il registro dei tempi partisse: la fine è misurata, l\'inizio è ricavato dalla durata riportata da lake.'));
+  if (FL[i] & 2) body.append(el('div', 'note', T('Questo file è finito prima che il registro dei tempi partisse: la fine è misurata, l\'inizio è ricavato dalla durata riportata da lake.', 'This file finished before the timing log started: the end is measured, the start is derived from the duration reported by lake.')));
 }
 function tabSource(body) {
   const i = sel.i;
-  body.append(rows([['Livello', lvl[i] + ' di ' + (LV - 1)],
-    ['Esito', !isDone(i) ? 'in compilazione' : FL[i] & 1 ? 'compilato, con avvisi di stile' : 'compilato, senza avvisi']]));
-  const n = el('div', 'note', 'Dei sorgenti qui si citano solo gli enunciati dei teoremi, con attribuzione: le dimostrazioni non sono riprodotte, perché l\'archivio originale non dichiara una licenza. Si scarica da '), a = el('a', '', 'alpo.ge');
+  body.append(rows([[T('Livello', 'Level'), lvl[i] + T(' di ', ' of ') + (LV - 1)],
+    [T('Esito', 'Outcome'), !isDone(i) ? T('in compilazione', 'compiling') : FL[i] & 1 ? T('compilato, con avvisi di stile', 'compiled, with style warnings') : T('compilato, senza avvisi', 'compiled, no warnings')]]));
+  const n = el('div', 'note', T('Dei sorgenti qui si citano solo gli enunciati dei teoremi, con attribuzione: le dimostrazioni non sono riprodotte, perché l\'archivio originale non dichiara una licenza. Si scarica da ', 'Only the theorem statements are quoted here, with attribution: proofs are not reproduced, because the original archive declares no licence. It can be downloaded from ')), a = el('a', '', 'alpo.ge');
   a.href = 'https://alpo.ge/'; a.rel = 'noopener'; a.style.color = 'inherit';
   n.append(a, '.');
   body.append(n);
@@ -608,24 +612,24 @@ function tabLinks(body) {
   const i = sel.i, dl = [];
   for (let j = doff[i]; j < doff[i + 1]; j++) dl.push(deps[j]);
   dl.sort((a, b) => en(b) - en(a));
-  body.append(rows([['Importa', dl.length + ' file del progetto'], ['Poggia su', nf(sel.anc) + ' file in tutto'],
-    ['Lo usano', sel.nUsers ? nf(sel.nUsers) + (sel.nUsers === 1 ? ' file già partito' : ' file già partiti') : 'nessuno, finora'],
-    ['Lo aspettano', sel.waiting ? nf(sel.waiting) + (sel.waiting === 1 ? ' file non ancora partito' : ' file non ancora partiti') : 'nessuno']]));
+  body.append(rows([[T('Importa', 'Imports'), dl.length + T(' file del progetto', ' project files')], [T('Poggia su', 'Rests on'), nf(sel.anc) + T(' file in tutto', ' files in total')],
+    [T('Lo usano', 'Used by'), sel.nUsers ? nf(sel.nUsers) + (sel.nUsers === 1 ? T(' file già partito', ' file already started') : T(' file già partiti', ' files already started')) : T('nessuno, finora', 'none so far')],
+    [T('Lo aspettano', 'Waiting for it'), sel.waiting ? nf(sel.waiting) + (sel.waiting === 1 ? T(' file non ancora partito', ' file not started yet') : T(' file non ancora partiti', ' files not started yet')) : T('nessuno', 'none')]]));
   if (dl.length) {
-    body.append(el('div', 'sub', 'Import diretti, dal più recente'));
+    body.append(el('div', 'sub', T('Import diretti, dal più recente', 'Direct imports, most recent first')));
     const ul = el('ul', 'list');
-    dl.forEach((g, j) => ul.append(fileButton(g, (j === 0 && dl.length > 1 ? 'ultimo, ' : '') + clock(en(g)))));
+    dl.forEach((g, j) => ul.append(fileButton(g, (j === 0 && dl.length > 1 ? T('ultimo, ', 'last, ') : '') + clock(en(g)))));
     body.append(ul);
   }
   const us = [];
   for (let j = uoff[i]; j < uoff[i + 1]; j++) if (isDone(users[j])) us.push(users[j]);
   if (us.length) {
     us.sort((a, b) => E[a] - E[b]);
-    body.append(el('div', 'sub', 'Chi lo usa, dal primo'));
+    body.append(el('div', 'sub', T('Chi lo usa, dal primo', 'Used by, earliest first')));
     const ul = el('ul', 'list');
     us.slice(0, 40).forEach((g) => ul.append(fileButton(g, clock(E[g]))));
     body.append(ul);
-    if (us.length > 40) body.append(el('div', 'note', 'E altri ' + (us.length - 40) + '.'));
+    if (us.length > 40) body.append(el('div', 'note', T('E altri ' + (us.length - 40) + '.', 'And ' + (us.length - 40) + ' more.')));
   }
 }
 
@@ -643,52 +647,52 @@ function chart(pts, color, fmt) {
   return svg;
 }
 function tabChecks(body) {
-  body.append(el('div', '', 'Stiamo ricompilando da zero, su una macchina nostra, l\'archivio Lean con cui Levent Alpöge ha annunciato una dimostrazione dell\'ipotesi di Riemann. Non affermiamo nulla sulla correttezza della dimostrazione finché i controlli qui sotto non sono chiusi.'));
-  if (!checks) { body.append(el('div', 'note', 'L\'elenco dei controlli non è raggiungibile in questo momento.')); return; }
+  body.append(el('div', '', T('Stiamo ricompilando da zero, su una macchina nostra, l\'archivio Lean con cui Levent Alpöge ha annunciato una dimostrazione dell\'ipotesi di Riemann. Non affermiamo nulla sulla correttezza della dimostrazione finché i controlli qui sotto non sono chiusi.', 'We are recompiling from scratch, on our own machine, the Lean archive with which Levent Alpöge announced a proof of the Riemann Hypothesis. We claim nothing about the correctness of the proof until the checks below are closed.')));
+  if (!checks) { body.append(el('div', 'note', T('L\'elenco dei controlli non è raggiungibile in questo momento.', 'The list of checks cannot be reached right now.'))); return; }
   const dl = el('dl', 'rows');
   dl.style.cssText = 'grid-template-columns:minmax(0,1fr);gap:2px';
   for (const c of checks.controlli) {
-    let s = c.stato;
-    if (c.auto === 'build' && sys) s = sys.exit === '' ? 'in corso, ' + nf(order.length) + ' file su ' + nf(N) : sys.exit === '0' ? 'terminato senza errori' : 'terminato con errori (codice ' + sys.exit + ')';
-    const dd = el('dd', '', s + (c.esito ? ': ' + c.esito : ''));
-    if (c.link && /^https:\/\//.test(c.link)) { const a = el('a', '', 'dettagli'); a.href = c.link; a.rel = 'noopener'; a.style.color = 'inherit'; dd.append(' (', a, ')'); }
+    let s = T(c.stato, c.stato_en || c.stato);
+    if (c.auto === 'build' && sys) s = sys.exit === '' ? T('in corso, ', 'in progress, ') + nf(order.length) + T(' file su ', ' files out of ') + nf(N) : sys.exit === '0' ? T('terminato senza errori', 'finished with no errors') : T('terminato con errori (codice ', 'finished with errors (code ') + sys.exit + ')';
+    const dd = el('dd', '', s + (c.esito ? ': ' + T(c.esito, c.esito_en || c.esito) : ''));
+    if (c.link && /^https:\/\//.test(c.link)) { const a = el('a', '', T('dettagli', 'details')); a.href = c.link; a.rel = 'noopener'; a.style.color = 'inherit'; dd.append(' (', a, ')'); }
     dd.style.marginBottom = '10px';
-    dl.append(el('dt', '', c.nome), dd);
+    dl.append(el('dt', '', T(c.nome, c.nome_en || c.nome)), dd);
   }
-  body.append(dl, el('div', 'note', 'Elenco aggiornato il ' + checks.aggiornato + '. ' + checks.nota));
+  body.append(dl, el('div', 'note', T('Elenco aggiornato il ' + checks.aggiornato + '. ' + checks.nota, 'List updated on ' + checks.aggiornato_en + '. ' + checks.nota_en)));
 }
 function tabTrend(body) {
   const tn = now(), nb = Math.max(1, Math.ceil(tn / 60)), per = new Uint32Array(nb + 1);
   for (const i of order) per[Math.min(nb, Math.floor(E[i] / 60))]++;
   const cum = [], rate = []; let c = 0;
   for (let b = 0; b < nb; b++) { c += per[b]; cum.push([(b + 1) * 60, c]); let s = 0, n = 0; for (let q = Math.max(0, b - 4); q <= b; q++) { s += per[q]; n++; } if (b < nb - 1) rate.push([(b + 1) * 60, s / n]); }
-  body.append(el('div', 'sub', 'File compilati nel tempo'), chart(cum, '#eef0f7', nf));
-  body.append(el('div', 'sub', 'Ritmo, file al minuto (media su 5 minuti)'), chart(rate, '#9db8ff', nf));
-  body.append(el('div', 'sub', 'Per area'));
+  body.append(el('div', 'sub', T('File compilati nel tempo', 'Compiled files over time')), chart(cum, '#eef0f7', nf));
+  body.append(el('div', 'sub', T('Ritmo, file al minuto (media su 5 minuti)', 'Rate, files per minute (5-minute average)')), chart(rate, '#9db8ff', nf));
+  body.append(el('div', 'sub', T('Per area', 'By area')));
   for (let k = 0; k < 7; k++) {
     const a = el('div', 'area'), bar = el('div', 'bar'), f = el('span');
     f.style.cssText = 'width:' + (cnt[k] / M.tot[k]) * 100 + '%;background:' + hex(COL[k]);
     bar.append(f);
-    a.append(el('div', '', M.libs[k]), el('span', '', nf(cnt[k]) + ' di ' + nf(M.tot[k])), bar);
+    a.append(el('div', '', M.libs[k]), el('span', '', nf(cnt[k]) + T(' di ', ' of ') + nf(M.tot[k])), bar);
     body.append(a);
   }
 }
 function tabMachine(body) {
   const tn = now(), r = rateNow(), eta = r > 0 ? (N - order.length) / r : NaN, last = order.length ? order[order.length - 1] : -1;
   body.append(rows([
-    ['Stato', sys ? (sys.exit !== '' ? 'terminato con codice ' + sys.exit : sys.run ? 'lake in esecuzione' : 'lake fermo') : '…'],
-    ['Tempo trascorso', dur(tn)], ['Tempo residuo', eta === eta ? dur(eta) + ' (stima)' : '…'],
-    ['In compilazione', run.length + ' file'], ['Errori', sys ? String(sys.err) : '…'],
-    ['RAM usata', sys ? sys.mem + ' GB di 256' : '…'], ['Carico', sys ? String(sys.load).replace('.', ',') + ' su 32 vCPU' : '…'], ['Disco libero', sys ? sys.free + ' GB' : '…'],
-    ['Costo del pod', '$' + ((tn / 3600) * M.price).toFixed(2) + ' finora'], ['Costo stimato', eta === eta ? '$' + (((tn + eta) / 3600) * M.price).toFixed(0) + ' a fine build' : '…'],
-    ['Ultimo compilato', last >= 0 ? short(last) + ', ' + clock(E[last]) : '…'],
+    [T('Stato', 'Status'), sys ? (sys.exit !== '' ? T('terminato con codice ', 'finished with code ') + sys.exit : sys.run ? T('lake in esecuzione', 'lake running') : T('lake fermo', 'lake stopped')) : '…'],
+    [T('Tempo trascorso', 'Elapsed'), dur(tn)], [T('Tempo residuo', 'Remaining'), eta === eta ? dur(eta) + T(' (stima)', ' (estimate)') : '…'],
+    [T('In compilazione', 'Compiling'), run.length + T(' file', ' files')], [T('Errori', 'Errors'), sys ? String(sys.err) : '…'],
+    [T('RAM usata', 'RAM used'), sys ? sys.mem + T(' GB di 256', ' GB of 256') : '…'], [T('Carico', 'Load'), sys ? String(sys.load).replace('.', DEC) + T(' su 32 vCPU', ' on 32 vCPUs') : '…'], [T('Disco libero', 'Free disk'), sys ? sys.free + ' GB' : '…'],
+    [T('Costo del pod', 'Machine cost'), '$' + ((tn / 3600) * M.price).toFixed(2) + T(' finora', ' so far')], [T('Costo stimato', 'Estimated cost'), eta === eta ? '$' + (((tn + eta) / 3600) * M.price).toFixed(0) + T(' a fine build', ' at the end of the build') : '…'],
+    [T('Ultimo compilato', 'Last compiled'), last >= 0 ? short(last) + ', ' + clock(E[last]) : '…'],
   ]));
-  body.append(el('div', 'note', 'Il costo conta solo il pod a ' + String(M.price).replace('.', ',') + ' $ l\'ora, senza disco e volume, e non legge il saldo dell\'account.'));
+  body.append(el('div', 'note', T('Il costo conta solo il pod a ', 'The cost counts only the machine at ') + String(M.price).replace('.', DEC) + T(' $ l\'ora, senza disco e volume, e non legge il saldo dell\'account.', ' $ per hour, without disk and volume, and does not read the account balance.')));
 }
 function tabRunning(body) {
   const tn = now(), ul = el('ul', 'list');
   run.filter((r) => !isDone(r.i)).sort((a, b) => a.s - b.s).forEach((r) => ul.append(fileButton(r.i, dur(tn - r.s))));
-  body.append(el('div', 'note', run.length + ' file in compilazione, dal più lungo. Fai clic per vederne le radici.'), ul);
+  body.append(el('div', 'note', run.length + T(' file in compilazione, dal più lungo. Fai clic per vederne le radici.', ' files compiling, longest first. Click one to see its roots.')), ul);
 }
 
 // ---- scritte fisse e filtri
@@ -702,19 +706,19 @@ function hud() {
   pills();
   if (view != null) {
     const done = kAt(view);
-    $('pct').textContent = ((done / N) * 100).toFixed(1).replace('.', ',') + '%';
-    $('files').textContent = nf(done) + ' file compilati su ' + nf(N) + ' alle ' + clock(view);
-    $('sRate').textContent = nf(rateAt(view) * 60) + ' file al minuto, ' + runningAt(view).length + ' in compilazione a quell\'ora';
-    $('sEnd').textContent = 'Stai guardando ' + dur(now() - view) + ' fa, a ' + dur(view) + ' dall\'avvio';
+    $('pct').textContent = ((done / N) * 100).toFixed(1).replace('.', DEC) + '%';
+    $('files').textContent = nf(done) + T(' file compilati su ', ' files compiled out of ') + nf(N) + T(' alle ', ' at ') + clock(view);
+    $('sRate').textContent = nf(rateAt(view) * 60) + T(' file al minuto, ', ' files per minute, ') + runningAt(view).length + T(' in compilazione a quell\'ora', ' compiling at that time');
+    $('sEnd').textContent = T('Stai guardando ' + dur(now() - view) + ' fa, a ' + dur(view) + ' dall\'avvio', 'Looking back ' + dur(now() - view) + ', at ' + dur(view) + ' from the start');
     return;
   }
   const done = order.length, r = rateNow(), eta = r > 0 ? (N - done) / r : NaN;
-  $('pct').textContent = ((done / N) * 100).toFixed(1).replace('.', ',') + '%';
-  $('files').textContent = nf(done) + ' file compilati su ' + nf(N);
+  $('pct').textContent = ((done / N) * 100).toFixed(1).replace('.', DEC) + '%';
+  $('files').textContent = nf(done) + T(' file compilati su ', ' files compiled out of ') + nf(N);
   const finished = sys && sys.exit !== '';
-  $('sRate').textContent = finished ? 'Build terminato' : frozen != null ? 'Build in corso al momento dell\'istantanea' : nf(r * 60) + ' file al minuto, ' + run.length + ' in compilazione adesso';
-  $('sEnd').textContent = finished || frozen != null || eta !== eta ? '' : 'Fine stimata ' + new Date((T0 - skew + now() + eta) * 1000).toLocaleString('it-IT', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
-  $('sErr').textContent = sys ? (sys.err === 0 ? 'Nessun errore' : sys.err + ' errori') : '';
+  $('sRate').textContent = finished ? T('Build terminato', 'Build finished') : frozen != null ? T('Build in corso al momento dell\'istantanea', 'Build in progress at the time of the snapshot') : nf(r * 60) + T(' file al minuto, ', ' files per minute, ') + run.length + T(' in compilazione adesso', ' compiling now');
+  $('sEnd').textContent = finished || frozen != null || eta !== eta ? '' : T('Fine stimata ', 'Estimated end ') + new Date((T0 - skew + now() + eta) * 1000).toLocaleString(LOC, { weekday: 'long', hour: '2-digit', minute: '2-digit' });
+  $('sErr').textContent = sys ? (sys.err === 0 ? T('Nessun errore', 'No errors') : sys.err + T(' errori', ' errors')) : '';
   $('sErr').style.color = sys && sys.err > 0 ? '#ff9c9c' : '';
 }
 function buildFilters() {
@@ -731,7 +735,7 @@ function buildFilters() {
     };
     box.append(b);
   }
-  const all = el('button', 'pill ghost', 'Tutte le aree'); all.type = 'button'; all.id = 'fAll'; all.hidden = true;
+  const all = el('button', 'pill ghost', T('Tutte le aree', 'All areas')); all.type = 'button'; all.id = 'fAll'; all.hidden = true;
   all.onclick = () => { on.fill(true); hud(); redraw(); };
   box.append(all);
 }
@@ -744,6 +748,18 @@ $('bPlay').onclick = () => { if (playing) { playing = false; setView(view); } el
 $('bSpeed').onclick = () => { speed = speed === 300 ? 1200 : speed === 1200 ? 60 : 300; $('bSpeed').textContent = '×' + speed; };
 $('bLive').onclick = () => setView(null);
 playIcon();
+// scritte fisse della pagina nella lingua scelta
+document.title = T('Archivio RH di Alpöge: il build dal vivo', 'Alpöge RH archive: the build, live');
+$('eyebrow').textContent = T('Ricostruzione indipendente dell\'archivio Lean di Alpöge, in corso', 'Independent rebuild of Alpöge\u2019s Lean archive, in progress');
+$('files').textContent = T('Caricamento dei dati', 'Loading data');
+$('clock').textContent = T('In collegamento con il pod', 'Connecting to the build machine');
+$('art').setAttribute('aria-label', T('Tracciato del build: il tempo in orizzontale, il livello di dipendenza in verticale, un tratto per ogni file compilato e un filo verso ogni file che importa', 'Build trace: time on the horizontal axis, dependency level on the vertical axis, one stroke per compiled file and one thread to each file it imports'));
+$('scrub').setAttribute('aria-label', T('Scorri il tempo del build', 'Scrub through the build time'));
+$('bLive').lastChild.textContent = T('Torna al presente', 'Back to now');
+$('bChecks').textContent = T('Controlli', 'Checks');
+for (const [id, it, en] of [['bSpeed', 'Velocità di riproduzione', 'Playback speed'], ['bBuild', 'Stato del build', 'Build status'], ['bFull', 'Schermo intero', 'Full screen'], ['bLang', 'Switch to English', 'Passa all\'italiano']]) { $(id).title = T(it, en); $(id).setAttribute('aria-label', T(it, en)); }
+$('bLang').textContent = EN ? 'IT' : 'EN';
+$('bLang').onclick = () => { const l = EN ? 'it' : 'en'; try { localStorage.setItem('lang', l); } catch (e) {} const u = new URL(location.href); u.searchParams.set('lang', l); location.href = u.href; };
 
 // ---- dati: in diretta dal pod, oppure l'ultima istantanea salvata accanto alla pagina
 async function get(live, snap, ms = 30000) {
@@ -778,22 +794,22 @@ async function pollSys(ms) {
   sys = await (await get('sys.json?' + Date.now(), 'sys.json', ms)).json();
   if (base != null) skew = sys.t - Date.now() / 1000; else { skew = 0; frozen = sys.t - T0; }
 }
-const guard = (fn, label) => () => fn().then(() => { $('clock').textContent = 'In diretta, aggiornato alle ' + new Date().toLocaleTimeString('it-IT'); }).catch(() => { $('clock').textContent = 'Il pod non risponde (' + label + '): riprovo.'; });
+const guard = (fn, label) => () => fn().then(() => { $('clock').textContent = T('In diretta, aggiornato alle ', 'Live, updated at ') + new Date().toLocaleTimeString(LOC); }).catch(() => { $('clock').textContent = T('Il pod non risponde (', 'The build machine is not answering (') + label + T('): riprovo.', '): retrying.'); });
 
 async function boot() {
   const bin = (name) => fetch(name).then((r) => { if (!r.ok) throw new Error(name); return r.arrayBuffer(); });
   let a;
   try { a = await Promise.all([fetch('meta.json').then((r) => r.json()), bin('level.u8'), bin('lib.u8'), bin('depoff.u32'), bin('deps.u32')]); }
-  catch (e) { $('files').textContent = 'I dati del grafo non sono raggiungibili. Ricarica la pagina per riprovare.'; return; }
+  catch (e) { $('files').textContent = T('I dati del grafo non sono raggiungibili. Ricarica la pagina per riprovare.', 'The graph data cannot be reached. Reload the page to try again.'); return; }
   M = a[0]; N = M.n; T0 = M.t0; LV = M.levels;
   fetch('risultati.json?' + Date.now()).then((r) => r.json()).then((d) => { checks = d; if (panel === 'build') renderPanel(); }).catch(() => {});
   // live.json dice dove risponde il pod; se manca, o il pod tace, si passa all'istantanea
   try { base = (await (await fetch('live.json?' + Date.now())).json()).base || null; } catch (e) { base = null; }
   try { await pollSys(6000); }
   catch (e) {
-    if (base == null) { $('files').textContent = 'I dati del build non sono raggiungibili. Ricarica la pagina per riprovare.'; return; }
+    if (base == null) { $('files').textContent = T('I dati del build non sono raggiungibili. Ricarica la pagina per riprovare.', 'The build data cannot be reached. Reload the page to try again.'); return; }
     base = null;
-    try { await pollSys(); } catch (e2) { $('files').textContent = 'I dati del build non sono raggiungibili. Ricarica la pagina per riprovare.'; return; }
+    try { await pollSys(); } catch (e2) { $('files').textContent = T('I dati del build non sono raggiungibili. Ricarica la pagina per riprovare.', 'The build data cannot be reached. Reload the page to try again.'); return; }
   }
   lvl = new Uint8Array(a[1]); lib = new Uint8Array(a[2]); doff = new Uint32Array(a[3]); deps = new Uint32Array(a[4]);
   // elenco inverso: chi usa ciascun file
@@ -807,12 +823,12 @@ async function boot() {
   buildFilters(); resize();
   addEventListener('resize', () => { clearTimeout(resize.t); resize.t = setTimeout(resize, 150); });
   if (base != null) {
-    const ev = guard(pollEvents, 'eventi'), nw = guard(pollNow, 'file in compilazione'), sy = guard(pollSys, 'stato');
+    const ev = guard(pollEvents, T('eventi', 'events')), nw = guard(pollNow, T('file in compilazione', 'files compiling')), sy = guard(pollSys, T('stato', 'status'));
     await ev(); nw();
     setInterval(ev, 8000); setInterval(nw, 3000); setInterval(sy, 10000);
   } else {
     await pollEvents(); await pollNow();
-    $('clock').textContent = 'Il pod non è collegato: dati fermi al ' + new Date(sys.t * 1000).toLocaleString('it-IT', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+    $('clock').textContent = T('Il pod non è collegato: dati fermi al ', 'The build machine is not connected: data as of ') + new Date(sys.t * 1000).toLocaleString(LOC, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
   }
   setInterval(() => { domain(); hud(); if (panel === 'build') renderPanel(); }, 5000);
   fetch('names.txt').then((r) => r.text()).then((t) => { names = t.split('\n'); if (panel) renderPanel(); }).catch(() => {});
