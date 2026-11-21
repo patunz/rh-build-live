@@ -175,6 +175,8 @@ let W = 0, H = 0, dpr = 1, x0 = 0, x1f = 0, y0 = 0, y1 = 0, TD = 1800, dockT = 0
 let queue = [], qi = 0, hot = -1, sel = null, panel = null, info = null, decl = 0, firstLoad = true;
 // base: indirizzo del pod (null = istantanea in data/); frozen: istante a cui è ferma l'istantanea; checks: risultati.json
 let base = null, frozen = null, checks = null;
+// stmtOn: la sezione Enunciato si accende solo se live.json dice "enunciati": true (serve il permesso dell'autore dell'archivio)
+let stmtOn = false;
 const tab = { build: 'checks', file: 'stmt', comm: 'over' };
 // scorrimento nel tempo: view è l'istante che si sta guardando (null = presente); drawnFor dice fin dove è disegnata la trama
 let view = null, drawnFor = Infinity, playing = false, speed = 300, maxDur = 0, lastFrame = 0, idleAt = 0;
@@ -332,7 +334,7 @@ function pick(i) {
   info = null; decl = 0; panel = 'file'; dockT = sidePx() ? 1 : 0;
   $('tip').hidden = true;
   renderPanel();
-  if (base != null) fetch(base + '/file?i=' + i, { signal: AbortSignal.timeout(20000) })
+  if (stmtOn && base != null) fetch(base + '/file?i=' + i, { signal: AbortSignal.timeout(20000) })
     .then((r) => (r.ok ? r.json() : { error: r.status }))
     .then((d) => { if (sel && sel.i === i) { info = d; renderPanel(); } })
     .catch(() => { if (sel && sel.i === i) { info = { error: true }; renderPanel(); } });
@@ -546,7 +548,7 @@ function renderPanel() {
     eyebrow.textContent = M.libs[lib[i]]; eyebrow.style.color = accent;
     top.append(eyebrow, x);
     head.append(top, el('h2', '', nm ? parts.pop() : T('file n. ', 'file no. ') + i), el('div', 'path', parts.join(' / ')));
-    defs = [['stmt', T('Enunciato', 'Statement'), tabStatement], ['time', T('Tempi', 'Timing'), tabTimes], ['link', T('Legami', 'Links'), tabLinks], ['src', T('Sorgente', 'Source'), tabSource]];
+    defs = [...(stmtOn ? [['stmt', T('Enunciato', 'Statement'), tabStatement]] : []), ['time', T('Tempi', 'Timing'), tabTimes], ['link', T('Legami', 'Links'), tabLinks], ['src', T('Sorgente', 'Source'), tabSource]];
   } else if (panel === 'comm') {
     eyebrow.textContent = T('La comunità', 'The community');
     top.append(eyebrow, x);
@@ -558,7 +560,7 @@ function renderPanel() {
     head.append(top, el('h2', '', sys && sys.exit !== '' ? (sys.exit === '0' ? T('Build terminato, controlli in corso', 'Build finished, checks in progress') : T('Build terminato con errori', 'Build finished with errors')) : T('Build in corso', 'Build in progress')));
     defs = [['checks', T('Controlli', 'Checks'), tabChecks], ['trend', T('Andamento', 'Progress'), tabTrend], ['machine', T('Macchina', 'Machine'), tabMachine], ['running', T('In corso', 'Running'), tabRunning]];
   }
-  const cur = tab[panel];
+  const cur = panel === 'file' && !stmtOn && tab.file === 'stmt' ? 'time' : tab[panel];
   for (const [id, label, fn] of defs) {
     const b = el('button', '', label);
     b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(id === cur));
@@ -635,7 +637,7 @@ function tabSource(body) {
   const i = sel.i;
   body.append(rows([[T('Livello', 'Level'), lvl[i] + T(' di ', ' of ') + (LV - 1)],
     [T('Esito', 'Outcome'), !isDone(i) ? T('in compilazione', 'compiling') : FL[i] & 1 ? T('compilato, con avvisi di stile', 'compiled, with style warnings') : T('compilato, senza avvisi', 'compiled, no warnings')]]));
-  const n = el('div', 'note', T('Dei sorgenti qui si citano solo gli enunciati dei teoremi, con attribuzione: le dimostrazioni non sono riprodotte, perché l\'archivio originale non dichiara una licenza. Si scarica da ', 'Only the theorem statements are quoted here, with attribution: proofs are not reproduced, because the original archive declares no licence. It can be downloaded from ')), a = el('a', '', 'alpo.ge');
+  const n = el('div', 'note', (stmtOn ? T('Dei sorgenti qui si citano solo gli enunciati dei teoremi, con attribuzione: le dimostrazioni non sono riprodotte, perché l\'archivio originale non dichiara una licenza. Si scarica da ', 'Only the theorem statements are quoted here, with attribution: proofs are not reproduced, because the original archive declares no licence. It can be downloaded from ') : T('Il testo dei sorgenti non è riprodotto qui: l\'archivio originale non dichiara una licenza. Si scarica da ', 'The source text is not reproduced here: the original archive declares no licence. It can be downloaded from '))), a = el('a', '', 'alpo.ge');
   a.href = 'https://alpo.ge/'; a.rel = 'noopener'; a.style.color = 'inherit';
   n.append(a, '.');
   body.append(n);
@@ -971,7 +973,7 @@ async function boot() {
   M = a[0]; N = M.n; T0 = M.t0; LV = M.levels;
   fetch('risultati.json?' + Date.now()).then((r) => r.json()).then((d) => { checks = d; if (panel === 'build') renderPanel(); }).catch(() => {});
   // live.json dice dove risponde il pod; se manca, o il pod tace, si passa all'istantanea
-  try { base = (await (await fetch('live.json?' + Date.now())).json()).base || null; } catch (e) { base = null; }
+  try { const lj = await (await fetch('live.json?' + Date.now())).json(); base = lj.base || null; stmtOn = lj.enunciati === true; } catch (e) { base = null; }
   try { await pollSys(6000); }
   catch (e) {
     if (base == null) { $('files').textContent = T('I dati del build non sono raggiungibili. Ricarica la pagina per riprovare.', 'The build data cannot be reached. Reload the page to try again.'); return; }

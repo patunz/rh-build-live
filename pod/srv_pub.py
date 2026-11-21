@@ -1,5 +1,5 @@
 # Server pubblico della dashboard: sola lettura.
-# Uso: python3 srv_pub.py <origine consentita> [altre origini]
+# Uso: python3 srv_pub.py [--senza-enunciati] <origine consentita> [altre origini]
 #
 #   /events, /now.json, /sys.json   i tre dati in diretta del build
 #   /file?i=N                       gli enunciati dei teoremi del file N, letti dal sorgente
@@ -8,11 +8,13 @@
 # (dal nome del teorema fino al := escluso), mai le dimostrazioni: l'archivio è di Levent Alpöge
 # ed è stato pubblicato senza licenza, quindi qui se ne cita lo stretto necessario, con un limite
 # al numero di richieste perché non diventi un modo per scaricarlo in blocco.
+# Con --senza-enunciati /file è chiuso: serve finché l'autore non ha risposto alla richiesta di poterli mostrare.
 import collections, http.server, json, re, sys, threading, time, urllib.parse
 
 MON = '/root/mon/'
 SRC = '/root/rh/lean/src/'
-ORIGINS = set(sys.argv[1:])
+ORIGINS = {a for a in sys.argv[1:] if not a.startswith('--')}
+ENUNCIATI = '--senza-enunciati' not in sys.argv
 FONTE = 'Levent Alpöge, https://alpo.ge/ (archivio pubblicato senza licenza; qui solo gli enunciati, a scopo di studio)'
 PER_INDIRIZZO, IN_TUTTO, FINESTRA = 40, 240, 60.0   # richieste di /file al minuto
 MAX_ENUNCIATI, MAX_CARATTERI = 60, 6000
@@ -114,6 +116,8 @@ class H(http.server.BaseHTTPRequestHandler):
                 return self.reply(body[:len(body) // 12 * 12], 'application/octet-stream')
             if u.path in ('/now.json', '/sys.json'):
                 return self.reply(open(MON + u.path[1:], 'rb').read(), 'application/json')
+            if u.path == '/file' and not ENUNCIATI:
+                return self.reply(b'{"errore": "enunciati non disponibili"}', 'application/json', code=403)
             if u.path == '/file':
                 chi = self.headers.get('CF-Connecting-IP') or self.client_address[0]
                 if not concesso(chi):
