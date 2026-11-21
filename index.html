@@ -100,6 +100,14 @@ dl.rows dd{margin:0;font-variant-numeric:tabular-nums}
 svg text{fill:var(--mu);font:11px var(--sans)}
 [hidden]{display:none!important}
 @media (max-width:760px){#head{padding:20px 16px 0 16px}#foot{padding:8px 16px 12px}#panel:not([hidden]) ~ #foot #filters{display:none}}
+.body>svg{flex:none}
+.items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.items a,.plain{color:var(--fg);text-decoration:none;overflow-wrap:anywhere}
+.plain{text-decoration:underline}
+.items a:hover{text-decoration:underline}
+.items small{display:block;margin-top:2px;color:var(--mu);font-size:12px}
+.tag{margin-left:6px;padding:1px 7px;border:1px solid var(--line2);border-radius:9px;font-size:11px;color:var(--mu);white-space:nowrap}
+.tag.us{border-color:#5ed6b4;color:#5ed6b4}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -130,6 +138,7 @@ svg text{fill:var(--mu);font:11px var(--sans)}
 <button type="button" class="ic" id="bPlay"></button>
 <button type="button" class="ic txt" id="bSpeed" title="Velocità di riproduzione" aria-label="Velocità di riproduzione">×300</button>
 <span class="sep" aria-hidden="true"></span>
+<button type="button" class="ic txt" id="bComm"></button>
 <button type="button" class="ic txt" id="bChecks">Controlli</button>
 <button type="button" class="ic txt" id="bLang"></button>
 <button type="button" class="ic" id="bBuild" title="Stato del build" aria-label="Stato del build"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 13.5h11M4.5 11V7M8 11V4M11.5 11V8.5"></path></svg></button>
@@ -165,7 +174,7 @@ let W = 0, H = 0, dpr = 1, x0 = 0, x1f = 0, y0 = 0, y1 = 0, TD = 1800, dockT = 0
 let queue = [], qi = 0, hot = -1, sel = null, panel = null, info = null, decl = 0, firstLoad = true;
 // base: indirizzo del pod (null = istantanea in data/); frozen: istante a cui è ferma l'istantanea; checks: risultati.json
 let base = null, frozen = null, checks = null;
-const tab = { build: 'checks', file: 'stmt' };
+const tab = { build: 'checks', file: 'stmt', comm: 'over' };
 // scorrimento nel tempo: view è l'istante che si sta guardando (null = presente); drawnFor dice fin dove è disegnata la trama
 let view = null, drawnFor = Infinity, playing = false, speed = 300, maxDur = 0, lastFrame = 0, idleAt = 0;
 const cv = {}, cx = {};
@@ -427,7 +436,7 @@ function frame(t) {
   }
   // un file appena finito lascia un'onda
   pops = pops.filter((p) => t - p.t < 1300);
-  if (live) for (const p of pops) { const a = (t - p.t) / 1300, x = Xd(E[p.i]), y = Y(lvl[p.i]); c.strokeStyle = rgb(COL[lib[p.i]], 0.8 * (1 - a)); c.lineWidth = 1.5 * d; c.beginPath(); c.arc(x, y, (3 + 22 * a) * d, 0, 6.3); c.stroke(); }
+  if (live) for (const p of pops) { const a = (t - p.t) / 1300; if (a < 0) continue; const x = Xd(E[p.i]), y = Y(lvl[p.i]); c.strokeStyle = rgb(COL[lib[p.i]], 0.8 * (1 - a)); c.lineWidth = 1.5 * d; c.beginPath(); c.arc(x, y, (3 + 22 * a) * d, 0, 6.3); c.stroke(); }
   // file sotto il puntatore
   if (hot >= 0 && isDone(hot) && S[hot] <= tn && !(sel && sel.i === hot)) {
     const x = Xd(S[hot]), y = Y(lvl[hot]), xe = Xd(Math.min(E[hot], tn));
@@ -537,6 +546,11 @@ function renderPanel() {
     top.append(eyebrow, x);
     head.append(top, el('h2', '', nm ? parts.pop() : T('file n. ', 'file no. ') + i), el('div', 'path', parts.join(' / ')));
     defs = [['stmt', T('Enunciato', 'Statement'), tabStatement], ['time', T('Tempi', 'Timing'), tabTimes], ['link', T('Legami', 'Links'), tabLinks], ['src', T('Sorgente', 'Source'), tabSource]];
+  } else if (panel === 'comm') {
+    eyebrow.textContent = T('La comunità', 'The community');
+    top.append(eyebrow, x);
+    head.append(top, el('h2', '', T('Chi sta verificando, e come', 'Who is checking, and how')));
+    defs = [['over', T('Quadro', 'Overview'), commOver], ['themes', T('Filoni', 'Threads'), commThemes], ['ours', T('I nostri', 'Ours'), commOurs], ['proj', T('Progetti', 'Projects'), commProj]];
   } else {
     eyebrow.textContent = T('Il build', 'The build');
     top.append(eyebrow, x);
@@ -552,7 +566,7 @@ function renderPanel() {
     tabs.append(b);
   }
   p.append(head, tabs, body);
-  if (panel === 'build') body.scrollTop = keep;
+  if (panel !== 'file') body.scrollTop = keep;
 }
 
 function tabStatement(body, accent) {
@@ -678,6 +692,134 @@ function tabChecks(body) {
   }
   body.append(dl, el('div', 'note', T('Elenco aggiornato il ' + checks.aggiornato + '. ' + checks.nota, 'List updated on ' + checks.aggiornato_en + '. ' + checks.nota_en)));
 }
+// ---- comunità: issue e PR del repo del gruppo di verifica, lette dall'API pubblica di GitHub, più i testi di comunita.json.
+// Le richieste partono solo quando si apre la scheda e il risultato vale dieci minuti, perché GitHub ne concede poche a chi non è autenticato.
+let comm = null, gh = null, ghErr = '', ghBusy = false;
+const ago = (iso) => { const s = Math.max(0, (Date.now() - Date.parse(iso)) / 1000), v = s < 5400 ? Math.round(s / 60) + ' min' : s < 172800 ? Math.round(s / 3600) + ' h' : Math.round(s / 86400) + T(' g', ' d'); return T(v + ' fa', v + ' ago'); };
+const day = (iso) => new Date(iso).toLocaleString(LOC, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+async function loadComm() {
+  if (ghBusy || (gh && Date.now() - gh.t < 600000)) return;
+  ghBusy = true; ghErr = '';
+  let cache = null;
+  try {
+    if (!comm) comm = await (await fetch('comunita.json?' + Date.now())).json();
+    try { cache = JSON.parse(localStorage.getItem('gh')); } catch (e) {}
+    if (cache && Date.now() - cache.t < 600000) gh = cache;
+    else {
+      const j = async (u) => { const r = await fetch('https://api.github.com/repos/' + u, { headers: { Accept: 'application/vnd.github+json' } }); if (!r.ok) throw new Error(String(r.status)); return r.json(); };
+      const repos = comm.progetti.filter((p) => p.repo).map((p) => p.repo);
+      const [items, ...rs] = await Promise.all([j(comm.repo + '/issues?state=all&sort=updated&per_page=100'), ...repos.map((r) => j(r).catch(() => null))]);
+      const fresh = { t: Date.now(), repos: {}, items: items.map((i) => ({ n: i.number, t: i.title, open: i.state === 'open', pr: !!i.pull_request, merged: !!(i.pull_request && i.pull_request.merged_at), u: i.user.login, c: i.comments, ca: i.created_at, ua: i.updated_at, url: i.html_url })) };
+      rs.forEach((r, k) => { if (r) fresh.repos[repos[k]] = { stars: r.stargazers_count, forks: r.forks_count, pushed: r.pushed_at, desc: r.description }; });
+      gh = fresh;
+      try { localStorage.setItem('gh', JSON.stringify(gh)); } catch (e) {}
+    }
+  } catch (e) { ghErr = comm ? 'api' : 'json'; if (cache && !gh) gh = cache; }
+  ghBusy = false;
+  if (panel === 'comm') renderPanel();
+}
+// vero se i dati ci sono; altrimenti scrive nella scheda perché mancano
+function commReady(body) {
+  if (gh && comm) { if (ghErr) body.append(el('div', 'note', T('GitHub non risponde in questo momento: questi sono i dati di ', 'GitHub is not answering right now: this is the data from ') + ago(new Date(gh.t).toISOString()) + '.')); return true; }
+  body.append(el('div', 'note', ghErr === 'api' ? T('GitHub limita le richieste di chi non è autenticato: riprova tra qualche minuto.', 'GitHub limits unauthenticated requests: try again in a few minutes.') : ghErr ? T('I dati della comunità non sono raggiungibili in questo momento.', 'The community data cannot be reached right now.') : T('Leggo issue e PR da GitHub.', 'Reading issues and PRs from GitHub.')));
+  return false;
+}
+const isOurs = (i) => comm.nostri.some((o) => o.numero === i.n);
+const themeOf = (i) => comm.filoni.find((f) => f.numeri.includes(i.n)) || comm.filoni.find((f) => f.parole && new RegExp(f.parole, 'i').test(i.t)) || null;
+const link = (text, url, cls) => { const a = el('a', cls || '', text); if (/^https:\/\//.test(url)) { a.href = url; a.target = '_blank'; a.rel = 'noopener'; } return a; };
+function itemLi(i) {
+  const li = el('li'), state = i.merged ? T('unita', 'merged') : i.open ? T('aperta', 'open') : T('chiusa', 'closed');
+  li.append(link('#' + i.n + ' ' + i.t, i.url));
+  if (isOurs(i)) li.append(el('span', 'tag us', T('nostra', 'ours')));
+  li.append(el('small', '', (i.pr ? 'PR' : 'issue') + ' · ' + state + ' · ' + i.u + ' · ' + i.c + T(' commenti', ' comments') + ' · ' + ago(i.ua)));
+  return li;
+}
+function itemList(list, max) {
+  const ul = el('ul', 'items');
+  list.slice(0, max).forEach((i) => ul.append(itemLi(i)));
+  return ul;
+}
+// barre: issue e PR aperte per ora, nelle ultime 36 ore
+function hourBars() {
+  const NS = 'http://www.w3.org/2000/svg', Wc = 340, Hc = 78, HN = 36, svg = document.createElementNS(NS, 'svg'), a = new Array(HN).fill(0), b = new Array(HN).fill(0), t1 = Date.now();
+  svg.setAttribute('viewBox', '0 0 ' + Wc + ' ' + Hc); svg.setAttribute('role', 'img');
+  for (const i of gh.items) { const h = HN - 1 - Math.floor((t1 - Date.parse(i.ca)) / 3600000); if (h >= 0 && h < HN) (i.pr ? b : a)[h]++; }
+  const top = Math.max(1, ...a.map((v, k) => v + b[k])), bw = Wc / HN, sy = (v) => (v / top) * (Hc - 22);
+  const add = (tag, at, text) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (text != null) e.textContent = text; svg.append(e); };
+  add('line', { x1: 0, x2: Wc, y1: Hc - 16.5, y2: Hc - 16.5, stroke: 'rgba(154,164,196,0.2)' });
+  for (let k = 0; k < HN; k++) {
+    if (b[k]) add('rect', { x: k * bw + 1, y: Hc - 17 - sy(b[k]), width: bw - 2, height: sy(b[k]), rx: 1, fill: '#78aafa' });
+    if (a[k]) add('rect', { x: k * bw + 1, y: Hc - 17 - sy(b[k]) - sy(a[k]), width: bw - 2, height: sy(a[k]), rx: 1, fill: '#f6b462' });
+  }
+  add('text', { x: 0, y: Hc - 3, 'text-anchor': 'start' }, T('36 ore fa', '36 hours ago'));
+  add('text', { x: Wc, y: Hc - 3, 'text-anchor': 'end' }, T('adesso', 'now'));
+  add('text', { x: 0, y: 10, 'text-anchor': 'start' }, T('massimo ', 'peak ') + top + T(' l\'ora', ' per hour'));
+  return svg;
+}
+function commOver(body) {
+  if (!commReady(body)) return;
+  const it = gh.items, r = gh.repos[comm.repo] || {}, recent = it.filter((i) => Date.now() - Date.parse(i.ua) < 172800000);
+  const iss = it.filter((i) => !i.pr), prs = it.filter((i) => i.pr), last = it.reduce((m, i) => (i.ua > m ? i.ua : m), '');
+  const intro = el('div', '', T('Il gruppo di verifica lavora su ', 'The verification group works on '));
+  intro.append(link(comm.repo, 'https://github.com/' + comm.repo, 'plain'), '.');
+  body.append(intro);
+  body.append(rows([
+    [T('Issue', 'Issues'), iss.filter((i) => i.open).length + T(' aperte su ', ' open of ') + iss.length],
+    ['PR', prs.filter((i) => i.merged).length + T(' unite, ', ' merged, ') + prs.filter((i) => i.open).length + T(' aperte, su ', ' open, of ') + prs.length],
+    [T('Persone', 'People'), new Set(recent.map((i) => i.u)).size + T(' con issue o PR mosse nelle ultime 48 ore', ' with issues or PRs moved in the last 48 hours')],
+    [T('Ultima mossa', 'Last move'), last ? ago(last) : '…'],
+    [T('Interesse', 'Interest'), r.stars != null ? nf(r.stars) + T(' stelle, ', ' stars, ') + nf(r.forks) + T(' fork', ' forks') : '…'],
+  ]));
+  body.append(el('div', 'sub', T('Issue e PR aperte, per ora', 'Issues and PRs opened, per hour')), hourBars());
+  const lg = el('div', 'note'); lg.innerHTML = '<span style="color:#f6b462">■</span> issue  <span style="color:#78aafa">■</span> PR';
+  body.append(lg);
+  const byTheme = comm.filoni.map((f) => [f, it.filter((i) => themeOf(i) === f)]);
+  body.append(el('div', 'sub', T('Dove va il lavoro', 'Where the work goes')));
+  const tot = Math.max(1, it.length);
+  for (const [f, list] of byTheme) {
+    const a = el('div', 'area'), bar = el('div', 'bar'), s = el('span');
+    s.style.cssText = 'width:' + (list.length / tot) * 100 + '%;background:' + (list.some(isOurs) ? '#5ed6b4' : '#9aa4c4');
+    bar.append(s);
+    a.append(el('div', '', T(f.it, f.en)), el('span', '', String(list.length)), bar);
+    body.append(a);
+  }
+  body.append(el('div', 'sub', T('Ultime mosse', 'Latest moves')), itemList(it.slice().sort((p, q) => (p.ua < q.ua ? 1 : -1)), 8));
+  body.append(el('div', 'note', T('Dati di GitHub, letti ', 'GitHub data, read ') + ago(new Date(gh.t).toISOString()) + T('. Sono le 100 voci aggiornate più di recente; i filoni sono una nostra lettura dei titoli.', '. These are the 100 most recently updated items; the threads are our own reading of the titles.')));
+}
+function commThemes(body) {
+  if (!commReady(body)) return;
+  const groups = comm.filoni.map((f) => [T(f.it, f.en), T(f.desc_it, f.desc_en), gh.items.filter((i) => themeOf(i) === f)]);
+  groups.push([T('Altro', 'Other'), T('Voci che non rientrano nei filoni sopra.', 'Items that do not fit the threads above.'), gh.items.filter((i) => !themeOf(i))]);
+  for (const [name, desc, list] of groups) {
+    if (!list.length) continue;
+    list.sort((p, q) => (p.ua < q.ua ? 1 : -1));
+    body.append(el('div', 'sub', name + ' · ' + list.length), el('div', 'note', desc), itemList(list, 6));
+    if (list.length > 6) body.append(el('div', 'note', T('E altre ' + (list.length - 6) + '.', 'And ' + (list.length - 6) + ' more.')));
+  }
+}
+function commOurs(body) {
+  if (!commReady(body)) return;
+  for (const o of comm.nostri) {
+    const i = gh.items.find((v) => v.n === o.numero);
+    body.append(el('div', 'sub', 'Issue #' + o.numero));
+    if (i) { const ul = el('ul', 'items'); ul.append(itemLi(i)); body.append(ul, el('div', 'note', T('Aperta il ', 'Opened on ') + day(i.ca) + '.')); }
+    body.append(el('div', '', T(o.it, o.en)));
+    if (o.numeri) body.append(rows(o.numeri.map((v) => [T(v.it, v.en), T(v.v_it, v.v_en)])));
+    if (o.seguito) { body.append(el('div', 'note', T('Che cosa è seguito:', 'What followed:'))); const ul = el('ul', 'items'); o.seguito.forEach((s) => ul.append(el('li', '', T(s.it, s.en)))); body.append(ul); }
+  }
+  body.append(el('div', 'note', T(comm.nota_it, comm.nota_en)));
+}
+function commProj(body) {
+  if (!commReady(body)) return;
+  const ul = el('ul', 'items');
+  for (const p of comm.progetti) {
+    const li = el('li'), r = p.repo ? gh.repos[p.repo] : null;
+    li.append(link(p.nome, p.url));
+    li.append(el('small', '', (p.it ? T(p.it, p.en) : r && r.desc ? r.desc : '') + (r ? ' · ★ ' + nf(r.stars) + T(' · ultimo push ', ' · last push ') + ago(r.pushed) : '')));
+    ul.append(li);
+  }
+  body.append(ul, el('div', 'note', T('Per i repository la descrizione è quella scritta dai loro autori.', 'For repositories, the description is the one written by their authors.')));
+}
 function tabTrend(body) {
   const tn = now(), nb = Math.max(1, Math.ceil(tn / 60)), per = new Uint32Array(nb + 1);
   for (const i of order) per[Math.min(nb, Math.floor(E[i] / 60))]++;
@@ -774,6 +916,8 @@ $('art').setAttribute('aria-label', T('Tracciato del build: il tempo in orizzont
 $('scrub').setAttribute('aria-label', T('Scorri il tempo del build', 'Scrub through the build time'));
 $('bLive').lastChild.textContent = T('Torna al presente', 'Back to now');
 $('bChecks').textContent = T('Controlli', 'Checks');
+$('bComm').textContent = T('Comunità', 'Community');
+$('bComm').onclick = () => { panel = 'comm'; dockT = sidePx() ? 1 : 0; renderPanel(); loadComm(); };
 for (const [id, it, en] of [['bSpeed', 'Velocità di riproduzione', 'Playback speed'], ['bBuild', 'Stato del build', 'Build status'], ['bFull', 'Schermo intero', 'Full screen'], ['bLang', 'Switch to English', 'Passa all\'italiano']]) { $(id).title = T(it, en); $(id).setAttribute('aria-label', T(it, en)); }
 $('bLang').textContent = EN ? 'IT' : 'EN';
 $('bLang').onclick = () => { const l = EN ? 'it' : 'en'; try { localStorage.setItem('lang', l); } catch (e) {} const u = new URL(location.href); u.searchParams.set('lang', l); location.href = u.href; };

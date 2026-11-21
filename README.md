@@ -38,6 +38,11 @@ the slider to go back in time.
   falls back to it when the machine does not answer, and will keep working as
   a replay after the build.
 - `risultati.json` is the list of checks shown in the "Controlli" tab.
+- `comunita.json` holds our own texts for the "Community" panel: the threads
+  of work, our contributions and the list of projects. Issue and PR titles,
+  states and counts are read live from GitHub's public API in the visitor's
+  browser (cached for ten minutes); the grouping into threads is our reading
+  of the titles.
 
 ## What is not here
 

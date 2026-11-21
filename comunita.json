@@ -1,0 +1,176 @@
+{
+  "repo": "leanprover-community/riemann-hypothesis",
+  "filoni": [
+    {
+      "it": "Riproducibilità degli artefatti",
+      "en": "Reproducibility of the artifacts",
+      "desc_it": "Se due build indipendenti producono gli stessi file: hash degli .olean, export, manifest.",
+      "desc_en": "Whether two independent builds produce the same files: .olean hashes, exports, manifests.",
+      "numeri": [
+        6
+      ],
+      "parole": "hash|olean|reproduc|manifest|export|byte"
+    },
+    {
+      "it": "Infrastruttura di build e CI",
+      "en": "Build infrastructure and CI",
+      "desc_it": "Come far compilare l'archivio a più macchine: runner volontari, cache di Lake, flussi di CI.",
+      "desc_en": "How to get the archive built on more machines: volunteer runners, Lake cache, CI workflows.",
+      "numeri": [
+        11,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ],
+      "parole": "runner|cache|\\bCI\\b|build|workflow|lake"
+    },
+    {
+      "it": "Mappe e lettura della dimostrazione",
+      "en": "Maps and reading of the proof",
+      "desc_it": "Chi prova a capire che cosa dimostra l'archivio e per quale strada: mappe della strategia, cono degli import.",
+      "desc_en": "People trying to understand what the archive proves and by which route: strategy maps, import cone.",
+      "numeri": [
+        2,
+        5,
+        12
+      ],
+      "parole": "map|strategy|exposition|cone|reader|reduction to|bound"
+    },
+    {
+      "it": "Riduzioni e pulizia del codice",
+      "en": "Reductions and code clean-up",
+      "desc_it": "Versioni più leggere dell'archivio e semplificazioni del codice generato.",
+      "desc_en": "Lighter versions of the archive and simplifications of the generated code.",
+      "numeri": [
+        3,
+        9,
+        10
+      ],
+      "parole": "reduc|simplif|redundant|remove|faster|shorten"
+    }
+  ],
+  "nostri": [
+    {
+      "numero": 6,
+      "it": "Segnalato nella issue #6 e poi confermato da A. Sutherland e da un build indipendente: gli hash degli .olean dipendono dalla cartella in cui si compila, perché Lean 4.33.1 salva nell'.olean i messaggi dei linter con il percorso assoluto del sorgente. Riguarda la riproducibilità di un artefatto, non la dimostrazione né l'export.",
+      "en": "Reported in issue #6 and then confirmed by A. Sutherland and by an independent build: .olean hashes depend on the directory the build runs in, because Lean 4.33.1 stores linter messages in the .olean with the absolute source path. It concerns the reproducibility of one artifact, not the proof and not the export.",
+      "numeri": [
+        {
+          "it": "Moduli confrontati",
+          "en": "Modules compared",
+          "v_it": "40.281 su 175.187",
+          "v_en": "40,281 of 175,187"
+        },
+        {
+          "it": "Identici byte per byte",
+          "en": "Byte-identical",
+          "v_it": "20.994",
+          "v_en": "20,994"
+        },
+        {
+          "it": "Diversi",
+          "en": "Different",
+          "v_it": "19.287, tutti con avvisi dei linter",
+          "v_en": "19,287, all with linter warnings"
+        },
+        {
+          "it": "Senza avvisi",
+          "en": "Warning-free",
+          "v_it": "19.533 su 19.533 identici",
+          "v_en": "19,533 of 19,533 identical"
+        }
+      ],
+      "seguito": [
+        {
+          "it": "A. Sutherland ha comunicato la cartella di build del manifest e riporta la conferma dal suo lato: 240 moduli ricompilati altrove, 168 identici e 72 diversi, tutti con il percorso dentro.",
+          "en": "A. Sutherland shared the manifest's build directory and reports the confirmation on his side: 240 modules recompiled elsewhere, 168 identical and 72 different, all with the path inside."
+        },
+        {
+          "it": "Ricompilando un modulo con quel percorso, l'hash del manifest si riproduce esattamente.",
+          "en": "Recompiling one module at that path reproduces the manifest hash exactly."
+        },
+        {
+          "it": "Nella stessa issue ishaan2006 riporta il confronto completo da un suo build: 76.968 identici e 98.219 diversi, tutti con il percorso dentro.",
+          "en": "In the same issue ishaan2006 reports the full comparison from his own build: 76,968 identical and 98,219 different, all with the path inside."
+        },
+        {
+          "it": "Da fare a build finito: il controllo degli assiomi e il nostro conteggio su tutti i moduli, come seconda conferma.",
+          "en": "To do once the build ends: the axiom check and our own count over all modules, as a second confirmation."
+        }
+      ]
+    },
+    {
+      "numero": 29,
+      "it": "Una nota preventiva per chi offre macchine al gruppo: con il valore predefinito di vm.max_map_count (65.530) i moduli più alti del grafo degli import falliscono con un errore fuorviante su un file integro. Propone che il controllo dei runner lo segnali. Sui runner del gruppo il problema non si è visto.",
+      "en": "A preventive note for people offering machines to the group: with the default vm.max_map_count (65,530) the modules highest in the import graph fail with a misleading error on an intact file. It proposes that the runner check report it. The problem has not been seen on the group's runners.",
+      "numeri": [
+        {
+          "it": "Mappe di memoria in un processo Lean a metà build",
+          "en": "Memory mappings in one Lean process halfway through the build",
+          "v_it": "73.448",
+          "v_en": "73,448"
+        }
+      ]
+    }
+  ],
+  "progetti": [
+    {
+      "nome": "A. Sutherland (MIT)",
+      "url": "https://math.mit.edu/~drew/grh/",
+      "it": "Build completo, manifest degli hash degli .olean, audit degli assiomi ed export scaricabili.",
+      "en": "Full build, manifest of .olean hashes, axiom audit and downloadable exports."
+    },
+    {
+      "nome": "leanprover-community/riemann-hypothesis",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis",
+      "repo": "leanprover-community/riemann-hypothesis"
+    },
+    {
+      "nome": "Hertaspace/alpoge-rh-lean-verification",
+      "url": "https://github.com/Hertaspace/alpoge-rh-lean-verification",
+      "repo": "Hertaspace/alpoge-rh-lean-verification"
+    },
+    {
+      "nome": "ishaan2006/rh-lean-reproduction",
+      "url": "https://github.com/ishaan2006/rh-lean-reproduction",
+      "repo": "ishaan2006/rh-lean-reproduction"
+    },
+    {
+      "nome": "keithadler/rh-trim",
+      "url": "https://github.com/keithadler/rh-trim",
+      "repo": "keithadler/rh-trim"
+    },
+    {
+      "nome": "james-shore/rh-proof-dependencies",
+      "url": "https://github.com/james-shore/rh-proof-dependencies",
+      "repo": "james-shore/rh-proof-dependencies"
+    },
+    {
+      "nome": "leanprover/con-leche",
+      "url": "https://github.com/leanprover/con-leche",
+      "repo": "leanprover/con-leche"
+    },
+    {
+      "nome": "patunz/rh-build-live",
+      "url": "https://github.com/patunz/rh-build-live",
+      "it": "Questa pagina: un build indipendente su 32 vCPU, mostrato dal vivo.",
+      "en": "This page: an independent build on 32 vCPUs, shown live."
+    }
+  ],
+  "nota_it": "I controlli alla base di questi contributi sono stati eseguiti con Claude Code sotto la direzione di Lucio Patone, come dichiarato nelle issue. Non sono affermazioni sulla correttezza della dimostrazione: la verifica in sandbox del gruppo risulta ancora in corso.",
+  "nota_en": "The checks behind these contributions were run with Claude Code under Lucio Patone's direction, as stated in the issues. They are not statements about the correctness of the proof: the group's sandboxed verification is still reported as in progress."
+}
