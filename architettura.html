@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Archivio RH di Alpöge: l'architettura</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Inter:wght@400;500&display=swap">
+<style>
+/* una figura a tutto schermo: ogni teoria è una colonna sull'asse dei livelli; il resto sono scritte leggere e una scheda a destra */
+:root{color-scheme:dark;--bg:#060911;--panel:#0c1120;--well:#080c18;--line:#28314f;--line2:#3a4568;--fg:#eef0f7;--fg2:#d5d9ea;--mu:#9aa4c4;
+  --serif:'Fraunces',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:ui-monospace,Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font:13px/1.4 var(--sans);overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:#aebfff}
+button:focus-visible,a:focus-visible{outline:2px solid #aebfff;outline-offset:2px}
+canvas{position:absolute;left:0;top:0;width:100%;height:100%}
+#head{position:absolute;left:0;top:0;padding:28px 32px 0 72px;display:flex;flex-direction:column;gap:8px;max-width:min(470px,100%);pointer-events:none}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
+h1{margin:0;font:300 clamp(40px,5.5vw,68px)/1 var(--serif);letter-spacing:-.02em}
+#lede{color:var(--mu);max-width:46ch}
+#crumb{display:flex;align-items:center;gap:8px;margin-top:4px;pointer-events:auto;min-height:36px}
+#crumb button{min-height:36px;padding:0 12px;background:rgba(20,27,48,.85);border:1px solid var(--line2);border-radius:18px;font-size:12px}
+#crumb b{font:500 15px var(--serif)}
+#foot{position:absolute;left:0;right:0;bottom:0;padding:0 32px 12px 72px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 24px;font-size:12px;color:var(--mu);pointer-events:none}
+#ctl{display:flex;align-items:center;gap:2px;pointer-events:auto}
+.ic{min-width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:0 10px;background:transparent;border:none;border-radius:18px;color:var(--mu);font-size:12px;text-decoration:none}
+.ic:hover{color:var(--fg);background:rgba(154,164,196,.12)}
+.ic[aria-pressed=true]{color:var(--fg);background:rgba(154,164,196,.16)}
+.sep{width:1px;height:16px;margin:0 6px;background:var(--line)}
+#tip{position:absolute;max-width:340px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;pointer-events:none;overflow-wrap:anywhere}
+#tip b{display:block;font:500 15px var(--serif)}
+#tip span{color:var(--mu);font-size:12px}
+#panel{position:absolute;right:16px;top:16px;bottom:64px;width:min(400px,calc(100% - 32px));display:flex;flex-direction:column;background:rgba(12,17,32,.96);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+#panel header{padding:14px 18px 12px;display:flex;flex-direction:column;gap:6px}
+#panel header .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#panel h2{margin:0;font:500 21px/1.15 var(--serif);overflow-wrap:anywhere}
+#panel .path{color:var(--mu);font-size:12px;overflow-wrap:anywhere}
+.x{width:44px;height:44px;margin:-8px -12px -8px 0;display:flex;align-items:center;justify-content:center;background:transparent;color:var(--mu);border:none;border-radius:22px}
+.tabs{display:flex;padding:0 8px;border-bottom:1px solid var(--line)}
+.tabs button{min-height:44px;padding:0 10px;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--mu)}
+.tabs button[aria-selected=true]{color:var(--fg)}
+.body{flex:1;min-height:0;padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px;overflow-wrap:anywhere}
+.scroll{overflow:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+.scroll::-webkit-scrollbar{width:10px;height:10px}
+.scroll::-webkit-scrollbar-track{background:transparent}
+.scroll::-webkit-scrollbar-thumb{background:var(--line2);border-radius:5px;border:3px solid transparent;background-clip:padding-box}
+dl.rows{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 18px;margin:0}
+dl.rows dt{color:var(--mu)}
+dl.rows dd{margin:0;font-variant-numeric:tabular-nums}
+.sub{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}
+.note{color:var(--mu);font-size:12px}
+.mono{font:11.5px/1.45 var(--mono)}
+.thm{font:italic 400 15px var(--serif)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{padding:4px 10px;border:1px solid var(--line2);border-radius:14px;font-size:12px}
+.chips small{color:var(--mu);font-size:12px;margin-left:5px;font-variant-numeric:tabular-nums}
+.list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px}
+.list button{width:100%;min-height:44px;padding:6px 10px;display:flex;align-items:center;gap:10px;background:transparent;border:1px solid transparent;border-radius:10px;text-align:left}
+.list button:hover,.list button[aria-current=true]{border-color:var(--line)}
+.list button b{flex:1;min-width:0;font-weight:400;overflow-wrap:anywhere}
+.list button span{color:var(--mu);flex:none;font-variant-numeric:tabular-nums;text-align:right}
+.list button em{font-style:normal;flex:none;width:22px;height:22px;border-radius:50%;border:1px solid var(--line2);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-variant-numeric:tabular-nums}
+.list .off{color:#7f8aad}
+.back{align-self:flex-start;min-height:36px;padding:0 12px;background:transparent;border:1px solid var(--line2);border-radius:18px;font-size:12px}
+.nav{display:flex;align-items:center;gap:6px}
+.nav button{width:44px;height:44px;background:transparent;border:1px solid var(--line2);border-radius:22px}
+.nav button:disabled{opacity:.35;cursor:default}
+.nav span{flex:1;text-align:center;color:var(--mu);font-variant-numeric:tabular-nums}
+.proof{position:relative;display:flex;flex-direction:column;gap:12px;padding-left:22px}
+.proof .spine{position:absolute;left:4px;top:8px;bottom:22px;width:1px;background:var(--line2);transform-origin:top;animation:grow 1s ease-out both}
+.prem{position:relative;display:flex;flex-direction:column;gap:2px;animation:in .5s ease-out both}
+.prem i{position:absolute;left:-22px;top:5px;width:9px;height:9px;border:1.5px solid var(--mu)}
+.prem b{font:italic 400 13px var(--serif)}
+.prem span{color:#b9c2de}
+.thesis{position:relative;display:flex;flex-direction:column;gap:4px;padding:10px 12px;background:var(--well);border:1px solid var(--mu);border-radius:10px;animation:thesis 1.5s ease-out both}
+.thesis i{position:absolute;left:-24px;top:12px;width:13px;height:13px;border-radius:50%}
+@keyframes in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes thesis{0%{opacity:0;transform:translateY(-8px);box-shadow:0 0 0 0 rgba(255,255,255,0)}45%{opacity:1;transform:none;box-shadow:0 0 0 0 rgba(255,255,255,.4)}100%{opacity:1;box-shadow:0 0 0 14px rgba(255,255,255,0)}}
+[hidden]{display:none!important}
+@media (max-width:760px){#head{padding:20px 16px 0}#lede{display:none}#foot{padding:0 16px 10px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<canvas id="cv" role="img" aria-label="Architettura della dimostrazione: una colonna per teoria sull'asse dei livelli di dipendenza, larga quanto i file che ha a ogni livello, con nastri per gli import tra teorie"></canvas>
+<div id="head">
+<div class="eyebrow">Architettura dell'archivio Lean di Alpöge</div>
+<h1>Architettura</h1>
+<div id="lede">Ogni colonna è una teoria: una barra per livello, lunga quanto i file che ha a quell'altezza, con la stessa scala per tutte. Dove non c'è barra non ci sono file. La parte piena è già compilata nel nostro build. I nastri sono gli import da una teoria all'altra. Fai clic su una colonna per aprirla.</div>
+<div id="crumb" hidden><button type="button" id="bUp">Tutte le teorie</button><b id="crumbName"></b></div>
+</div>
+<aside id="panel" hidden></aside>
+<div id="tip" hidden><b></b><span></span></div>
+<div id="foot">
+<div id="status">Caricamento dei dati</div>
+<div id="ctl">
+<button type="button" class="ic" id="bTrace" aria-pressed="false" hidden>Traccia dell'autore</button>
+<button type="button" class="ic" id="bFlow" aria-pressed="true">Nastri</button>
+<span class="sep" aria-hidden="true"></span>
+<a class="ic" href="./">Tracciato del build</a>
+<button type="button" class="ic" id="bFull" title="Schermo intero" aria-label="Schermo intero"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"></path></svg></button>
+</div>
+</div>
+<script>
+(() => {
+'use strict';
+const HUE = [[200,205,220],[248,134,176],[150,220,230],[246,180,98],[160,200,120],[94,214,180],[120,170,250],[230,160,220],[235,200,120],[208,220,104],[186,150,250],[248,128,112],[170,180,255]];
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const rgb = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+const hex = (c) => 'rgb(' + c.join(',') + ')';
+const nf = (n) => Math.round(n).toLocaleString('it-IT');
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const cv = $('cv'), cx = cv.getContext('2d');
+
+let A = null, LV = 203, blk = null, lvl = null, done = null, nEv = 0, nDone = 0;
+let open = -1, panel = null, tab = 'blocco', selSub = -1, file = null, info = null, extra = null, decl = 0;
+let trace = false, step = -1, flows = true, hover = null;
+let W = 0, H = 0, dpr = 1, x0, x1, y0, y1, cols = [], prev = new Map(), tween = 1, tweenAt = 0;
+
+const Y = (level) => y0 - (level / (LV - 1)) * (y0 - y1);
+const col = (t) => HUE[t % HUE.length];
+const teoriaHist = (t, src) => { const h = new Float64Array(LV); for (const s of A.subs) if (s.teoria === t) { const a = src(s); for (let l = 0; l < LV; l++) h[l] += a[l]; } return h; };
+const label = (s) => s.nome.replace(A.teorie[s.teoria].nome + '.', '').replace(A.teorie[s.teoria].nome + ' · ', '');
+
+// le colonne visibili: tutte le teorie, oppure i sottoblocchi di quella aperta in mezzo alle altre teorie.
+// Una sola scala orizzontale per tutte: la larghezza a un livello è il numero di file a quel livello.
+function layout() {
+  dpr = Math.min(2, devicePixelRatio || 1);
+  W = Math.round(innerWidth * dpr); H = Math.round(innerHeight * dpr);
+  cv.width = W; cv.height = H;
+  const side = panel && innerWidth >= 900 ? 416 : 0, narrow = innerWidth < 760;
+  x0 = (narrow ? 36 : 72) * dpr; x1 = W - ((narrow ? 12 : 40) + side) * dpr; y0 = H - 150 * dpr; y1 = 44 * dpr;
+  if (!A) return;
+  const items = [];
+  if (open >= 0) {
+    const ss = A.subs.filter((s) => s.teoria === open).sort((a, b) => b.file - a.file), big = ss.slice(0, MAXCOL), small = ss.slice(MAXCOL);
+    for (const s of big) items.push({ key: 's' + s.id, kind: 'sub', sub: s, teoria: open, nome: label(s), hist: s.hist, med: s.med, file: s.file });
+    if (small.length) {
+      const h = new Float64Array(LV), v = []; let n = 0;
+      for (const s of small) { n += s.file; for (let l = 0; l < LV; l++) h[l] += s.hist[l]; }
+      for (let l = 0; l < LV; l++) for (let q = 0; q < h[l]; q += 20) v.push(l);
+      items.push({ key: 'm' + open, kind: 'misc', subs: small, teoria: open, nome: small.length + ' blocchi minori', hist: h, med: v[v.length >> 1] || 0, file: n });
+    }
+  }
+  else for (const t of A.teorie) {
+    { const h = teoriaHist(t.id, (s) => s.hist), v = []; for (let l = 0; l < LV; l++) for (let q = 0; q < h[l]; q += 50) v.push(l); items.push({ key: 't' + t.id, kind: 'teoria', teoria: t.id, nome: t.nome, hist: h, med: v[v.length >> 1] || 0, file: t.file }); }
+  }
+  items.sort((a, b) => a.med - b.med || b.file - a.file);
+  for (const it of items) it.max = Math.max(1, ...it.hist);
+  const gap = Math.max(14, Math.min(28, 380 / items.length)) * dpr;
+  let sum = 0;
+  for (const it of items) sum += it.max;
+  // una sola scala per tutte le colonne, senza larghezza minima: una teoria con pochi file per livello resta sottile com'è
+  const s = (x1 - x0 - gap * (items.length - 1)) / sum;
+  let x = x0;
+  for (const it of items) { it.w = it.max * s; it.x = x; x += it.w + gap; }
+  for (const it of items) { const p = prev.get(it.key) || prev.get('t' + it.teoria) || prev.get('s0'); it.fx = p ? p.x : it.x; it.fw = p ? (prev.has(it.key) ? p.w : 0) : 0; }
+  cols = items; cols.scale = s;
+  tween = still ? 1 : 0; tweenAt = performance.now();
+}
+function remember() { prev = new Map(cols.map((c) => [c.key, { x: c.x, w: c.w }])); }
+const cxOf = (c) => c.fx + (c.x - c.fx) * tween;
+const MAXCOL = 20;
+const subsOf = (c) => (c.kind === 'sub' ? [c.sub] : c.kind === 'misc' ? c.subs : A.subs.filter((s) => s.teoria === c.teoria));
+const colOfSub = (id) => cols.find((c) => (c.kind === 'sub' ? c.sub.id === id : c.kind === 'misc' ? c.subs.includes(A.subs[id]) : c.teoria === A.subs[id].teoria));
+function doneHist(c) { if (c.kind === 'sub') return done[c.sub.id]; const h = new Float64Array(LV); for (const s of subsOf(c)) { const a = done[s.id]; for (let l = 0; l < LV; l++) h[l] += a[l]; } return h; }
+
+function bars(c, hist, alpha) {
+  const x = cxOf(c), k = cols.scale * (0.15 + 0.85 * tween), row = (y0 - y1) / (LV - 1), h = Math.max(dpr, row - (row > 3 * dpr ? 0.6 * dpr : 0));
+  cx.fillStyle = rgb(col(c.teoria), alpha);
+  for (let l = 0; l < LV; l++) if (hist[l]) cx.fillRect(x, Y(l) - h / 2, hist[l] * k, h);
+}
+function ribbon(ax, ay, bx, by) { const m = (by - ay) * 0.5; cx.moveTo(ax, ay); cx.bezierCurveTo(ax, ay + m, bx, by - m, bx, by); }
+
+function draw(t) {
+  requestAnimationFrame(draw);
+  if (!A || !done) return;
+  if (tween < 1) tween = Math.min(1, (t - tweenAt) / 450), tween = 1 - Math.pow(1 - tween, 3);
+  const d = dpr;
+  cx.clearRect(0, 0, W, H);
+  cx.fillStyle = '#060911'; cx.fillRect(0, 0, W, H);
+  // assi
+  cx.lineWidth = d; cx.textBaseline = 'middle'; cx.font = '400 ' + 11 * d + 'px Inter, system-ui, sans-serif';
+  for (const lv of [0, 50, 100, 150, LV - 1]) {
+    const y = Math.round(Y(lv)) + 0.5;
+    cx.strokeStyle = 'rgba(154,164,196,0.1)'; cx.beginPath(); cx.moveTo(x0, y); cx.lineTo(x1, y); cx.stroke();
+    cx.textAlign = 'right'; cx.fillStyle = '#9aa4c4'; cx.fillText(String(lv), x0 - 10 * d, y);
+  }
+  if (innerWidth >= 760) { cx.save(); cx.translate(22 * d, (y0 + y1) / 2); cx.rotate(-Math.PI / 2); cx.textAlign = 'center'; cx.fillText('livello di dipendenza', 0, 0); cx.restore(); }
+  const hot = hover ? hover.c : null, focusKey = selSub >= 0 ? 's' + selSub : null;
+  // nastri: import da un blocco a un altro, dal livello medio dei file importati a quello di chi importa
+  if (flows) {
+    const list = [];
+    const add = (a, b, n, la, lb) => { if (a && b && a !== b) list.push([a, b, n, la, lb]); };
+    if (open < 0) for (const [a, b, n, la, lb] of A.flussiTeorie) add(cols.find((c) => c.teoria === a), cols.find((c) => c.teoria === b), n, la, lb);
+    else {
+      const acc = new Map();
+      for (const [a, b, n, la, lb] of A.flussiSubs) { const ca = colOfSub(a), cb = colOfSub(b); if (!ca || !cb || ca === cb) continue; const k = ca.key + '>' + cb.key, o = acc.get(k) || [ca, cb, 0, 0, 0]; o[2] += n; o[3] += la * n; o[4] += lb * n; acc.set(k, o); }
+      for (const o of acc.values()) add(o[0], o[1], o[2], o[3] / o[2], o[4] / o[2]);
+    }
+    list.sort((p, q) => q[2] - p[2]);
+    const top = list.slice(0, 60), big = top.length ? top[0][2] : 1;
+    for (const [a, b, n, la, lb] of top) {
+      const on = !hot || a === hot || b === hot;
+      cx.strokeStyle = rgb(col(a.teoria), (on ? (hot ? 0.6 : 0.22) : 0.04) * tween);
+      cx.lineWidth = Math.max(0.6, 14 * Math.sqrt(n / big)) * d;
+      cx.beginPath(); ribbon(cxOf(a), Y(la), cxOf(b), Y(lb)); cx.stroke();
+    }
+  }
+  // colonne: sagoma di tutti i file, piena la parte compilata
+  for (const c of cols) {
+    const dim = (hot && hot !== c) || (focusKey && c.key !== focusKey && panel === 'sub') ? 0.5 : 1;
+    bars(c, c.hist, 0.26 * dim);
+    bars(c, doneHist(c), 0.95 * dim);
+  }
+  // strutture di ipotesi: dove entrano i risultati presi dalla letteratura
+  for (const c of cols) {
+    const hs = subsOf(c).flatMap((s) => s.ipotesi);
+    cx.strokeStyle = 'rgba(255,255,255,0.85)'; cx.lineWidth = 1.2 * d; cx.fillStyle = '#060911';
+    for (const h of hs) { const x = cxOf(c), y = Y(h.lv), r = 4 * d; cx.beginPath(); cx.moveTo(x, y - r); cx.lineTo(x + r, y); cx.lineTo(x, y + r); cx.lineTo(x - r, y); cx.closePath(); cx.fill(); cx.stroke(); }
+  }
+  // etichette delle colonne
+  cx.textBaseline = 'middle';
+  for (const c of cols) {
+    const x = cxOf(c);
+    cx.save(); cx.translate(x, y0 + 14 * d); cx.rotate(Math.PI / 5);
+    cx.font = (c.kind === 'teoria' ? '500 ' : '400 ') + 11.5 * d + 'px Inter, system-ui, sans-serif';
+    cx.fillStyle = hot === c ? '#ffffff' : rgb(col(c.teoria), c.kind === 'teoria' && open >= 0 ? 0.6 : 1); cx.textAlign = 'left';
+    const name = c.nome.length > 24 ? c.nome.slice(0, 23) + '…' : c.nome;
+    cx.fillText(name, 0, 0); cx.restore();
+  }
+  // la catena finale, dai sorgenti
+  const groups = new Map();
+  for (const s of A.spina) { if (s.sub < 0) continue; const c = colOfSub(s.sub); if (!c) continue; const k = c.key + ':' + s.lv, g = groups.get(k) || { c, lv: s.lv, t: [] }; g.t.push(s.etichetta); groups.set(k, g); }
+  const pts = [...groups.values()].sort((a, b) => a.lv - b.lv);
+  cx.strokeStyle = 'rgba(255,255,255,0.5)'; cx.lineWidth = d; cx.setLineDash([3 * d, 4 * d]); cx.beginPath();
+  pts.forEach((g, j) => { const x = cxOf(g.c), y = Y(g.lv); if (j) cx.lineTo(x, y); else cx.moveTo(x, y); });
+  cx.stroke(); cx.setLineDash([]);
+  cx.font = 'italic 400 ' + 13 * d + 'px Fraunces, Georgia, serif';
+  for (const g of pts) {
+    const x = cxOf(g.c), y = Y(g.lv), right = x < (x0 + x1) / 2;
+    cx.fillStyle = '#ffffff'; cx.beginPath(); cx.arc(x, y, 3 * d, 0, 6.3); cx.fill();
+    cx.textAlign = right ? 'left' : 'right'; cx.fillStyle = '#eef0f7';
+    cx.fillText(g.t.join(' · '), x + (right ? 10 : -10) * d, y - 9 * d);
+  }
+  // traccia dell'autore: dove ricorrono nei nomi le parole di ciascun passo della cronologia del PDF
+  if (trace) {
+    cx.textAlign = 'center'; cx.font = '500 ' + 10.5 * d + 'px Inter, system-ui, sans-serif';
+    for (const p of A.passi) {
+      if (step >= 0 && p.n !== step) continue;
+      const where = step >= 0 ? p.dove : p.dove.slice(0, 1);
+      for (const [sid, n, lv] of where) {
+        const c = colOfSub(sid); if (!c) continue;
+        const x = cxOf(c), y = Y(lv), r = (step >= 0 ? 7 + Math.min(12, Math.sqrt(n)) : 9) * d;
+        cx.fillStyle = 'rgba(6,9,17,0.85)'; cx.strokeStyle = '#ffd98a'; cx.lineWidth = 1.4 * d;
+        cx.beginPath(); cx.arc(x, y, r, 0, 6.3); cx.fill(); cx.stroke();
+        cx.fillStyle = '#ffd98a'; cx.fillText(String(p.n), x, y + 0.5 * d);
+      }
+    }
+  }
+}
+
+// ---- puntatore
+function pick(e) {
+  const px = e.clientX * dpr, py = e.clientY * dpr;
+  if (py < y1 - 10 * dpr || py > y0 + 60 * dpr) return null;
+  let best = null, bd = Infinity;
+  for (const c of cols) { const dx = px < c.x ? c.x - px : Math.max(0, px - c.x - c.w); if (dx < 12 * dpr && dx < bd) { bd = dx; best = c; } }
+  if (!best) return null;
+  const lv = Math.max(0, Math.min(LV - 1, Math.round(((y0 - py) / (y0 - y1)) * (LV - 1))));
+  const hs = subsOf(best).flatMap((s) => s.ipotesi);
+  const hyp = hs.find((h) => Math.abs(Y(h.lv) - py) < 6 * dpr && Math.abs(px - best.x) < 8 * dpr);
+  return { c: best, lv, hyp };
+}
+cv.addEventListener('mousemove', (e) => {
+  if (!A) return;
+  hover = pick(e);
+  const tip = $('tip');
+  cv.style.cursor = hover ? 'pointer' : 'default';
+  if (!hover) { tip.hidden = true; return; }
+  const c = hover.c, tot = c.hist[hover.lv], dn = doneHist(c)[hover.lv];
+  tip.firstChild.textContent = hover.hyp ? hover.hyp.nome.split('.').slice(-1)[0] : (c.kind === 'sub' ? c.sub.nome : c.nome);
+  tip.lastChild.textContent = hover.hyp ? 'Struttura di ipotesi al livello ' + hover.hyp.lv + '. Campi: ' + (hover.hyp.campi.join(', ') || 'non letti') + '.'
+    : nf(c.file) + ' file. Al livello ' + hover.lv + ': ' + nf(tot) + ' file, ' + nf(dn) + ' compilati.';
+  tip.hidden = false;
+  tip.style.left = Math.max(8, Math.min(e.clientX + 16, innerWidth - 356)) + 'px';
+  tip.style.top = Math.max(8, Math.min(e.clientY + 18, innerHeight - 110)) + 'px';
+});
+cv.addEventListener('mouseleave', () => { hover = null; $('tip').hidden = true; });
+cv.addEventListener('click', (e) => {
+  const h = pick(e);
+  if (!h) return;
+  if (h.hyp) { const s = A.subs.find((s) => s.ipotesi.includes(h.hyp)); showSub(s.id); openFile(h.hyp.i, h.hyp.nome.split('.').slice(-1)[0], []); return; }
+  if (h.c.kind === 'teoria') { remember(); open = h.c.teoria; panel = trace ? 'trace' : null; selSub = -1; crumb(); layout(); renderPanel(); }
+  else if (h.c.kind === 'misc') { remember(); panel = 'misc'; selSub = -1; file = null; layout(); renderPanel(); }
+  else showSub(h.c.sub.id);
+});
+function crumb() { $('crumb').hidden = open < 0; $('lede').hidden = open >= 0; if (open >= 0) { $('crumbName').textContent = A.teorie[open].nome; $('crumbName').style.color = hex(col(open)); } }
+function showSub(id) { remember(); const s = A.subs[id]; if (open !== s.teoria) { open = s.teoria; crumb(); } selSub = id; panel = 'sub'; tab = 'blocco'; file = null; layout(); renderPanel(); }
+$('bUp').onclick = () => { remember(); open = -1; selSub = -1; if (panel === 'sub' || panel === 'misc') panel = trace ? 'trace' : null; crumb(); layout(); renderPanel(); };
+$('bTrace').onclick = () => { trace = !trace; step = -1; $('bTrace').setAttribute('aria-pressed', String(trace)); remember(); panel = trace ? 'trace' : (selSub >= 0 ? 'sub' : null); layout(); renderPanel(); };
+$('bFlow').onclick = () => { flows = !flows; $('bFlow').setAttribute('aria-pressed', String(flows)); };
+$('bFull').onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); };
+if (!document.fullscreenEnabled) $('bFull').hidden = true;
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel) closePanel(); });
+function closePanel() { remember(); if (panel === 'trace') { trace = false; step = -1; $('bTrace').setAttribute('aria-pressed', 'false'); } panel = null; selSub = -1; file = null; layout(); renderPanel(); }
+
+// ---- lettura dell'enunciato: premesse tra parentesi, poi la tesi; anche i "per ogni" e le implicazioni in testa alla tesi sono premesse
+function parse(text) {
+  const open = '([{⦃', all = '([{⦃⟨', allc = ')]}⦄⟩', hyps = [];
+  let broken = false;
+  const binders = (str) => {
+    const list = []; let i = 0; const n = str.length;
+    const skip = () => { while (i < n && str[i] === ' ') i++; };
+    skip();
+    while (i < n && open.includes(str[i])) {
+      let dp = 0, j = i;
+      for (; j < n; j++) { if (all.includes(str[j])) dp++; else if (allc.includes(str[j])) { dp--; if (dp === 0) break; } }
+      if (j >= n) { broken = true; i = n; break; }
+      const inner = str.slice(i + 1, j);
+      let c = -1, d2 = 0;
+      for (let q = 0; q < inner.length; q++) { const ch = inner[q]; if (all.includes(ch)) d2++; else if (allc.includes(ch)) d2--; else if (ch === ':' && d2 === 0 && inner[q + 1] !== '=') { c = q; break; } }
+      list.push({ b: str[i], names: c < 0 ? '' : inner.slice(0, c).trim(), type: (c < 0 ? inner : inner.slice(c + 1)).trim() });
+      i = j + 1; skip();
+    }
+    return { list, rest: str.slice(i) };
+  };
+  const top = (str, mark) => { let dp = 0; for (let q = 0; q < str.length; q++) { const ch = str[q]; if (all.includes(ch)) dp++; else if (allc.includes(ch)) dp--; else if (dp === 0 && ch === mark) return q; } return -1; };
+  let { list, rest } = binders(text);
+  hyps.push(...list);
+  rest = rest.trim();
+  if (rest[0] === ':') rest = rest.slice(1).trim();
+  for (let guard = 0; guard < 40 && rest; guard++) {
+    if (rest[0] === '∀') {
+      const r2 = rest.slice(1).trim(), b = binders(r2), r3 = b.rest.trim();
+      if (b.list.length && r3[0] === ',') { hyps.push(...b.list); rest = r3.slice(1).trim(); continue; }
+      const c = top(r2, ',');
+      if (c < 0) break;
+      hyps.push({ b: '∀', names: '', type: r2.slice(0, c).trim() });
+      rest = r2.slice(c + 1).trim();
+      continue;
+    }
+    if (/^[∃λ]|^fun\b/.test(rest)) break;
+    const a = top(rest, '→'), c = top(rest, ',');
+    if (a < 0 || (c >= 0 && c < a)) break;
+    hyps.push({ b: '→', names: '', type: rest.slice(0, a).trim() });
+    rest = rest.slice(a + 1).trim();
+  }
+  return { hyps, concl: rest, broken };
+}
+
+// ---- scheda a destra: un sottoblocco, un suo file, oppure la traccia dell'autore
+const rows = (list) => { const dl = el('dl', 'rows'); for (const [k, v] of list) dl.append(el('dt', '', k), el('dd', '', v)); return dl; };
+const TIPI = { theorem: 'Teorema', lemma: 'Lemma', def: 'Definizione', abbrev: 'Abbreviazione', structure: 'Struttura', class: 'Classe', inductive: 'Tipo induttivo', instance: 'Istanza' };
+const getFile = (i) => (base == null ? Promise.resolve({ error: 'off' }) : fetch(base + '/file?i=' + i, { signal: AbortSignal.timeout(20000) }).then((r) => (r.ok ? r.json() : { error: r.status })));
+function openFile(i, name, copie, focus) {
+  file = { i, name, copie }; info = null; extra = null; decl = 0; tab = 'enunciato'; renderPanel();
+  getFile(i).then((d) => { if (file && file.i === i) { info = d; if (d.error) { renderPanel(); return; } decl = Math.max(0, d.decls.findIndex((x) => x.k === 'theorem' || x.k === 'lemma')); if (focus) { const j = d.decls.findIndex((x) => x.full === focus); if (j >= 0) decl = j; } if (d.name) file.name = d.name.split('.').pop(); renderPanel(); } }).catch(() => { if (file && file.i === i) { info = { error: true }; renderPanel(); } });
+  if (copie.length) getFile(copie[0]).then((d) => { if (file && file.i === i) { extra = d; renderPanel(); } }).catch(() => {});
+}
+function renderPanel() {
+  const p = $('panel');
+  p.hidden = !panel;
+  if (!panel) return;
+  p.textContent = '';
+  const head = el('header'), top = el('div', 'row'), x = el('button', 'x'), eyebrow = el('div', 'eyebrow'), body = el('div', 'body scroll');
+  x.type = 'button'; x.setAttribute('aria-label', 'Chiudi la scheda');
+  x.innerHTML = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"></path></svg>';
+  x.onclick = closePanel;
+  if (panel === 'trace') {
+    eyebrow.textContent = 'Dal PDF, non dai sorgenti'; eyebrow.style.color = '#ffd98a';
+    top.append(eyebrow, x); head.append(top, el('h2', '', 'Traccia dell\'autore'));
+    p.append(head, body); panelTrace(body); return;
+  }
+  if (panel === 'misc') {
+    const small = A.subs.filter((q) => q.teoria === open).sort((a, b) => b.file - a.file).slice(MAXCOL);
+    eyebrow.textContent = A.teorie[open].nome; eyebrow.style.color = hex(col(open));
+    top.append(eyebrow, x); head.append(top, el('h2', '', small.length + ' blocchi minori'), el('div', 'path', 'I sottoblocchi troppo piccoli per avere una colonna propria'));
+    const ul = el('ul', 'list');
+    for (const q of small) { const li = el('li'), b = el('button'); b.type = 'button'; b.append(el('b', '', label(q)), el('span', '', nf(q.file) + ' file · liv. ' + q.lo + '–' + q.hi)); b.onclick = () => showSub(q.id); li.append(b); ul.append(li); }
+    body.append(ul); p.append(head, body); return;
+  }
+  const s = A.subs[selSub], accent = hex(col(s.teoria));
+  eyebrow.textContent = A.teorie[s.teoria].nome; eyebrow.style.color = accent;
+  top.append(eyebrow, x);
+  if (file) {
+    head.append(top, el('h2', '', file.name), el('div', 'path', info && info.name ? info.name.split('.').slice(0, -1).join(' / ') : s.nome));
+    const back = el('button', 'back', 'Torna a ' + label(s)); back.type = 'button'; back.onclick = () => { file = null; tab = 'portanti'; renderPanel(); };
+    body.append(back); p.append(head, body); panelStatement(body, accent); return;
+  }
+  head.append(top, el('h2', '', label(s)), el('div', 'path', s.tipo === 'gruppo' ? 'Gruppo di file che si importano tra loro; il nome sono le parole che li distinguono' : s.tipo === 'resto' ? 'File della teoria che non formano un blocco riconoscibile' : 'Spazio dei nomi ' + s.nome));
+  const tabs = el('div', 'tabs'); tabs.setAttribute('role', 'tablist');
+  for (const [id, name, fn] of [['blocco', 'Blocco', panelBlock], ['portanti', 'Snodi e vertici', panelTop], ['ipotesi', 'Ipotesi', panelHyp]]) {
+    const b = el('button', '', name + (id === 'ipotesi' ? ' ' + s.ipotesi.length : ''));
+    b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(id === tab));
+    if (id === tab) { b.style.borderBottomColor = accent; fn(body, s, accent); }
+    b.onclick = () => { tab = id; renderPanel(); };
+    tabs.append(b);
+  }
+  p.append(head, tabs, body);
+}
+function panelBlock(body, s) {
+  let dn = 0; for (let l = 0; l < LV; l++) dn += done[s.id][l];
+  body.append(rows([['File', nf(s.file)], ['Compilati', nf(dn) + ' (' + Math.round((dn / s.file) * 100) + '%)'], ['Dichiarazioni', nf(s.decl)],
+    ['Livelli', 'da ' + s.lo + ' a ' + s.hi + ', mediana ' + s.med], ['Strutture di ipotesi', String(s.ipotesi.length)]]));
+  if (s.chiavi.length) {
+    body.append(el('div', 'sub', 'Nomi che ricorrono nelle dichiarazioni'));
+    const ch = el('div', 'chips');
+    for (const [k, n] of s.chiavi) { const c = el('span', '', k); c.append(el('small', '', nf(n))); ch.append(c); }
+    body.append(ch, el('div', 'note', 'Numero di file in cui la parola compare nel nome del file o di una dichiarazione. Sono nomi, non un riassunto di cosa fa il blocco.'));
+  }
+  const fin = [], fout = [];
+  for (const [a, b, n] of A.flussiSubs) { if (b === s.id) fin.push([a, n]); else if (a === s.id) fout.push([b, n]); }
+  const flowList = (title, list) => { if (!list.length) return; body.append(el('div', 'sub', title)); const ul = el('ul', 'list'); for (const [id, n] of list.slice(0, 8)) { const li = el('li'), b = el('button'); b.type = 'button'; b.append(el('b', '', A.subs[id].nome), el('span', '', nf(n) + ' import')); b.onclick = () => showSub(id); li.append(b); ul.append(li); } body.append(ul); };
+  flowList('Poggia su', fin); flowList('Lo usano', fout);
+}
+function panelTop(body, s) {
+  const section = (title, why, list) => {
+    if (!list.length) return;
+    body.append(el('div', 'sub', title), el('div', 'note', why));
+    const ul = el('ul', 'list');
+    for (const f of list) {
+      const li = el('li'), b = el('button'), side = el('span'); b.type = 'button';
+      side.append(el('div', '', 'liv. ' + f.lv), el('div', '', nf(f.sotto) + ' sotto · ' + nf(f.sopra) + ' sopra'));
+      b.append(el('b', '', f.n), side);
+      b.onclick = () => openFile(f.i, f.n, f.copie || [], f.full); li.append(b); ul.append(li);
+    }
+    body.append(ul);
+  };
+  section(s.snodiTeoremi ? 'Snodi tra i teoremi' : 'Snodi', s.snodiTeoremi ? 'Teoremi che poggiano su molte dichiarazioni e sono usati da molte: raccolgono tanto lavoro e lo passano avanti. Sono i primi posti dove guardare.' : 'Hanno molto sotto e molto sopra insieme: raccolgono tanto lavoro e lo passano a molti. Sono i primi posti dove guardare.', s.snodi);
+  section('Vertici', 'I file più alti del blocco: dove il suo lavoro culmina.', s.vertici);
+  section('Fondamenta', 'I più usati dal resto del progetto. Di solito lemmi di base.', s.fondamenta);
+  body.append(el('div', 'note', (s.snodiTeoremi ? 'Per gli snodi, "sotto" e "sopra" contano le dichiarazioni raggiunte seguendo le citazioni lette nel testo delle dimostrazioni: una lettura testuale, precisa al 98% circa ma incompleta, perché tattiche automatiche e notazione col punto usano lemmi senza nominarli. ' : '') + 'Per vertici e fondamenta contano i file, seguendo gli import, e sono esatti. Uno snodo è centrale nel grafo: è un indizio su dove guardare, non la prova che sia centrale nell\'idea.'));
+}
+function panelHyp(body, s) {
+  if (!s.ipotesi.length) { body.append(el('div', 'note', 'Nessuna struttura di ipotesi in questo blocco.')); return; }
+  body.append(el('div', 'note', 'Strutture che raccolgono come ipotesi risultati presi dalla letteratura. Non sono assiomi: il teorema finale non ha ipotesi, quindi da qualche parte vengono soddisfatte. Dove, non l\'abbiamo ancora tracciato per tutte.'));
+  for (const h of s.ipotesi) {
+    const b = el('button', 'back', h.nome.split('.').slice(-2).join('.') + ' · liv. ' + h.lv); b.type = 'button'; b.style.alignSelf = 'stretch'; b.style.textAlign = 'left';
+    b.onclick = () => openFile(h.i, h.nome.split('.').slice(-1)[0], []);
+    body.append(b);
+    if (h.campi.length) body.append(el('div', 'note mono', h.campi.join(' · ')));
+  }
+}
+function panelStatement(body, accent) {
+  if (!info) { body.append(el('div', 'note', 'Leggo il sorgente dal pod.')); return; }
+  if (info.error) { body.append(el('div', 'note', info.error === 'off' ? 'Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.' : info.error === 429 ? 'Troppe richieste in questo momento: riprova tra un minuto.' : 'L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.')); return; }
+  body.append(rows([['Righe', nf(info.lines)], ['Teoremi e lemmi', String(info.ndecl)], ['Definizioni', String(info.defs)]]));
+  if (extra && extra.decls && extra.decls.length) {
+    body.append(el('div', 'sub', 'Enunciato per esteso'), el('div', 'thm', extra.decls[0].n.split('.').pop()));
+    diagram(body, extra.decls[0].s, accent);
+    body.append(el('div', 'note', 'Viene da una delle ' + nf(A.copie.n) + ' copie di enunciato: file che riscrivono un risultato in forma leggibile e lo chiudono richiamando questo.'));
+  }
+  if (!info.decls.length) { body.append(el('div', '', 'Questo file non contiene dichiarazioni.')); return; }
+  decl = Math.max(0, Math.min(decl, info.decls.length - 1));
+  const d = info.decls[decl];
+  body.append(el('div', 'sub', 'Dichiarazioni del file'));
+  if (info.decls.length > 1) {
+    const nav = el('div', 'nav'), a = el('button', '', '‹'), b = el('button', '', '›');
+    a.type = b.type = 'button'; a.setAttribute('aria-label', 'Enunciato precedente'); b.setAttribute('aria-label', 'Enunciato successivo');
+    a.disabled = decl === 0; b.disabled = decl === info.decls.length - 1;
+    a.onclick = () => { decl--; renderPanel(); }; b.onclick = () => { decl++; renderPanel(); };
+    nav.append(a, el('span', '', (TIPI[d.k] || d.k) + ', ' + (decl + 1) + ' di ' + (info.ntot || info.decls.length)), b);
+    body.append(nav);
+  }
+  body.append(el('div', 'thm', d.n));
+  diagram(body, d.s, accent);
+  if (info.fonte) { const n = el('div', 'note', 'Fonte: ' + info.fonte + '. Le dimostrazioni non sono riprodotte. '), a = el('a', '', 'Archivio originale'); a.href = 'https://alpo.ge/'; a.rel = 'noopener'; a.style.color = 'inherit'; n.append(a, '.'); body.append(n); }
+  if (d.d === undefined) { if (info.grafo === false) body.append(el('div', 'note', 'Il grafo delle citazioni non è caricato sul pod.')); return; }
+  // cosa cita e da chi è citato questo teorema, dal grafo delle citazioni lette nel testo
+  body.append(rows([['Poggia su', nf(d.sotto) + ' dichiarazioni'], ['La usano', nf(d.sopra) + ' dichiarazioni']]));
+  const vicini = (title, list, tot, key) => {
+    if (!tot) return;
+    body.append(el('div', 'sub', title + ' (' + nf(tot) + ')'));
+    const ul = el('ul', 'list');
+    for (const v of list) {
+      const li = el('li'), b = el('button'); b.type = 'button';
+      b.append(el('b', '', v.n.split('.').slice(-2).join('.')), el('span', '', nf(v[key]) + (key === 'sotto' ? ' sotto' : ' sopra')));
+      b.title = v.n;
+      b.onclick = () => openFile(v.f, v.n.split('.').pop(), [], v.n); li.append(b); ul.append(li);
+    }
+    body.append(ul);
+    if (tot > list.length) body.append(el('div', 'note', 'E altre ' + nf(tot - list.length) + '.'));
+  };
+  vicini('Cita direttamente', d.cita, d.ncita, 'sotto');
+  vicini('Citato da', d.citato, d.ncitato, 'sopra');
+  body.append(el('div', 'note', 'Citazioni lette nel testo della dimostrazione, non dall\'elaborazione di Lean: quelle mostrate sono quasi sempre vere, ma possono mancarne.'));
+}
+function diagram(body, text, accent) {
+  const P = parse(text), proof = el('div', 'proof'), spine = el('span', 'spine');
+  spine.style.animationDuration = (0.5 + Math.min(P.hyps.length, 12) * 0.14).toFixed(2) + 's';
+  proof.append(spine);
+  P.hyps.forEach((h, j) => {
+    const row = el('div', 'prem'), dot = el('i');
+    dot.style.borderRadius = h.b === '[' ? '2px' : '50%'; dot.style.background = h.b === '(' || h.b === '→' ? '#9aa4c4' : 'transparent';
+    row.style.animationDelay = (0.2 + Math.min(j, 12) * 0.14).toFixed(2) + 's';
+    row.append(dot, el('b', '', h.names || (h.b === '[' ? 'struttura richiesta' : h.b === '→' ? 'se vale' : h.b === '∀' ? 'per ogni' : 'argomento')), el('span', 'mono', h.type));
+    proof.append(row);
+  });
+  const th = el('div', 'thesis'), big = el('i');
+  big.style.background = accent; th.style.borderColor = accent;
+  th.style.animationDelay = (0.3 + Math.min(P.hyps.length, 12) * 0.14).toFixed(2) + 's';
+  th.append(big, el('span', 'sub', 'Tesi'), el('span', 'mono', P.concl || 'La tesi non si isola dal testo.'));
+  proof.append(th);
+  body.append(proof);
+}
+function panelTrace(body) {
+  body.append(el('div', 'note', 'I venti passi della cronologia che l\'autore dà nel PDF, riassunti. Per ciascuno abbiamo cercato alcune parole nei nomi dei file e delle dichiarazioni: il numero dice in quanti file compaiono. È una collocazione per nomi, non una lettura dell\'argomento, e dove non troviamo nulla lo diciamo.'));
+  const ul = el('ul', 'list');
+  for (const p of A.passi) {
+    const li = el('li'), b = el('button'); b.type = 'button'; b.setAttribute('aria-current', String(step === p.n));
+    b.style.alignItems = 'flex-start';
+    const txt = el('b'); txt.append(el('div', '', p.testo), el('div', 'note', p.data + ' · ' + (p.file ? nf(p.file) + ' file' : 'non localizzato')));
+    if (!p.file) txt.classList.add('off');
+    b.append(el('em', '', String(p.n)), txt);
+    b.onclick = () => { step = step === p.n ? -1 : p.n; renderPanel(); };
+    li.append(b);
+    if (step === p.n) {
+      const more = el('div', 'note'); more.style.padding = '0 10px 8px 42px';
+      more.append(el('div', 'mono', 'cercato: ' + p.cerca));
+      for (const [sid, n, lv] of p.dove) { const a = el('button', 'back', A.subs[sid].nome + ' · ' + nf(n) + ' file · liv. medio ' + Math.round(lv)); a.type = 'button'; a.style.marginTop = '6px'; a.style.display = 'block'; a.style.textAlign = 'left'; a.onclick = () => showSub(sid); more.append(a); }
+      li.append(more);
+    }
+    ul.append(li);
+  }
+  body.append(ul);
+}
+
+// ---- dati: gli statici stanno accanto alla pagina; eventi ed enunciati arrivano dalla macchina del build (live.json),
+// e per gli eventi c'è l'istantanea in data/ quando la macchina non risponde
+let base = null;
+async function pollEvents() {
+  const r = await (base != null ? fetch(base + '/events?from=' + nEv, { signal: AbortSignal.timeout(30000) }) : fetch('data/events.bin'));
+  if (!r.ok) throw new Error('events');
+  const buf = await r.arrayBuffer(), dv = new DataView(buf), n = Math.floor(buf.byteLength / 12);
+  for (let k = 0; k < n; k++) { const i = dv.getUint32(k * 12, true) & 0x3FFFFFFF; if (i < blk.length && blk[i] !== 65535) done[blk[i]][lvl[i]]++; }
+  nEv += n; nDone += n;
+  $('status').textContent = nf(A.lavoro) + ' file di lavoro matematico in ' + A.teorie.length + ' teorie. Fuori dalla figura ' + nf(A.copie.n) + ' copie di enunciato. Compilati finora ' + nf(nDone) + ' file su ' + nf(A.n) + '.';
+}
+async function boot() {
+  try {
+    const bin = (name) => fetch(name).then((r) => { if (!r.ok) throw new Error(name); return r.arrayBuffer(); });
+    const a = await Promise.all([fetch('arch.json').then((r) => r.json()), bin('blk.u16'), bin('level.u8')]);
+    A = a[0]; LV = A.livelli; blk = new Uint16Array(a[1]); lvl = new Uint8Array(a[2]);
+    done = A.subs.map(() => new Float64Array(LV));
+  } catch (e) { $('status').textContent = 'I dati dell\'architettura non sono raggiungibili. Ricarica la pagina per riprovare.'; return; }
+  layout(); tween = 1;
+  addEventListener('resize', () => { clearTimeout(layout.t); layout.t = setTimeout(() => { remember(); layout(); tween = 1; }, 150); });
+  try { base = (await (await fetch('live.json?' + Date.now())).json()).base || null; } catch (e) { base = null; }
+  if (base != null) { try { await pollEvents(); } catch (e) { base = null; } }
+  if (base != null) setInterval(() => pollEvents().catch(() => {}), 30000);
+  else await pollEvents().catch(() => { $('status').textContent = 'I dati del build non sono raggiungibili: la figura mostra solo la struttura.'; });
+}
+requestAnimationFrame(draw);
+boot();
+})();
+</script>
+</body>
+</html>

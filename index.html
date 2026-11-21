@@ -138,6 +138,7 @@ svg text{fill:var(--mu);font:11px var(--sans)}
 <button type="button" class="ic" id="bPlay"></button>
 <button type="button" class="ic txt" id="bSpeed" title="Velocità di riproduzione" aria-label="Velocità di riproduzione">×300</button>
 <span class="sep" aria-hidden="true"></span>
+<a class="ic txt" id="aArch" href="architettura.html" style="text-decoration:none"></a>
 <button type="button" class="ic txt" id="bComm"></button>
 <button type="button" class="ic txt" id="bChecks">Controlli</button>
 <button type="button" class="ic txt" id="bLang"></button>
@@ -916,6 +917,7 @@ $('art').setAttribute('aria-label', T('Tracciato del build: il tempo in orizzont
 $('scrub').setAttribute('aria-label', T('Scorri il tempo del build', 'Scrub through the build time'));
 $('bLive').lastChild.textContent = T('Torna al presente', 'Back to now');
 $('bChecks').textContent = T('Controlli', 'Checks');
+$('aArch').textContent = T('Architettura', 'Architecture');
 $('bComm').textContent = T('Comunità', 'Community');
 $('bComm').onclick = () => { panel = 'comm'; dockT = sidePx() ? 1 : 0; renderPanel(); loadComm(); };
 for (const [id, it, en] of [['bSpeed', 'Velocità di riproduzione', 'Playback speed'], ['bBuild', 'Stato del build', 'Build status'], ['bFull', 'Schermo intero', 'Full screen'], ['bLang', 'Switch to English', 'Passa all\'italiano']]) { $(id).title = T(it, en); $(id).setAttribute('aria-label', T(it, en)); }
