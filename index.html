@@ -206,8 +206,19 @@ function setView(t) {
   hud();
 }
 
-// due sole scale, entrambe lineari: secondi dall'avvio in orizzontale, livello di dipendenza in verticale
-const X = (sec) => x0 + (sec / TD) * (x1f - x0);
+// pause: intervalli di almeno 20 minuti in cui nessun file era in compilazione, cioè la macchina era spenta.
+// busy segna i minuti in cui almeno un file era in corso; PZ sono le pause, in secondi dall'avvio.
+let PZ = [], busy = new Uint8Array(4096);
+const ct = (sec) => { let c = sec; for (const [a, b] of PZ) { if (sec >= b) c -= b - a; else if (sec > a) c -= sec - a; } return c; };
+const ut = (c) => { for (const [a, b] of PZ) { if (c > a) c += b - a; else break; } return c; };
+function pauses() {
+  const out = []; let last = -1;
+  for (let m = 0; m < busy.length; m++) if (busy[m]) { if (last >= 0 && m - last - 1 >= 20) out.push([(last + 1) * 60, m * 60]); last = m; }
+  if (JSON.stringify(out) === JSON.stringify(PZ)) return;
+  PZ = out; redraw();
+}
+// due sole scale, entrambe lineari: secondi di build (senza le pause) in orizzontale, livello di dipendenza in verticale
+const X = (sec) => x0 + (ct(sec) / TD) * (x1f - x0);
 const Y = (level) => y0 - (level / (LV - 1)) * (y0 - y1);
 const sidePx = () => (panel && innerWidth >= 900 ? 400 : 0);
 const dockScale = () => 1 - (dockK * sidePx() * dpr) / (x1f - x0);
@@ -262,7 +273,7 @@ function axes() {
   const c = cx.axes, d = dpr;
   c.clearRect(0, 0, W, H);
   c.lineWidth = d; c.textBaseline = 'middle'; c.font = '400 ' + 11 * d + 'px Inter, system-ui, sans-serif';
-  const xr = Xd(TD);
+  const xr = Xd(ut(TD));
   for (const lv of [0, 50, 100, 150, LV - 1]) {
     const y = Math.round(Y(lv)) + 0.5;
     c.strokeStyle = 'rgba(154,164,196,0.1)';
@@ -277,7 +288,13 @@ function axes() {
   const maxTicks = Math.max(3, Math.floor((xr - x0) / (110 * d)));
   const step = [600, 900, 1800, 3600, 7200, 10800, 21600].find((s) => TD / s <= maxTicks) || 43200;
   const base = T0 - skew;
-  for (let t = Math.ceil(base / step) * step; t <= base + TD; t += step) c.fillText(new Date(t * 1000).toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' }), Xd(t - base), y0 + 12 * d);
+  for (let t = Math.ceil(base / step) * step; t <= base + ut(TD); t += step) if (!PZ.some(([a, b]) => t - base > a && t - base < b)) c.fillText(new Date(t * 1000).toLocaleTimeString(LOC, { hour: '2-digit', minute: '2-digit' }), Xd(t - base), y0 + 12 * d);
+  for (const [a, b] of PZ) {
+    const x = Math.round(Xd(a)) + 0.5;
+    c.save(); c.setLineDash([3 * d, 4 * d]); c.strokeStyle = 'rgba(154,164,196,0.4)';
+    c.beginPath(); c.moveTo(x, y1); c.lineTo(x, y0 + 6 * d); c.stroke(); c.restore();
+    c.fillText(T('macchina spenta ', 'machine off ') + dur(b - a), x, y0 + 28 * d);
+  }
 }
 
 // clic su un file: risale i suoi import generazione per generazione, poi scende verso chi lo usa
@@ -375,7 +392,7 @@ function frame(t) {
     axes();
   }
   pump();
-  if (playing && view != null) { view += ((t - lastFrame) / 1000) * speed; if (view >= now() - 2) setView(null); else hud(); }
+  if (playing && view != null) { view += ((t - lastFrame) / 1000) * speed; for (const [a, b] of PZ) if (view > a && view < b) view = b; if (view >= now() - 2) setView(null); else hud(); }
   lastFrame = t;
   // durante lo scorrimento la trama viene ritagliata all'istante scelto; a cursore fermo viene ridisegnata esatta per quell'istante
   const clip = view == null ? '' : 'inset(0 ' + Math.max(0, innerWidth - X(view) / dpr) + 'px 0 0)';
@@ -384,7 +401,7 @@ function frame(t) {
   const sc = $('scrub'), left = x0 / dpr - 7 + 'px', wide = Math.max(20, (Xd(now()) - x0) / dpr + 14) + 'px';
   if (sc.style.left !== left) { sc.style.left = left; sc.style.top = y0 / dpr - 22 + 'px'; }
   if (sc.style.width !== wide) sc.style.width = wide;
-  if (document.activeElement !== sc || playing) { sc.max = Math.floor(now()); sc.value = Math.floor(tau()); }
+  if (document.activeElement !== sc || playing) { sc.max = Math.floor(ct(now())); sc.value = Math.floor(ct(tau())); }
   const c = cx.fx, d = dpr, tn = tau(), xn = Xd(tn), live = view == null, running = live ? run : runningAt(tn);
   c.clearRect(0, 0, W, H);
   c.lineCap = 'round';
@@ -423,7 +440,7 @@ function frame(t) {
 
 function hit(e) {
   const r = cv.fx.getBoundingClientRect(), d = dpr, px = (e.clientX - r.left) * d, py = (e.clientY - r.top) * d;
-  const sec = ((px - x0) / dockScale() / (x1f - x0)) * TD, lf = ((y0 - py) / (y0 - y1)) * (LV - 1), pad = (5 * d * TD) / (x1f - x0) / dockScale();
+  const sec = ut(((px - x0) / dockScale() / (x1f - x0)) * TD), lf = ((y0 - py) / (y0 - y1)) * (LV - 1), pad = (5 * d * TD) / (x1f - x0) / dockScale();
   const tn = tau();
   for (const q of view == null ? run : runningAt(tn)) if (on[lib[q.i]] && (view != null || !isDone(q.i)) && Math.abs(lvl[q.i] - lf) < 1.2 && sec >= q.s - pad && sec <= tn + 3 * pad) return q.i;
   let best = -1, bd = Infinity;
@@ -684,10 +701,10 @@ function tabMachine(body) {
     [T('Tempo trascorso', 'Elapsed'), dur(tn)], [T('Tempo residuo', 'Remaining'), eta === eta ? dur(eta) + T(' (stima)', ' (estimate)') : '…'],
     [T('In compilazione', 'Compiling'), run.length + T(' file', ' files')], [T('Errori', 'Errors'), sys ? String(sys.err) : '…'],
     [T('RAM usata', 'RAM used'), sys ? sys.mem + T(' GB di 256', ' GB of 256') : '…'], [T('Carico', 'Load'), sys ? String(sys.load).replace('.', DEC) + T(' su 32 vCPU', ' on 32 vCPUs') : '…'], [T('Disco libero', 'Free disk'), sys ? sys.free + ' GB' : '…'],
-    [T('Costo del pod', 'Machine cost'), '$' + ((tn / 3600) * M.price).toFixed(2) + T(' finora', ' so far')], [T('Costo stimato', 'Estimated cost'), eta === eta ? '$' + (((tn + eta) / 3600) * M.price).toFixed(0) + T(' a fine build', ' at the end of the build') : '…'],
+    [T('Costo del pod', 'Machine cost'), '$' + ((ct(tn) / 3600) * M.price).toFixed(2) + T(' finora', ' so far')], [T('Costo stimato', 'Estimated cost'), eta === eta ? '$' + (((ct(tn) + eta) / 3600) * M.price).toFixed(0) + T(' a fine build', ' at the end of the build') : '…'],
     [T('Ultimo compilato', 'Last compiled'), last >= 0 ? short(last) + ', ' + clock(E[last]) : '…'],
   ]));
-  body.append(el('div', 'note', T('Il costo conta solo il pod a ', 'The cost counts only the machine at ') + String(M.price).replace('.', DEC) + T(' $ l\'ora, senza disco e volume, e non legge il saldo dell\'account.', ' $ per hour, without disk and volume, and does not read the account balance.')));
+  body.append(el('div', 'note', T('Il costo conta solo il pod a ', 'The cost counts only the machine at ') + String(M.price).replace('.', DEC) + T(' $ l\'ora per le ore in cui era accesa, senza disco e volume, e non legge il saldo dell\'account.', ' $ per hour for the hours it was on, without disk and volume, and does not read the account balance.')));
 }
 function tabRunning(body) {
   const tn = now(), ul = el('ul', 'list');
@@ -743,7 +760,7 @@ $('bBuild').onclick = () => { panel = 'build'; dockT = sidePx() ? 1 : 0; renderP
 $('bChecks').onclick = () => { tab.build = 'checks'; $('bBuild').onclick(); };
 $('bFull').onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); };
 if (!document.fullscreenEnabled) $('bFull').hidden = true;
-$('scrub').addEventListener('input', (e) => { playing = false; setView(Number(e.target.value)); });
+$('scrub').addEventListener('input', (e) => { playing = false; setView(ut(Number(e.target.value))); });
 $('bPlay').onclick = () => { if (playing) { playing = false; setView(view); } else { if (view == null) view = 0; playing = true; if (drawnFor !== Infinity) redraw(Infinity); setView(view); } };
 $('bSpeed').onclick = () => { speed = speed === 300 ? 1200 : speed === 1200 ? 60 : 300; $('bSpeed').textContent = '×' + speed; };
 $('bLive').onclick = () => setView(null);
@@ -767,7 +784,7 @@ async function get(live, snap, ms = 30000) {
   if (!r.ok) throw new Error(snap);
   return r;
 }
-function domain() { const t = Math.max(1800, Math.ceil((now() + 90) / 1800) * 1800); if (t !== TD) { TD = t; redraw(); } }
+function domain() { const t = Math.max(1800, Math.ceil((ct(now()) + 90) / 1800) * 1800); if (t !== TD) { TD = t; redraw(); } }
 async function pollEvents() {
   const buf = await (await get('events?from=' + nEv, 'events.bin')).arrayBuffer(), dv = new DataView(buf), n = Math.floor(buf.byteLength / 12);
   for (let k = 0; k < n; k++) {
@@ -775,6 +792,10 @@ async function pollEvents() {
     if (i >= N || isDone(i)) continue;
     S[i] = dv.getFloat32(k * 12 + 4, true); E[i] = dv.getFloat32(k * 12 + 8, true);
     FL[i] = (v >>> 31) | ((v >>> 30) & 1) << 1;
+    for (let m = Math.max(0, Math.floor(S[i] / 60)), me = Math.floor(E[i] / 60); m <= me; m++) {
+      if (m >= busy.length) { const nb = new Uint8Array(Math.max(busy.length * 2, m + 1)); nb.set(busy); busy = nb; }
+      busy[m] = 1;
+    }
     order.push(i);
     for (let q = order.length - 1; q > 0 && E[order[q - 1]] > E[i]; q--) { order[q] = order[q - 1]; order[q - 1] = i; }
     if (E[i] - S[i] > maxDur) maxDur = E[i] - S[i];
@@ -783,7 +804,7 @@ async function pollEvents() {
     if (!firstLoad) pops.push({ i, t: performance.now() + Math.random() * 600 });
   }
   nEv += n; firstLoad = false;
-  domain(); hud();
+  pauses(); domain(); hud();
 }
 async function pollNow() {
   const list = await (await get('now.json?' + Date.now(), 'now.json')).json(), tn = now(), map = new Map();
