@@ -177,7 +177,7 @@ let queue = [], qi = 0, hot = -1, sel = null, panel = null, info = null, decl = 
 let base = null, frozen = null, checks = null;
 // stmtOn: la sezione Enunciato si accende solo se live.json dice "enunciati": true (serve il permesso dell'autore dell'archivio)
 let stmtOn = false;
-const tab = { build: 'checks', file: 'stmt', comm: 'over' };
+const tab = { build: 'checks', file: 'time', comm: 'over' };
 // scorrimento nel tempo: view è l'istante che si sta guardando (null = presente); drawnFor dice fin dove è disegnata la trama
 let view = null, drawnFor = Infinity, playing = false, speed = 300, maxDur = 0, lastFrame = 0, idleAt = 0;
 const cv = {}, cx = {};
@@ -548,7 +548,7 @@ function renderPanel() {
     eyebrow.textContent = M.libs[lib[i]]; eyebrow.style.color = accent;
     top.append(eyebrow, x);
     head.append(top, el('h2', '', nm ? parts.pop() : T('file n. ', 'file no. ') + i), el('div', 'path', parts.join(' / ')));
-    defs = [...(stmtOn ? [['stmt', T('Enunciato', 'Statement'), tabStatement]] : []), ['time', T('Tempi', 'Timing'), tabTimes], ['link', T('Legami', 'Links'), tabLinks], ['src', T('Sorgente', 'Source'), tabSource]];
+    defs = [['time', T('Tempi', 'Timing'), tabTimes], ['link', T('Legami', 'Links'), tabLinks], ['src', T('Sorgente', 'Source'), tabSource], ['stmt', T('Enunciato', 'Statement'), tabStatement]];
   } else if (panel === 'comm') {
     eyebrow.textContent = T('La comunità', 'The community');
     top.append(eyebrow, x);
@@ -560,7 +560,7 @@ function renderPanel() {
     head.append(top, el('h2', '', sys && sys.exit !== '' ? (sys.exit === '0' ? T('Build terminato, controlli in corso', 'Build finished, checks in progress') : T('Build terminato con errori', 'Build finished with errors')) : T('Build in corso', 'Build in progress')));
     defs = [['checks', T('Controlli', 'Checks'), tabChecks], ['trend', T('Andamento', 'Progress'), tabTrend], ['machine', T('Macchina', 'Machine'), tabMachine], ['running', T('In corso', 'Running'), tabRunning]];
   }
-  const cur = panel === 'file' && !stmtOn && tab.file === 'stmt' ? 'time' : tab[panel];
+  const cur = tab[panel];
   for (const [id, label, fn] of defs) {
     const b = el('button', '', label);
     b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(id === cur));
@@ -573,6 +573,11 @@ function renderPanel() {
 }
 
 function tabStatement(body, accent) {
+  if (!stmtOn) {
+    const n = el('div', '', T('Gli enunciati dei teoremi non sono mostrati. L\'archivio è di Levent Alpöge ed è pubblicato senza licenza: gli abbiamo chiesto il permesso di citarli qui, con attribuzione, e aspettiamo la sua risposta. L\'archivio si scarica da ', 'Theorem statements are not shown. The archive is by Levent Alpöge and was published without a licence: we have asked his permission to quote them here, with attribution, and are waiting for his answer. The archive can be downloaded from ')), a = el('a', '', 'alpo.ge');
+    a.href = 'https://alpo.ge/'; a.rel = 'noopener'; a.style.color = 'inherit';
+    n.append(a, '.'); body.append(n); return;
+  }
   if (base == null) { body.append(el('div', 'note', T('Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.', 'Statements are read from the build machine, which is not connected right now.'))); return; }
   if (!info) { body.append(el('div', 'note', T('Leggo l\'enunciato dalla macchina del build.', 'Reading the statement from the build machine.'))); return; }
   if (info.error) { body.append(el('div', 'note', info.error === 429 ? T('Troppe richieste in questo momento: riprova tra un minuto.', 'Too many requests right now: try again in a minute.') : T('L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.', 'The statement cannot be reached right now. Try again shortly.'))); return; }

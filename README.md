@@ -50,8 +50,8 @@ The archive's sources and compiled files are not redistributed: the archive
 declares no licence. This repository holds only module names and the import
 graph derived from them. The page can also quote the *statements* of the
 theorems in a file, attributed to Levent Alpöge and never the proofs; this is
-switched off (`"enunciati"` in `live.json`, and on the server) until the
-author has been asked.
+switched off (`"enunciati"` in `live.json`, and on the server): we have asked
+the author's permission and are waiting for his answer.
 
 ## Who
 
@@ -75,6 +75,7 @@ I sorgenti e i file compilati dell'archivio non sono ridistribuiti, perché
 l'archivio non dichiara una licenza: nel repository ci sono solo i nomi dei
 moduli e il grafo degli import che se ne ricava. La pagina può anche citare i
 soli enunciati dei teoremi di un file, attribuiti a Levent Alpöge e mai le
-dimostrazioni; la funzione è spenta finché non abbiamo chiesto all'autore.
+dimostrazioni; la funzione è spenta: abbiamo chiesto il permesso all'autore e aspettiamo la
+sua risposta.
 
 Lucio Patone, con Claude (Anthropic) come assistente.
