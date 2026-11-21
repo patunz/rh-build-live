@@ -447,7 +447,7 @@ function panelHyp(body, s) {
 }
 function panelStatement(body, accent) {
   if (!info) { body.append(el('div', 'note', 'Leggo il sorgente dal pod.')); return; }
-  if (info.error) { body.append(el('div', 'note', info.error === 'spenti' ? 'Gli enunciati non sono mostrati: prima chiediamo il permesso all\'autore dell\'archivio.' : info.error === 'off' ? 'Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.' : info.error === 429 ? 'Troppe richieste in questo momento: riprova tra un minuto.' : 'L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.')); return; }
+  if (info.error) { body.append(el('div', 'note', info.error === 'spenti' ? 'Gli enunciati dei teoremi non sono mostrati. L\'archivio è di Levent Alpöge ed è pubblicato senza licenza: gli abbiamo chiesto il permesso di citarli qui, con attribuzione, e aspettiamo la sua risposta. L\'archivio si scarica da alpo.ge.' : info.error === 'off' ? 'Gli enunciati si leggono dalla macchina del build, che in questo momento non è collegata.' : info.error === 429 ? 'Troppe richieste in questo momento: riprova tra un minuto.' : 'L\'enunciato non è raggiungibile in questo momento. Riprova tra poco.')); return; }
   body.append(rows([['Righe', nf(info.lines)], ['Teoremi e lemmi', String(info.ndecl)], ['Definizioni', String(info.defs)]]));
   if (extra && extra.decls && extra.decls.length) {
     body.append(el('div', 'sub', 'Enunciato per esteso'), el('div', 'thm', extra.decls[0].n.split('.').pop()));
