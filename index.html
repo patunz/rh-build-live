@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Archivio RH di Alpöge: il build dal vivo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Inter:wght@400;500&display=swap">
+<style>
+/* una sola figura a tutto schermo; il resto sono scritte leggere sopra e una scheda che si aggancia a destra */
+:root{color-scheme:dark;--bg:#060911;--panel:#0c1120;--well:#080c18;--line:#28314f;--line2:#3a4568;--fg:#eef0f7;--fg2:#d5d9ea;--mu:#9aa4c4;
+  --serif:'Fraunces',Georgia,serif;--sans:'Inter',system-ui,sans-serif;--mono:ui-monospace,Menlo,Consolas,monospace}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font:13px/1.4 var(--sans);overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:2px solid #aebfff;outline-offset:2px}
+#stage{position:absolute;inset:0}
+#stage canvas{position:absolute;left:0;top:0;width:100%;height:100%}
+#web{opacity:.35}
+#glow{filter:blur(6px);opacity:.55;mix-blend-mode:screen}
+/* il cursore del tempo scorre sull'asse delle ore: la traccia è l'asse stesso */
+#scrub{position:absolute;height:44px;margin:0;padding:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:ew-resize}
+#scrub::-webkit-slider-runnable-track{height:44px;background:transparent}
+#scrub::-moz-range-track{height:44px;background:transparent}
+#scrub::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;margin-top:15px;border-radius:50%;background:var(--fg2);border:4px solid var(--bg);transition:transform .15s}
+#scrub:hover::-webkit-slider-thumb,#scrub:focus-visible::-webkit-slider-thumb{transform:scale(1.5);background:var(--fg)}
+#scrub::-moz-range-thumb{width:6px;height:6px;border-radius:50%;background:var(--fg2);border:4px solid var(--bg)}
+#scrub:focus-visible{outline:2px solid #aebfff;outline-offset:2px;border-radius:8px}
+#head{position:absolute;left:0;top:0;padding:28px 32px 0 72px;display:flex;flex-direction:column;gap:10px;max-width:min(520px,100%);pointer-events:none}
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--mu)}
+#pct{font:300 clamp(56px,9vw,112px)/.95 var(--serif);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+#files{font:500 17px var(--serif);color:var(--fg2)}
+#lede{color:var(--mu);max-width:44ch}
+#right{display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px}
+#ctl{display:flex;align-items:center;gap:2px;pointer-events:auto}
+.ic{min-width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;gap:7px;background:transparent;border:none;border-radius:18px;color:var(--mu)}
+.ic:hover{color:var(--fg);background:rgba(154,164,196,.12)}
+.ic.txt{padding:0 10px;font-size:12px;font-variant-numeric:tabular-nums}
+#bLive{color:var(--fg)}
+#bLive i{width:6px;height:6px;border-radius:50%;background:#ff9c9c}
+.sep{width:1px;height:16px;margin:0 6px;background:var(--line)}
+.pill{min-height:44px;padding:0 16px;display:inline-flex;align-items:center;gap:7px;background:rgba(20,27,48,.85);border:1px solid var(--line2);border-radius:22px;font-size:12px}
+.pill.off{background:transparent;border-color:#1e2640;color:#7f8aad}
+.pill.ghost{background:transparent;border-style:dashed;border-color:#5a6690}
+.pill i{width:8px;height:8px;border-radius:50%;flex:none}
+.pill small{font-size:12px;color:var(--mu);font-variant-numeric:tabular-nums}
+#foot{position:absolute;left:0;right:0;bottom:0;padding:0 32px 14px 72px;display:flex;flex-direction:column;gap:8px;font-size:12px;color:var(--mu);pointer-events:none}
+#line{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 28px}
+#sum{display:flex;flex-wrap:wrap;gap:4px 22px;color:var(--fg2)}
+#filters{display:flex;flex-wrap:wrap;gap:6px;pointer-events:auto}
+#tip{position:absolute;max-width:340px;padding:10px 12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;pointer-events:none;overflow-wrap:anywhere}
+#tip b{display:block;font:500 15px var(--serif)}
+#tip span{color:var(--mu);font-size:12px}
+#panel{position:absolute;right:16px;top:16px;bottom:138px;width:min(384px,calc(100% - 32px));display:flex;flex-direction:column;background:rgba(12,17,32,.96);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+#panel header{padding:14px 18px 12px;display:flex;flex-direction:column;gap:6px}
+#panel header .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+#panel h2{margin:0;font:500 21px/1.15 var(--serif);overflow-wrap:anywhere}
+#panel .path{color:var(--mu);font-size:12px;overflow-wrap:anywhere}
+.x{width:44px;height:44px;margin:-8px -12px -8px 0;display:flex;align-items:center;justify-content:center;background:transparent;color:var(--mu);border:none;border-radius:22px}
+.tabs{display:flex;padding:0 8px;border-bottom:1px solid var(--line)}
+.tabs button{min-height:44px;padding:0 10px;background:transparent;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;color:var(--mu)}
+.tabs button[aria-selected=true]{color:var(--fg)}
+.body{flex:1;min-height:0;padding:16px 18px 18px;display:flex;flex-direction:column;gap:14px;overflow-wrap:anywhere}
+/* la barra di scorrimento della scheda segue la grafica: sottile, senza binario */
+.scroll{overflow:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+.scroll::-webkit-scrollbar{width:10px;height:10px}
+.scroll::-webkit-scrollbar-track{background:transparent}
+.scroll::-webkit-scrollbar-thumb{background:var(--line2);border-radius:5px;border:3px solid transparent;background-clip:padding-box}
+.scroll::-webkit-scrollbar-thumb:hover{background:#5a6690;border:3px solid transparent;background-clip:padding-box}
+dl.rows{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 18px;margin:0}
+dl.rows dt{color:var(--mu)}
+dl.rows dd{margin:0;font-variant-numeric:tabular-nums}
+.sub{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}
+.note{color:var(--mu);font-size:12px}
+.mono{font:11.5px/1.45 var(--mono)}
+.thm{font:italic 400 15px var(--serif)}
+.nav{display:flex;align-items:center;gap:6px}
+.nav button{width:44px;height:44px;background:transparent;border:1px solid var(--line2);border-radius:22px}
+.nav button:disabled{opacity:.35;cursor:default}
+.nav span{flex:1;text-align:center;color:var(--mu);font-variant-numeric:tabular-nums}
+.proof{position:relative;display:flex;flex-direction:column;gap:12px;padding-left:22px}
+.proof .spine{position:absolute;left:4px;top:8px;bottom:22px;width:1px;background:var(--line2);transform-origin:top;animation:grow 1s ease-out both}
+.prem{position:relative;display:flex;flex-direction:column;gap:2px;animation:in .5s ease-out both}
+.prem i{position:absolute;left:-22px;top:5px;width:9px;height:9px;border:1.5px solid var(--mu)}
+.prem b{font:italic 400 13px var(--serif)}
+.prem span{color:#b9c2de}
+.thesis{position:relative;display:flex;flex-direction:column;gap:4px;padding:10px 12px;background:var(--well);border:1px solid var(--mu);border-radius:10px;animation:thesis 1.5s ease-out both}
+.thesis i{position:absolute;left:-24px;top:12px;width:13px;height:13px;border-radius:50%}
+@keyframes in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes thesis{0%{opacity:0;transform:translateY(-8px);box-shadow:0 0 0 0 rgba(255,255,255,0)}45%{opacity:1;transform:none;box-shadow:0 0 0 0 rgba(255,255,255,.4)}100%{opacity:1;box-shadow:0 0 0 14px rgba(255,255,255,0)}}
+.bar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:#1a2238}
+.list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px}
+.list button{width:100%;min-height:44px;padding:4px 10px;display:flex;align-items:center;gap:10px;background:transparent;border:1px solid transparent;border-radius:10px;text-align:left}
+.list button:hover{border-color:var(--line)}
+.list button i{width:8px;height:8px;border-radius:50%;flex:none}
+.list button b{flex:1;min-width:0;font-weight:400;overflow-wrap:anywhere}
+.list button span{color:var(--mu);flex:none;font-variant-numeric:tabular-nums}
+.area{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:baseline}
+.area .bar{grid-column:1/3;height:4px}
+.area span{color:var(--mu);font-variant-numeric:tabular-nums}
+svg text{fill:var(--mu);font:11px var(--sans)}
+[hidden]{display:none!important}
+@media (max-width:760px){#head{padding:20px 16px 0 16px}#lede{display:none}#foot{padding:8px 16px 12px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div id="stage">
+<canvas id="axes" aria-hidden="true"></canvas>
+<canvas id="web" aria-hidden="true"></canvas>
+<canvas id="glow" aria-hidden="true"></canvas>
+<canvas id="art" role="img" aria-label="Tracciato del build: il tempo in orizzontale, il livello di dipendenza in verticale, un tratto per ogni file compilato e un filo verso ogni file che importa"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+</div>
+<input type="range" id="scrub" min="0" max="1" step="1" value="1" aria-label="Scorri il tempo del build">
+<div id="head">
+<div class="eyebrow">Ricostruzione indipendente dell'archivio Lean di Alpöge, in corso</div>
+<div id="pct">–</div>
+<div id="files">Caricamento dei dati</div>
+<div id="lede">Ogni tratto è un file: comincia quando Lean inizia a compilarlo e finisce quando ha finito. L'altezza è il numero di passaggi su cui poggia. I fili lo legano ai file che importa. Fai clic su un tratto per vedere da dove viene. È un build in corso: la pagina non afferma nulla sulla correttezza della dimostrazione.</div>
+</div>
+<aside id="panel" hidden></aside>
+<div id="tip" hidden><b></b><span></span></div>
+<div id="foot">
+<div id="filters"></div>
+<div id="line">
+<div id="sum"><span id="sRate"></span><span id="sEnd"></span><span id="sErr"></span></div>
+<div id="right">
+<div id="clock">In collegamento con il pod</div>
+<div id="ctl">
+<button type="button" class="ic txt" id="bLive" hidden><i></i>Torna al presente</button>
+<button type="button" class="ic" id="bPlay"></button>
+<button type="button" class="ic txt" id="bSpeed" title="Velocità di riproduzione" aria-label="Velocità di riproduzione">×300</button>
+<span class="sep" aria-hidden="true"></span>
+<button type="button" class="ic txt" id="bChecks">Controlli</button>
+<button type="button" class="ic" id="bBuild" title="Stato del build" aria-label="Stato del build"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2.5 13.5h11M4.5 11V7M8 11V4M11.5 11V8.5"></path></svg></button>
+<button type="button" class="ic" id="bFull" title="Schermo intero" aria-label="Schermo intero"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6V2.5H6M10 2.5h3.5V6M13.5 10v3.5H10M6 13.5H2.5V10"></path></svg></button>
+</div>
+</div>
+</div>
+</div>
+<script>
+(() => {
+'use strict';
+const COL = [[246,180,98],[120,170,250],[94,214,180],[186,150,250],[248,134,176],[208,220,104],[248,128,112],[200,205,220]];
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const rgb = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
+const hex = (c) => 'rgb(' + c.join(',') + ')';
+const nf = (n) => Math.round(n).toLocaleString('it-IT');
+const dur = (s) => { s = Math.round(s); return s < 60 ? s + ' s' : s < 3600 ? Math.floor(s / 60) + ' min ' + String(s % 60).padStart(2, '0') + ' s' : Math.floor(s / 3600) + ' h ' + String(Math.floor((s % 3600) / 60)).padStart(2, '0') + ' min'; };
+const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// dati statici del grafo e stato del build
+let M, N, T0, LV, lvl, lib, doff, deps, uoff, users, S, E, FL, byLevel, cnt, names = null;
+let order = [], nEv = 0, skew = 0, sys = null, run = [], runMap = new Map(), pops = [];
+const on = new Array(8).fill(true);
+// geometria
+let W = 0, H = 0, dpr = 1, x0 = 0, x1f = 0, y0 = 0, y1 = 0, TD = 1800, dockT = 0, dockK = 0;
+// disegno progressivo, selezione, scheda
+let queue = [], qi = 0, hot = -1, sel = null, panel = null, firstLoad = true;
+// base: indirizzo del pod (null = istantanea in data/); frozen: istante a cui è ferma l'istantanea; checks: risultati.json
+let base = null, frozen = null, checks = null;
+const tab = { build: 'checks', file: 'time' };
+// scorrimento nel tempo: view è l'istante che si sta guardando (null = presente); drawnFor dice fin dove è disegnata la trama
+let view = null, drawnFor = Infinity, playing = false, speed = 300, maxDur = 0, lastFrame = 0, idleAt = 0;
+const cv = {}, cx = {};
+for (const id of ['axes', 'web', 'glow', 'art', 'fx']) { cv[id] = $(id); cx[id] = cv[id].getContext('2d'); }
+
+const now = () => (frozen != null ? frozen : Date.now() / 1000 + skew - T0);
+const clock = (sec) => new Date((T0 + sec - skew) * 1000).toLocaleTimeString('it-IT');
+const short = (i) => (names ? names[i].split('.').pop() : 'file n. ' + i);
+const isDone = (i) => E[i] === E[i];
+const st = (i) => (S[i] === S[i] ? S[i] : runMap.has(i) ? runMap.get(i).s : now());
+const en = (i) => (isDone(i) ? E[i] : now());
+const tau = () => (view == null ? now() : view);
+const enV = (i) => Math.min(en(i), tau());
+// order è tenuto in ordine di fine: quanti file erano finiti all'istante t
+function kAt(t) { let lo = 0, hi = order.length; while (lo < hi) { const m = (lo + hi) >> 1; if (E[order[m]] <= t) lo = m + 1; else hi = m; } return lo; }
+// i file che all'istante t erano in compilazione: partiti, non ancora finiti
+function runningAt(t) {
+  const out = [];
+  for (let j = kAt(t); j < order.length && E[order[j]] - t <= maxDur; j++) if (S[order[j]] <= t) out.push({ i: order[j], s: S[order[j]] });
+  for (const r of run) if (!isDone(r.i) && r.s <= t) out.push(r);
+  return out;
+}
+function playIcon() {
+  const b = $('bPlay'), label = playing ? 'Pausa' : view == null ? 'Rivedi il build dall\'inizio' : 'Riprendi da qui';
+  b.title = label; b.setAttribute('aria-label', label);
+  b.innerHTML = playing
+    ? '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="4" y="3.5" width="2.8" height="9" rx="1"></rect><rect x="9.2" y="3.5" width="2.8" height="9" rx="1"></rect></svg>'
+    : '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3.2v9.6a.6.6 0 0 0 .9.5l7.6-4.8a.6.6 0 0 0 0-1L5.9 2.7a.6.6 0 0 0-.9.5z"></path></svg>';
+}
+function setView(t) {
+  const tn = now();
+  view = t == null || t >= tn - 2 ? null : Math.max(0, t);
+  if (view == null) playing = false;
+  if (view == null ? drawnFor !== Infinity : drawnFor !== Infinity && view > drawnFor) redraw(Infinity);
+  idleAt = performance.now();
+  $('bLive').hidden = view == null;
+  playIcon();
+  hud();
+}
+
+// due sole scale, entrambe lineari: secondi dall'avvio in orizzontale, livello di dipendenza in verticale
+const X = (sec) => x0 + (sec / TD) * (x1f - x0);
+const Y = (level) => y0 - (level / (LV - 1)) * (y0 - y1);
+const sidePx = () => (panel && innerWidth >= 900 ? 400 : 0);
+const dockScale = () => 1 - (dockK * sidePx() * dpr) / (x1f - x0);
+const Xd = (sec) => x0 + (X(sec) - x0) * dockScale();
+function curve(c, ax, ay, bx, by) { const m = Math.max(0, bx - ax) * 0.5; c.moveTo(ax, ay); c.bezierCurveTo(ax + m, ay, bx - m, by, bx, by); }
+function along(ax, ay, bx, by, t) { const m = Math.max(0, bx - ax) * 0.5, u = 1 - t, a = u * u * u, b = 3 * u * u * t, c = 3 * u * t * t, e = t * t * t; return [a * ax + b * (ax + m) + c * (bx - m) + e * bx, a * ay + b * ay + c * by + e * by]; }
+
+function resize() {
+  dpr = Math.min(2, devicePixelRatio || 1);
+  W = Math.round(innerWidth * dpr); H = Math.round(innerHeight * dpr);
+  for (const id in cv) { const g = id === 'glow' ? 0.5 : 1; cv[id].width = Math.max(2, Math.round(W * g)); cv[id].height = Math.max(2, Math.round(H * g)); }
+  x0 = 72 * dpr; x1f = W - 40 * dpr; y0 = H - 166 * dpr; y1 = 40 * dpr;
+  if (innerWidth < 760) { x0 = 40 * dpr; x1f = W - 16 * dpr; }
+  for (const id of ['web', 'glow', 'art']) cv[id].style.transformOrigin = x0 / dpr + 'px 0';
+  redraw();
+}
+function redraw(at = drawnFor) {
+  if (!N) return;
+  drawnFor = at;
+  for (const id of ['web', 'glow', 'art']) { cx[id].setTransform(1, 0, 0, 1, 0, 0); cx[id].clearRect(0, 0, cv[id].width, cv[id].height); cx[id].lineCap = 'round'; }
+  cx.glow.setTransform(0.5, 0, 0, 0.5, 0, 0);
+  cx.web.lineWidth = 0.7 * dpr; cx.art.lineWidth = 1.7 * dpr; cx.glow.lineWidth = 2.4 * dpr;
+  if (at === Infinity) queue = order.slice();
+  else { queue = order.slice(0, kAt(at)); for (const r of runningAt(at)) if (isDone(r.i)) queue.push(r.i); }
+  qi = 0;
+  axes();
+}
+// i file si disegnano a piccoli gruppi per fotogramma, così la pagina resta fluida anche con centinaia di migliaia di fili
+function pump() {
+  if (qi >= queue.length) { if (queue.length) { queue = []; qi = 0; } return; }
+  const t = performance.now();
+  while (qi < queue.length && performance.now() - t < 9) {
+    const end = Math.min(queue.length, qi + 500), by = [[], [], [], [], [], [], [], []];
+    for (; qi < end; qi++) { const i = queue[qi]; if (on[lib[i]]) by[lib[i]].push(i); }
+    for (let k = 0; k < 8; k++) {
+      const a = by[k];
+      if (!a.length) continue;
+      cx.art.strokeStyle = cx.glow.strokeStyle = rgb(COL[k], 0.6);
+      cx.web.strokeStyle = rgb(COL[k], 0.07);
+      cx.art.beginPath(); cx.glow.beginPath(); cx.web.beginPath();
+      for (const i of a) {
+        const y = Y(lvl[i]), xa = X(S[i]), xb = Math.max(xa + dpr, X(E[i]));
+        cx.art.moveTo(xa, y); cx.art.lineTo(xb, y);
+        cx.glow.moveTo(xa, y); cx.glow.lineTo(xb, y);
+        for (let j = doff[i]; j < doff[i + 1]; j++) { const g = deps[j]; if (isDone(g)) curve(cx.web, X(E[g]), Y(lvl[g]), xa, y); }
+      }
+      cx.art.stroke(); cx.glow.stroke(); cx.web.stroke();
+    }
+  }
+}
+function axes() {
+  const c = cx.axes, d = dpr;
+  c.clearRect(0, 0, W, H);
+  c.lineWidth = d; c.textBaseline = 'middle'; c.font = '400 ' + 11 * d + 'px Inter, system-ui, sans-serif';
+  const xr = Xd(TD);
+  for (const lv of [0, 50, 100, 150, LV - 1]) {
+    const y = Math.round(Y(lv)) + 0.5;
+    c.strokeStyle = 'rgba(154,164,196,0.1)';
+    c.beginPath(); c.moveTo(x0, y); c.lineTo(xr, y); c.stroke();
+    c.textAlign = 'right'; c.fillStyle = '#9aa4c4';
+    c.fillText(String(lv), x0 - 10 * d, y);
+  }
+  if (innerWidth >= 760) { c.save(); c.translate(22 * d, (y0 + y1) / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.fillText('livello di dipendenza', 0, 0); c.restore(); }
+  c.textAlign = 'right'; c.font = "italic 400 " + 15 * d + "px Fraunces, Georgia, serif"; c.fillStyle = '#eef0f7';
+  c.fillText('riemannHypothesis', xr, Y(LV - 1) - 14 * d);
+  c.font = '400 ' + 11 * d + 'px Inter, system-ui, sans-serif'; c.fillStyle = '#9aa4c4'; c.textBaseline = 'top'; c.textAlign = 'center';
+  const maxTicks = Math.max(3, Math.floor((xr - x0) / (110 * d)));
+  const step = [600, 900, 1800, 3600, 7200, 10800, 21600].find((s) => TD / s <= maxTicks) || 43200;
+  const base = T0 - skew;
+  for (let t = Math.ceil(base / step) * step; t <= base + TD; t += step) c.fillText(new Date(t * 1000).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }), Xd(t - base), y0 + 12 * d);
+}
+
+// clic su un file: risale i suoi import generazione per generazione, poi scende verso chi lo usa
+function pick(i) {
+  const seen = new Uint8Array(N), back = [], fwd = [];
+  let cur = [i], edges, anc = 0, drawn = 0;
+  for (;;) {
+    edges = []; const nx = [];
+    for (const c of cur) for (let j = doff[c]; j < doff[c + 1]; j++) { const g = deps[j]; if (!isDone(g)) continue; edges.push(g, c); if (!seen[g]) { seen[g] = 1; nx.push(g); anc++; } }
+    if (!edges.length) break;
+    if (drawn < 14000) { back.push(edges); drawn += edges.length; }
+    cur = nx;
+  }
+  let nUsers = 0, waiting = 0;
+  for (let j = uoff[i]; j < uoff[i + 1]; j++) { if (S[users[j]] === S[users[j]] || runMap.has(users[j])) nUsers++; else waiting++; }
+  const s2 = new Uint8Array(N); let f = [i];
+  for (let gen = 0; gen < 3 && f.length; gen++) {
+    const ed = [], nx = [];
+    for (const c of f) for (let j = uoff[c]; j < uoff[c + 1]; j++) { const u = users[j]; if (!isDone(u) || S[u] > tau()) continue; ed.push(c, u); if (!s2[u]) { s2[u] = 1; nx.push(u); } }
+    if (ed.length && ed.length < 6000) fwd.push(ed);
+    f = nx;
+  }
+  const step = Math.min(150, 1700 / Math.max(1, back.length));
+  sel = { i, back, fwd, step, t0: performance.now(), tConv: (back.length - 1) * step + 520, anc, nUsers, waiting };
+  panel = 'file'; dockT = sidePx() ? 1 : 0;
+  $('tip').hidden = true;
+  renderPanel();
+}
+function closePanel() { sel = null; panel = null; dockT = 0; renderPanel(); }
+
+function focus(c, t) {
+  const d = dpr, s = sel, age = still ? 1e9 : t - s.t0, i = s.i;
+  const ease = (p) => 1 - Math.pow(1 - Math.min(1, Math.max(0, p)), 3);
+  const P0 = (j) => [Xd(st(j)), Y(lvl[j])], P1 = (j) => [Xd(enV(j)), Y(lvl[j])];
+  c.fillStyle = 'rgba(6,9,17,' + 0.68 * ease(age / 500) + ')';
+  c.fillRect(0, 0, W, H);
+  const G = s.back.length;
+  for (let g = G - 1; g >= 0; g--) {
+    const p = ease((age - (G - 1 - g) * s.step) / 520), ed = s.back[g];
+    if (p <= 0) continue;
+    const a = 0.16 + 0.5 * Math.pow(0.86, g);
+    for (let k = 0; k < 8; k++) {
+      let any = false;
+      c.strokeStyle = rgb(COL[k], a); c.lineWidth = (g < 2 ? 1.2 : 0.8) * d; c.beginPath();
+      for (let q = 0; q < ed.length; q += 2) {
+        if (lib[ed[q + 1]] !== k) continue;
+        any = true;
+        const [ax, ay] = P1(ed[q]), [bx, by] = P0(ed[q + 1]);
+        if (p >= 1) curve(c, ax, ay, bx, by);
+        else { c.moveTo(ax, ay); for (let z = 1; z <= 10; z++) { const [x, y] = along(ax, ay, bx, by, (p * z) / 10); c.lineTo(x, y); } }
+      }
+      if (any) c.stroke();
+    }
+    c.lineWidth = 2 * d; c.strokeStyle = 'rgba(255,255,255,' + 0.75 * p * Math.pow(0.9, g) + ')'; c.beginPath();
+    for (let q = 0; q < ed.length; q += 2) { const [ax, ay] = P0(ed[q]), [bx] = P1(ed[q]); c.moveTo(ax, ay); c.lineTo(Math.max(ax + d, bx), ay); }
+    c.stroke();
+    if (p < 1) {
+      c.fillStyle = '#ffffff';
+      for (let q = 0; q < ed.length; q += 2) { const [ax, ay] = P1(ed[q]), [bx, by] = P0(ed[q + 1]), [x, y] = along(ax, ay, bx, by, p); c.beginPath(); c.arc(x, y, 1.5 * d, 0, 6.3); c.fill(); }
+    }
+  }
+  const a2 = age - s.tConv;
+  s.fwd.forEach((ed, g) => {
+    const p = ease((a2 - 150 - g * 240) / 560);
+    if (p <= 0) return;
+    c.strokeStyle = 'rgba(255,255,255,' + 0.5 * Math.pow(0.6, g) + ')'; c.lineWidth = 0.9 * d; c.beginPath();
+    for (let q = 0; q < ed.length; q += 2) {
+      const [ax, ay] = P1(ed[q]), [bx, by] = P0(ed[q + 1]);
+      if (p >= 1) curve(c, ax, ay, bx, by);
+      else { c.moveTo(ax, ay); for (let z = 1; z <= 10; z++) { const [x, y] = along(ax, ay, bx, by, (p * z) / 10); c.lineTo(x, y); } }
+    }
+    c.stroke();
+  });
+  const rs = P0(i), re = P1(i), col = COL[lib[i]];
+  c.strokeStyle = '#ffffff'; c.lineWidth = 3 * d;
+  c.beginPath(); c.moveTo(rs[0], rs[1]); c.lineTo(Math.max(rs[0] + 2 * d, re[0]), re[1]); c.stroke();
+  if (a2 > 0 && a2 < 1100) { const p = ease(a2 / 1100); c.strokeStyle = rgb(col, 0.9 * (1 - p)); c.lineWidth = 2 * d; c.beginPath(); c.arc(rs[0], rs[1], (6 + 46 * p) * d, 0, 6.3); c.stroke(); }
+  const R = 16 * d, gl = c.createRadialGradient(rs[0], rs[1], 0, rs[0], rs[1], R);
+  gl.addColorStop(0, rgb(col, 0.7)); gl.addColorStop(1, rgb(col, 0));
+  c.fillStyle = gl; c.fillRect(rs[0] - R, rs[1] - R, 2 * R, 2 * R);
+}
+
+function frame(t) {
+  requestAnimationFrame(frame);
+  if (!N) return;
+  if (Math.abs(dockT - dockK) > 0.001) {
+    dockK = still ? dockT : dockK + (dockT - dockK) * 0.16;
+    if (Math.abs(dockT - dockK) <= 0.001) dockK = dockT;
+    const tr = 'scaleX(' + dockScale() + ')';
+    cv.web.style.transform = cv.glow.style.transform = cv.art.style.transform = tr;
+    axes();
+  }
+  pump();
+  if (playing && view != null) { view += ((t - lastFrame) / 1000) * speed; if (view >= now() - 2) setView(null); else hud(); }
+  lastFrame = t;
+  // durante lo scorrimento la trama viene ritagliata all'istante scelto; a cursore fermo viene ridisegnata esatta per quell'istante
+  const clip = view == null ? '' : 'inset(0 ' + Math.max(0, innerWidth - X(view) / dpr) + 'px 0 0)';
+  if (cv.art.style.clipPath !== clip) cv.web.style.clipPath = cv.glow.style.clipPath = cv.art.style.clipPath = clip;
+  if (view != null && !playing && drawnFor !== view && t - idleAt > 350) redraw(view);
+  const sc = $('scrub'), left = x0 / dpr - 7 + 'px', wide = Math.max(20, (Xd(now()) - x0) / dpr + 14) + 'px';
+  if (sc.style.left !== left) { sc.style.left = left; sc.style.top = y0 / dpr - 22 + 'px'; }
+  if (sc.style.width !== wide) sc.style.width = wide;
+  if (document.activeElement !== sc || playing) { sc.max = Math.floor(now()); sc.value = Math.floor(tau()); }
+  const c = cx.fx, d = dpr, tn = tau(), xn = Xd(tn), live = view == null, running = live ? run : runningAt(tn);
+  c.clearRect(0, 0, W, H);
+  c.lineCap = 'round';
+  if (sel) focus(c, t);
+  // adesso
+  c.strokeStyle = 'rgba(154,164,196,0.28)'; c.lineWidth = d;
+  c.beginPath(); c.moveTo(Math.round(xn) + 0.5, y1); c.lineTo(Math.round(xn) + 0.5, y0 + 6 * d); c.stroke();
+  c.fillStyle = '#9aa4c4'; c.font = '400 ' + 11 * d + 'px Inter, system-ui, sans-serif'; c.textAlign = 'center'; c.textBaseline = 'top';
+  c.fillText(live && frozen == null ? 'adesso' : clock(tn), xn, y0 + 28 * d);
+  // file in compilazione: tratto ancora aperto fino ad adesso, con i fili verso ciò che importa
+  for (let j = 0; j < running.length; j++) {
+    const r = running[j], i = r.i;
+    if (!on[lib[i]] || (live && isDone(i))) continue;
+    const col = COL[lib[i]], y = Y(lvl[i]), xa = Xd(r.s), isHot = i === hot;
+    c.strokeStyle = rgb(col, isHot ? 0.75 : 0.2); c.lineWidth = (isHot ? 1.1 : 0.7) * d; c.beginPath();
+    for (let q = doff[i]; q < doff[i + 1]; q++) { const g = deps[q]; if (isDone(g) && E[g] <= tn) curve(c, Xd(E[g]), Y(lvl[g]), xa, y); }
+    c.stroke();
+    c.strokeStyle = 'rgba(255,255,255,0.9)'; c.lineWidth = 1.8 * d;
+    c.beginPath(); c.moveTo(xa, y); c.lineTo(xn, y); c.stroke();
+    const k = still ? 0.6 : 0.5 + 0.5 * Math.sin(t / 420 + j), R = (8 + 5 * k) * d, g = c.createRadialGradient(xn, y, 0, xn, y, R);
+    g.addColorStop(0, rgb(col, 0.55 + 0.3 * k)); g.addColorStop(1, rgb(col, 0));
+    c.fillStyle = g; c.fillRect(xn - R, y - R, 2 * R, 2 * R);
+  }
+  // un file appena finito lascia un'onda
+  pops = pops.filter((p) => t - p.t < 1300);
+  if (live) for (const p of pops) { const a = (t - p.t) / 1300, x = Xd(E[p.i]), y = Y(lvl[p.i]); c.strokeStyle = rgb(COL[lib[p.i]], 0.8 * (1 - a)); c.lineWidth = 1.5 * d; c.beginPath(); c.arc(x, y, (3 + 22 * a) * d, 0, 6.3); c.stroke(); }
+  // file sotto il puntatore
+  if (hot >= 0 && isDone(hot) && S[hot] <= tn && !(sel && sel.i === hot)) {
+    const x = Xd(S[hot]), y = Y(lvl[hot]), xe = Xd(Math.min(E[hot], tn));
+    c.lineWidth = d; c.strokeStyle = 'rgba(255,255,255,0.55)'; c.beginPath();
+    for (let q = doff[hot]; q < doff[hot + 1]; q++) { const g = deps[q]; if (isDone(g)) curve(c, Xd(E[g]), Y(lvl[g]), x, y); }
+    c.stroke();
+    c.strokeStyle = '#ffffff'; c.lineWidth = 2.6 * d; c.beginPath(); c.moveTo(x, y); c.lineTo(Math.max(x + 2 * d, xe), y); c.stroke();
+  }
+}
+
+function hit(e) {
+  const r = cv.fx.getBoundingClientRect(), d = dpr, px = (e.clientX - r.left) * d, py = (e.clientY - r.top) * d;
+  const sec = ((px - x0) / dockScale() / (x1f - x0)) * TD, lf = ((y0 - py) / (y0 - y1)) * (LV - 1), pad = (5 * d * TD) / (x1f - x0) / dockScale();
+  const tn = tau();
+  for (const q of view == null ? run : runningAt(tn)) if (on[lib[q.i]] && (view != null || !isDone(q.i)) && Math.abs(lvl[q.i] - lf) < 1.2 && sec >= q.s - pad && sec <= tn + 3 * pad) return q.i;
+  let best = -1, bd = Infinity;
+  for (let lv = Math.max(0, Math.round(lf) - 1); lv <= Math.min(LV - 1, Math.round(lf) + 1); lv++) {
+    for (const i of byLevel[lv]) {
+      if (!on[lib[i]] || S[i] > tn || sec < S[i] - pad || sec > Math.min(E[i], tn) + pad) continue;
+      const q = Math.abs(lv - lf) * 1000 + (E[i] - S[i]);
+      if (q < bd) { bd = q; best = i; }
+    }
+  }
+  return best;
+}
+cv.fx.addEventListener('mousemove', (e) => {
+  if (!N) return;
+  hot = hit(e);
+  const tip = $('tip');
+  cv.fx.style.cursor = hot >= 0 ? 'pointer' : 'default';
+  if (hot < 0) { tip.hidden = true; return; }
+  tip.firstChild.textContent = short(hot);
+  tip.lastChild.textContent = isDone(hot) && E[hot] > tau() ? 'A quell\'ora era in compilazione da ' + dur(tau() - S[hot]) + ', al livello ' + lvl[hot] + '.' : isDone(hot) ? 'Compilato in ' + dur(E[hot] - S[hot]) + ', livello ' + lvl[hot] + '.' : 'In compilazione da ' + dur(now() - st(hot)) + ', al livello ' + lvl[hot] + '.';
+  tip.hidden = false;
+  tip.style.left = Math.max(8, Math.min(e.clientX + 16, innerWidth - 356)) + 'px';
+  tip.style.top = Math.max(8, Math.min(e.clientY + 18, innerHeight - 100)) + 'px';
+});
+cv.fx.addEventListener('mouseleave', () => { hot = -1; $('tip').hidden = true; });
+cv.fx.addEventListener('click', (e) => { const i = hit(e); if (i >= 0) pick(i); else if (panel === 'file') closePanel(); });
+addEventListener('keydown', (e) => { if (e.key === 'Escape' && panel) closePanel(); });
+
+// ---- scheda agganciata a destra: un file, oppure lo stato del build
+const rows = (list) => { const dl = el('dl', 'rows'); for (const [k, v] of list) { dl.append(el('dt', '', k), el('dd', '', v)); } return dl; };
+const fileButton = (i, note) => { const li = el('li'), b = el('button'); b.type = 'button'; const dot = el('i'); dot.style.background = hex(COL[lib[i]]); b.append(dot, el('b', '', short(i)), el('span', '', note)); b.onclick = () => pick(i); li.append(b); return li; };
+function renderPanel() {
+  const p = $('panel');
+  p.hidden = !panel;
+  if (!panel) return;
+  const keep = p.querySelector('.body') ? p.querySelector('.body').scrollTop : 0;
+  p.textContent = '';
+  const head = el('header'), top = el('div', 'row'), x = el('button', 'x');
+  x.type = 'button'; x.setAttribute('aria-label', 'Chiudi la scheda');
+  x.innerHTML = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M3 3l10 10M13 3L3 13"></path></svg>';
+  x.onclick = closePanel;
+  const eyebrow = el('div', 'eyebrow'), tabs = el('div', 'tabs'), body = el('div', 'body scroll');
+  tabs.setAttribute('role', 'tablist');
+  let defs, accent = '#eef0f7';
+  if (panel === 'file') {
+    const i = sel.i, nm = names ? names[i] : null, parts = nm ? nm.split('.') : [];
+    accent = hex(COL[lib[i]]);
+    eyebrow.textContent = M.libs[lib[i]]; eyebrow.style.color = accent;
+    top.append(eyebrow, x);
+    head.append(top, el('h2', '', nm ? parts.pop() : 'file n. ' + i), el('div', 'path', parts.join(' / ')));
+    defs = [['time', 'Tempi', tabTimes], ['link', 'Legami', tabLinks], ['src', 'Sorgente', tabSource]];
+  } else {
+    eyebrow.textContent = 'Il build';
+    top.append(eyebrow, x);
+    head.append(top, el('h2', '', sys && sys.exit !== '' ? (sys.exit === '0' ? 'Build terminato, controlli in corso' : 'Build terminato con errori') : 'Build in corso'));
+    defs = [['checks', 'Controlli', tabChecks], ['trend', 'Andamento', tabTrend], ['machine', 'Macchina', tabMachine], ['running', 'In corso', tabRunning]];
+  }
+  const cur = tab[panel];
+  for (const [id, label, fn] of defs) {
+    const b = el('button', '', label);
+    b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(id === cur));
+    if (id === cur) { b.style.borderBottomColor = accent; fn(body, accent); }
+    b.onclick = () => { tab[panel] = id; renderPanel(); };
+    tabs.append(b);
+  }
+  p.append(head, tabs, body);
+  if (panel === 'build') body.scrollTop = keep;
+}
+
+function tabTimes(body, accent) {
+  const i = sel.i, s = st(i), e = en(i), done = isDone(i);
+  let last = NaN;
+  for (let j = doff[i]; j < doff[i + 1]; j++) if (isDone(deps[j]) && !(E[deps[j]] <= last)) last = E[deps[j]];
+  const wait = last === last ? Math.max(0, s - last) : 0, tot = wait + (e - s) || 1;
+  const bar = el('div', 'bar'), a = el('span'), b = el('span');
+  a.style.cssText = 'width:' + (wait / tot) * 100 + '%;background:#4a5680'; b.style.cssText = 'width:' + ((e - s) / tot) * 100 + '%;background:' + accent;
+  bar.append(a, b);
+  body.append(bar, el('div', 'note', 'In grigio l\'attesa dopo l\'ultimo import, in colore la compilazione.'));
+  let slower = 0;
+  for (const k of order) if (E[k] - S[k] < e - s) slower++;
+  const list = [['Inizio', clock(s) + (FL[i] & 2 ? ' (stimato)' : '')], done ? ['Fine', clock(e)] : ['In corso da', dur(e - s)]];
+  if (done) list.push(['Durata', dur(e - s)]);
+  list.push(['Attesa', last !== last ? 'nessun import interno' : wait < 1.5 ? 'partito appena pronto l\'ultimo import' : 'partito ' + dur(wait) + ' dopo l\'ultimo import'],
+    ['Confronto', 'più lungo del ' + Math.round((slower / Math.max(1, order.length)) * 100) + '% dei file compilati']);
+  body.append(rows(list));
+  if (FL[i] & 2) body.append(el('div', 'note', 'Questo file è finito prima che il registro dei tempi partisse: la fine è misurata, l\'inizio è ricavato dalla durata riportata da lake.'));
+}
+function tabSource(body) {
+  const i = sel.i;
+  body.append(rows([['Livello', lvl[i] + ' di ' + (LV - 1)],
+    ['Esito', !isDone(i) ? 'in compilazione' : FL[i] & 1 ? 'compilato, con avvisi di stile' : 'compilato, senza avvisi']]));
+  const n = el('div', 'note', 'Il testo dei sorgenti non è riprodotto qui: l\'archivio originale non dichiara una licenza. Si scarica da '), a = el('a', '', 'alpo.ge');
+  a.href = 'https://alpo.ge/'; a.rel = 'noopener'; a.style.color = 'inherit';
+  n.append(a, '.');
+  body.append(n);
+}
+function tabLinks(body) {
+  const i = sel.i, dl = [];
+  for (let j = doff[i]; j < doff[i + 1]; j++) dl.push(deps[j]);
+  dl.sort((a, b) => en(b) - en(a));
+  body.append(rows([['Importa', dl.length + ' file del progetto'], ['Poggia su', nf(sel.anc) + ' file in tutto'],
+    ['Lo usano', sel.nUsers ? nf(sel.nUsers) + (sel.nUsers === 1 ? ' file già partito' : ' file già partiti') : 'nessuno, finora'],
+    ['Lo aspettano', sel.waiting ? nf(sel.waiting) + (sel.waiting === 1 ? ' file non ancora partito' : ' file non ancora partiti') : 'nessuno']]));
+  if (dl.length) {
+    body.append(el('div', 'sub', 'Import diretti, dal più recente'));
+    const ul = el('ul', 'list');
+    dl.forEach((g, j) => ul.append(fileButton(g, (j === 0 && dl.length > 1 ? 'ultimo, ' : '') + clock(en(g)))));
+    body.append(ul);
+  }
+  const us = [];
+  for (let j = uoff[i]; j < uoff[i + 1]; j++) if (isDone(users[j])) us.push(users[j]);
+  if (us.length) {
+    us.sort((a, b) => E[a] - E[b]);
+    body.append(el('div', 'sub', 'Chi lo usa, dal primo'));
+    const ul = el('ul', 'list');
+    us.slice(0, 40).forEach((g) => ul.append(fileButton(g, clock(E[g]))));
+    body.append(ul);
+    if (us.length > 40) body.append(el('div', 'note', 'E altri ' + (us.length - 40) + '.'));
+  }
+}
+
+function chart(pts, color, fmt) {
+  const NS = 'http://www.w3.org/2000/svg', Wc = 340, Hc = 130, P = 40, svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 ' + Wc + ' ' + Hc); svg.setAttribute('role', 'img');
+  if (pts.length < 2) return svg;
+  const xa = pts[0][0], xb = Math.max(pts[pts.length - 1][0], xa + 60), ymax = Math.max(1, ...pts.map((p) => p[1])) * 1.08;
+  const sx = (x) => P + ((x - xa) / (xb - xa)) * (Wc - P - 6), sy = (y) => Hc - 18 - (y / ymax) * (Hc - 28);
+  const add = (tag, at, text) => { const e = document.createElementNS(NS, tag); for (const k in at) e.setAttribute(k, at[k]); if (text != null) e.textContent = text; svg.append(e); };
+  for (let k = 0; k <= 2; k++) { const y = (ymax / 1.08) * (k / 2); add('line', { x1: P, x2: Wc - 6, y1: sy(y), y2: sy(y), stroke: 'rgba(154,164,196,0.14)' }); add('text', { x: P - 6, y: sy(y) + 4, 'text-anchor': 'end' }, fmt(y)); }
+  add('text', { x: P, y: Hc - 3, 'text-anchor': 'start' }, clock(xa).slice(0, 5));
+  add('text', { x: Wc - 6, y: Hc - 3, 'text-anchor': 'end' }, clock(xb).slice(0, 5));
+  add('path', { d: pts.map((p, k) => (k ? 'L' : 'M') + sx(p[0]).toFixed(1) + ' ' + sy(p[1]).toFixed(1)).join(''), fill: 'none', stroke: color, 'stroke-width': 1.6, 'stroke-linejoin': 'round' });
+  return svg;
+}
+function tabChecks(body) {
+  body.append(el('div', '', 'Stiamo ricompilando da zero, su una macchina nostra, l\'archivio Lean con cui Levent Alpöge ha annunciato una dimostrazione dell\'ipotesi di Riemann. Non affermiamo nulla sulla correttezza della dimostrazione finché i controlli qui sotto non sono chiusi.'));
+  if (!checks) { body.append(el('div', 'note', 'L\'elenco dei controlli non è raggiungibile in questo momento.')); return; }
+  const dl = el('dl', 'rows');
+  dl.style.cssText = 'grid-template-columns:minmax(0,1fr);gap:2px';
+  for (const c of checks.controlli) {
+    let s = c.stato;
+    if (c.auto === 'build' && sys) s = sys.exit === '' ? 'in corso, ' + nf(order.length) + ' file su ' + nf(N) : sys.exit === '0' ? 'terminato senza errori' : 'terminato con errori (codice ' + sys.exit + ')';
+    const dd = el('dd', '', s + (c.esito ? ': ' + c.esito : ''));
+    if (c.link && /^https:\/\//.test(c.link)) { const a = el('a', '', 'dettagli'); a.href = c.link; a.rel = 'noopener'; a.style.color = 'inherit'; dd.append(' (', a, ')'); }
+    dd.style.marginBottom = '10px';
+    dl.append(el('dt', '', c.nome), dd);
+  }
+  body.append(dl, el('div', 'note', 'Elenco aggiornato il ' + checks.aggiornato + '. ' + checks.nota));
+}
+function tabTrend(body) {
+  const tn = now(), nb = Math.max(1, Math.ceil(tn / 60)), per = new Uint32Array(nb + 1);
+  for (const i of order) per[Math.min(nb, Math.floor(E[i] / 60))]++;
+  const cum = [], rate = []; let c = 0;
+  for (let b = 0; b < nb; b++) { c += per[b]; cum.push([(b + 1) * 60, c]); let s = 0, n = 0; for (let q = Math.max(0, b - 4); q <= b; q++) { s += per[q]; n++; } if (b < nb - 1) rate.push([(b + 1) * 60, s / n]); }
+  body.append(el('div', 'sub', 'File compilati nel tempo'), chart(cum, '#eef0f7', nf));
+  body.append(el('div', 'sub', 'Ritmo, file al minuto (media su 5 minuti)'), chart(rate, '#9db8ff', nf));
+  body.append(el('div', 'sub', 'Per area'));
+  for (let k = 0; k < 7; k++) {
+    const a = el('div', 'area'), bar = el('div', 'bar'), f = el('span');
+    f.style.cssText = 'width:' + (cnt[k] / M.tot[k]) * 100 + '%;background:' + hex(COL[k]);
+    bar.append(f);
+    a.append(el('div', '', M.libs[k]), el('span', '', nf(cnt[k]) + ' di ' + nf(M.tot[k])), bar);
+    body.append(a);
+  }
+}
+function tabMachine(body) {
+  const tn = now(), r = rateNow(), eta = r > 0 ? (N - order.length) / r : NaN, last = order.length ? order[order.length - 1] : -1;
+  body.append(rows([
+    ['Stato', sys ? (sys.exit !== '' ? 'terminato con codice ' + sys.exit : sys.run ? 'lake in esecuzione' : 'lake fermo') : '…'],
+    ['Tempo trascorso', dur(tn)], ['Tempo residuo', eta === eta ? dur(eta) + ' (stima)' : '…'],
+    ['In compilazione', run.length + ' file'], ['Errori', sys ? String(sys.err) : '…'],
+    ['RAM usata', sys ? sys.mem + ' GB di 256' : '…'], ['Carico', sys ? String(sys.load).replace('.', ',') + ' su 32 vCPU' : '…'], ['Disco libero', sys ? sys.free + ' GB' : '…'],
+    ['Costo del pod', '$' + ((tn / 3600) * M.price).toFixed(2) + ' finora'], ['Costo stimato', eta === eta ? '$' + (((tn + eta) / 3600) * M.price).toFixed(0) + ' a fine build' : '…'],
+    ['Ultimo compilato', last >= 0 ? short(last) + ', ' + clock(E[last]) : '…'],
+  ]));
+  body.append(el('div', 'note', 'Il costo conta solo il pod a ' + String(M.price).replace('.', ',') + ' $ l\'ora, senza disco e volume, e non legge il saldo dell\'account.'));
+}
+function tabRunning(body) {
+  const tn = now(), ul = el('ul', 'list');
+  run.filter((r) => !isDone(r.i)).sort((a, b) => a.s - b.s).forEach((r) => ul.append(fileButton(r.i, dur(tn - r.s))));
+  body.append(el('div', 'note', run.length + ' file in compilazione, dal più lungo. Fai clic per vederne le radici.'), ul);
+}
+
+// ---- scritte fisse e filtri
+function rateAt(tn) { return (kAt(tn) - kAt(tn - 900)) / Math.min(900, Math.max(60, tn)); }
+function rateNow() { return rateAt(now()); }
+function pills() {
+  for (let k = 0; k < 7; k++) { const b = $('f' + k); b.classList.toggle('off', !on[k]); b.setAttribute('aria-pressed', String(on[k])); b.firstChild.style.background = on[k] ? hex(COL[k]) : 'transparent'; b.lastChild.textContent = nf(cnt[k]); }
+  $('fAll').hidden = on.slice(0, 7).every(Boolean);
+}
+function hud() {
+  pills();
+  if (view != null) {
+    const done = kAt(view);
+    $('pct').textContent = ((done / N) * 100).toFixed(1).replace('.', ',') + '%';
+    $('files').textContent = nf(done) + ' file compilati su ' + nf(N) + ' alle ' + clock(view);
+    $('sRate').textContent = nf(rateAt(view) * 60) + ' file al minuto, ' + runningAt(view).length + ' in compilazione a quell\'ora';
+    $('sEnd').textContent = 'Stai guardando ' + dur(now() - view) + ' fa, a ' + dur(view) + ' dall\'avvio';
+    return;
+  }
+  const done = order.length, r = rateNow(), eta = r > 0 ? (N - done) / r : NaN;
+  $('pct').textContent = ((done / N) * 100).toFixed(1).replace('.', ',') + '%';
+  $('files').textContent = nf(done) + ' file compilati su ' + nf(N);
+  const finished = sys && sys.exit !== '';
+  $('sRate').textContent = finished ? 'Build terminato' : frozen != null ? 'Build in corso al momento dell\'istantanea' : nf(r * 60) + ' file al minuto, ' + run.length + ' in compilazione adesso';
+  $('sEnd').textContent = finished || frozen != null || eta !== eta ? '' : 'Fine stimata ' + new Date((T0 - skew + now() + eta) * 1000).toLocaleString('it-IT', { weekday: 'long', hour: '2-digit', minute: '2-digit' });
+  $('sErr').textContent = sys ? (sys.err === 0 ? 'Nessun errore' : sys.err + ' errori') : '';
+  $('sErr').style.color = sys && sys.err > 0 ? '#ff9c9c' : '';
+}
+function buildFilters() {
+  const box = $('filters');
+  for (let k = 0; k < 7; k++) {
+    const b = el('button', 'pill'); b.type = 'button'; b.id = 'f' + k;
+    b.append(el('i'), el('span', '', M.libs[k]), el('small', '', '0'));
+    // il primo clic isola l'area, i successivi aggiungono o tolgono; senza nessuna accesa tornano tutte
+    b.onclick = () => {
+      if (on.slice(0, 7).every(Boolean)) { for (let j = 0; j < 7; j++) on[j] = j === k; }
+      else { on[k] = !on[k]; if (!on.slice(0, 7).some(Boolean)) on.fill(true); }
+      on[7] = on.slice(0, 7).every(Boolean);
+      hud(); redraw();
+    };
+    box.append(b);
+  }
+  const all = el('button', 'pill ghost', 'Tutte le aree'); all.type = 'button'; all.id = 'fAll'; all.hidden = true;
+  all.onclick = () => { on.fill(true); hud(); redraw(); };
+  box.append(all);
+}
+$('bBuild').onclick = () => { panel = 'build'; dockT = sidePx() ? 1 : 0; renderPanel(); };
+$('bChecks').onclick = () => { tab.build = 'checks'; $('bBuild').onclick(); };
+$('bFull').onclick = () => { if (document.fullscreenElement) document.exitFullscreen(); else document.documentElement.requestFullscreen().catch(() => {}); };
+if (!document.fullscreenEnabled) $('bFull').hidden = true;
+$('scrub').addEventListener('input', (e) => { playing = false; setView(Number(e.target.value)); });
+$('bPlay').onclick = () => { if (playing) { playing = false; setView(view); } else { if (view == null) view = 0; playing = true; if (drawnFor !== Infinity) redraw(Infinity); setView(view); } };
+$('bSpeed').onclick = () => { speed = speed === 300 ? 1200 : speed === 1200 ? 60 : 300; $('bSpeed').textContent = '×' + speed; };
+$('bLive').onclick = () => setView(null);
+playIcon();
+
+// ---- dati: in diretta dal pod, oppure l'ultima istantanea salvata accanto alla pagina
+async function get(live, snap, ms = 30000) {
+  const r = await (base != null ? fetch(base + '/' + live, { signal: AbortSignal.timeout(ms) }) : fetch('data/' + snap));
+  if (!r.ok) throw new Error(snap);
+  return r;
+}
+function domain() { const t = Math.max(1800, Math.ceil((now() + 90) / 1800) * 1800); if (t !== TD) { TD = t; redraw(); } }
+async function pollEvents() {
+  const buf = await (await get('events?from=' + nEv, 'events.bin')).arrayBuffer(), dv = new DataView(buf), n = Math.floor(buf.byteLength / 12);
+  for (let k = 0; k < n; k++) {
+    const v = dv.getUint32(k * 12, true), i = v & 0x3FFFFFFF;
+    if (i >= N || isDone(i)) continue;
+    S[i] = dv.getFloat32(k * 12 + 4, true); E[i] = dv.getFloat32(k * 12 + 8, true);
+    FL[i] = (v >>> 31) | ((v >>> 30) & 1) << 1;
+    order.push(i);
+    for (let q = order.length - 1; q > 0 && E[order[q - 1]] > E[i]; q--) { order[q] = order[q - 1]; order[q - 1] = i; }
+    if (E[i] - S[i] > maxDur) maxDur = E[i] - S[i];
+    byLevel[lvl[i]].push(i); cnt[lib[i]]++;
+    if (drawnFor === Infinity) queue.push(i);
+    if (!firstLoad) pops.push({ i, t: performance.now() + Math.random() * 600 });
+  }
+  nEv += n; firstLoad = false;
+  domain(); hud();
+}
+async function pollNow() {
+  const list = await (await get('now.json?' + Date.now(), 'now.json')).json(), tn = now(), map = new Map();
+  for (const r of list) { if (r.i >= N) continue; const old = runMap.get(r.i); r.s = old ? Math.min(old.s, tn - r.e) : tn - r.e; map.set(r.i, r); }
+  runMap = map; run = [...map.values()];
+}
+async function pollSys(ms) {
+  sys = await (await get('sys.json?' + Date.now(), 'sys.json', ms)).json();
+  if (base != null) skew = sys.t - Date.now() / 1000; else { skew = 0; frozen = sys.t - T0; }
+}
+const guard = (fn, label) => () => fn().then(() => { $('clock').textContent = 'In diretta, aggiornato alle ' + new Date().toLocaleTimeString('it-IT'); }).catch(() => { $('clock').textContent = 'Il pod non risponde (' + label + '): riprovo.'; });
+
+async function boot() {
+  const bin = (name) => fetch(name).then((r) => { if (!r.ok) throw new Error(name); return r.arrayBuffer(); });
+  let a;
+  try { a = await Promise.all([fetch('meta.json').then((r) => r.json()), bin('level.u8'), bin('lib.u8'), bin('depoff.u32'), bin('deps.u32')]); }
+  catch (e) { $('files').textContent = 'I dati del grafo non sono raggiungibili. Ricarica la pagina per riprovare.'; return; }
+  M = a[0]; N = M.n; T0 = M.t0; LV = M.levels;
+  fetch('risultati.json?' + Date.now()).then((r) => r.json()).then((d) => { checks = d; if (panel === 'build') renderPanel(); }).catch(() => {});
+  // live.json dice dove risponde il pod; se manca, o il pod tace, si passa all'istantanea
+  try { base = (await (await fetch('live.json?' + Date.now())).json()).base || null; } catch (e) { base = null; }
+  try { await pollSys(6000); }
+  catch (e) {
+    if (base == null) { $('files').textContent = 'I dati del build non sono raggiungibili. Ricarica la pagina per riprovare.'; return; }
+    base = null;
+    try { await pollSys(); } catch (e2) { $('files').textContent = 'I dati del build non sono raggiungibili. Ricarica la pagina per riprovare.'; return; }
+  }
+  lvl = new Uint8Array(a[1]); lib = new Uint8Array(a[2]); doff = new Uint32Array(a[3]); deps = new Uint32Array(a[4]);
+  // elenco inverso: chi usa ciascun file
+  uoff = new Uint32Array(N + 1);
+  for (let j = 0; j < deps.length; j++) uoff[deps[j] + 1]++;
+  for (let i = 0; i < N; i++) uoff[i + 1] += uoff[i];
+  users = new Uint32Array(deps.length); const pos = uoff.slice(0, N);
+  for (let i = 0; i < N; i++) for (let j = doff[i]; j < doff[i + 1]; j++) users[pos[deps[j]]++] = i;
+  S = new Float32Array(N).fill(NaN); E = new Float32Array(N).fill(NaN); FL = new Uint8Array(N);
+  byLevel = Array.from({ length: LV }, () => []); cnt = new Array(8).fill(0);
+  buildFilters(); resize();
+  addEventListener('resize', () => { clearTimeout(resize.t); resize.t = setTimeout(resize, 150); });
+  if (base != null) {
+    const ev = guard(pollEvents, 'eventi'), nw = guard(pollNow, 'file in compilazione'), sy = guard(pollSys, 'stato');
+    await ev(); nw();
+    setInterval(ev, 8000); setInterval(nw, 3000); setInterval(sy, 10000);
+  } else {
+    await pollEvents(); await pollNow();
+    $('clock').textContent = 'Il pod non è collegato: dati fermi al ' + new Date(sys.t * 1000).toLocaleString('it-IT', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+  }
+  setInterval(() => { domain(); hud(); if (panel === 'build') renderPanel(); }, 5000);
+  fetch('names.txt').then((r) => r.text()).then((t) => { names = t.split('\n'); if (panel) renderPanel(); }).catch(() => {});
+}
+requestAnimationFrame(frame);
+boot();
+})();
+</script>
+</body>
+</html>
