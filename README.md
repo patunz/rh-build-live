@@ -49,6 +49,12 @@ the slider to go back in time.
   states and counts are read live from GitHub's public API in the visitor's
   browser (cached for ten minutes); the grouping into threads is our reading
   of the titles.
+- `aggiornamenti.json` is the log shown in the same panel. A scheduled
+  workflow (`.github/workflows/aggiornamenti.yml`) runs
+  `strumenti/aggiornamenti.py` twice a day and appends one entry with what
+  GitHub reports for the interval: issues and PRs opened, merged and closed,
+  stars, the state of our own issues and of our build. Facts only; the page
+  composes the sentences.
 
 ## What is not here
 

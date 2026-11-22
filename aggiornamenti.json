@@ -1,0 +1,239 @@
+{
+ "fino": "2026-11-22T01:50:08Z",
+ "stelle": 408,
+ "fork": 85,
+ "nostre": {
+  "6": {
+   "aperta": false,
+   "commenti": 10
+  },
+  "29": {
+   "aperta": false,
+   "commenti": 1
+  }
+ },
+ "voci": [
+  {
+   "da": "2026-11-21T13:50:08Z",
+   "a": "2026-11-22T01:50:08Z",
+   "issue_aperte": {
+    "n": 6,
+    "elenco": [
+     {
+      "n": 39,
+      "t": "A table of the named classical theorems inside the archive, with their Lean names (input for attribution and roadmaps)",
+      "u": "aapolipponen",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/39"
+     },
+     {
+      "n": 41,
+      "t": "Audit: Dependency on Mathlib/Classical.choice in src/Statements.lean decouples riemannZeta from dynamical stability",
+      "u": "frintroper",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/41"
+     },
+     {
+      "n": 42,
+      "t": "Audit: Dependency on Mathlib/Classical.choice in src/Challenge.lean decouples riemannZeta from dynamical stability",
+      "u": "frintroper",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/42"
+     },
+     {
+      "n": 47,
+      "t": "checks.yml: provenance check and source-mirror claims are stale after PR #8",
+      "u": "RFT-SIRM",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/47"
+     },
+     {
+      "n": 56,
+      "t": "There should be 2 repos: riemann-hypothesis and riemann-hypothesis-apogee",
+      "u": "jamesyc",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/56"
+     },
+     {
+      "n": 59,
+      "t": "Is there a reference for the rank-uniform local Bessel estimate WLoc1 in Theorem B?",
+      "u": "ATS-FinAI",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/59"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 3,
+    "elenco": [
+     {
+      "n": 5,
+      "t": "An unofficial reader’s map of the proof strategy (call path, windowed Landau endgame, LinkS, Chowla–Selberg)",
+      "u": "JoseClaudioSJr",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/5"
+     },
+     {
+      "n": 6,
+      "t": ".olean hashes depend on the build directory (stored linter messages embed the absolute source path)",
+      "u": "patunz",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/6"
+     },
+     {
+      "n": 29,
+      "t": "ci-runner.py doctor could check vm.max_map_count (the default 65530 breaks modules high in the import graph)",
+      "u": "patunz",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/29"
+     }
+    ]
+   },
+   "pr_aperte": {
+    "n": 22,
+    "elenco": [
+     {
+      "n": 37,
+      "t": "ci-runner doctor: report vm.max_map_count and require a minimum",
+      "u": "Ticobit",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/37"
+     },
+     {
+      "n": 38,
+      "t": "Specialize ordinary RH to the principal character",
+      "u": "dbsanfte",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/38"
+     },
+     {
+      "n": 40,
+      "t": "Notes: .olean checksums depend on the build directory; compare exports",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/40"
+     },
+     {
+      "n": 43,
+      "t": "Improve cache client planning and failure handling",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/43"
+     },
+     {
+      "n": 44,
+      "t": "Simplify the shared five-theorem proof and reduce its Lean source by 1.54 million lines",
+      "u": "mmmbeer",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/44"
+     },
+     {
+      "n": 45,
+      "t": "Prune unused top-level imports and 11,163 unreachable dead modules",
+      "u": "rohanarun",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/45"
+     },
+     {
+      "n": 46,
+      "t": "Allow runner services to set build parallelism and memory",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/46"
+     },
+     {
+      "n": 48,
+      "t": "cache get: check for Python 3.11+ before downloading",
+      "u": "homeowmorphism",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/48"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 13,
+    "elenco": [
+     {
+      "n": 8,
+      "t": "simplify Main imports and remove six unused modules",
+      "u": "deancureton",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8"
+     },
+     {
+      "n": 37,
+      "t": "ci-runner doctor: report vm.max_map_count and require a minimum",
+      "u": "Ticobit",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/37"
+     },
+     {
+      "n": 40,
+      "t": "Notes: .olean checksums depend on the build directory; compare exports",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/40"
+     },
+     {
+      "n": 43,
+      "t": "Improve cache client planning and failure handling",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/43"
+     },
+     {
+      "n": 45,
+      "t": "Prune unused top-level imports and 11,163 unreachable dead modules",
+      "u": "rohanarun",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/45"
+     },
+     {
+      "n": 46,
+      "t": "Allow runner services to set build parallelism and memory",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/46"
+     },
+     {
+      "n": 48,
+      "t": "cache get: check for Python 3.11+ before downloading",
+      "u": "homeowmorphism",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/48"
+     },
+     {
+      "n": 49,
+      "t": "Check that Elan is available before enrolling a runner",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/49"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 1,
+    "elenco": [
+     {
+      "n": 38,
+      "t": "Specialize ordinary RH to the principal character",
+      "u": "dbsanfte",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/38"
+     }
+    ]
+   },
+   "per_filone": [
+    3,
+    9,
+    1,
+    5,
+    10
+   ],
+   "nostre": [
+    {
+     "n": 6,
+     "t": ".olean hashes depend on the build directory (stored linter messages embed the absolute source path)",
+     "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/6",
+     "aperta": false,
+     "commenti": 10,
+     "commenti_prima": null,
+     "aperta_prima": null
+    },
+    {
+     "n": 29,
+     "t": "ci-runner.py doctor could check vm.max_map_count (the default 65530 breaks modules high in the import graph)",
+     "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/29",
+     "aperta": false,
+     "commenti": 1,
+     "commenti_prima": null,
+     "aperta_prima": null
+    }
+   ],
+   "stelle": 408,
+   "fork": 85,
+   "stelle_prima": null,
+   "fork_prima": null,
+   "build": {
+    "n": 175187,
+    "tot": 175187,
+    "errori": 0,
+    "uscita": "0"
+   }
+  }
+ ]
+}

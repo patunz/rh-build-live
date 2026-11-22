@@ -1,0 +1,24 @@
+# Diario della scheda Comunità: due volte al giorno aggiunge una voce con i fatti letti da GitHub.
+name: Aggiornamenti della comunità
+on:
+  schedule:
+    - cron: '7 6,18 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: aggiornamenti
+jobs:
+  diario:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Aggiunge la voce
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 strumenti/aggiornamenti.py .
+      - name: Pubblica se è cambiato qualcosa
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aggiornamenti.json
+          git diff --cached --quiet || { git commit -m "Diario: voce automatica"; git push; }
