@@ -1,8 +1,8 @@
 {
   "aggiornato": "22 novembre 2026",
   "aggiornato_en": "22 November 2026",
-  "nota": "Ricostruzione di Lucio Patone, condotta con Claude (Anthropic) come assistente. I risultati compariranno qui man mano che i controlli si chiudono.",
-  "nota_en": "Rebuild by Lucio Patone, carried out with Claude (Anthropic) as an assistant. Results will appear here as the checks are closed.",
+  "nota": "Ricostruzione di Lucio Patone, condotta con Claude (Anthropic) come assistente. Questi esiti dicono che il nostro build riproduce quello di A. Sutherland e che Lean accetta la dimostrazione dell'enunciato: non sono la verifica in sandbox del gruppo, che ha un suo corso.",
+  "nota_en": "Rebuild by Lucio Patone, carried out with Claude (Anthropic) as an assistant. These outcomes say that our build reproduces A. Sutherland's and that Lean accepts the proof of the statement: they are not the group's sandboxed verification, which runs on its own course.",
   "controlli": [
     {
       "nome": "Build completo fino a Main",
@@ -16,26 +16,29 @@
     {
       "nome": "Assiomi usati dai teoremi finali (Audit.lean di A. Sutherland)",
       "nome_en": "Axioms used by the final theorems (A. Sutherland's Audit.lean)",
-      "stato": "in corso",
-      "stato_en": "in progress",
-      "esito": "",
-      "link": ""
+      "stato": "concluso, superato",
+      "stato_en": "done, passed",
+      "esito": "l'output di Audit.lean sul nostro build è identico byte per byte all'audit.log di A. Sutherland: i cinque teoremi dipendono solo da propext, Classical.choice e Quot.sound; i 15 assiomi presenti nell'ambiente sono tutti nel nucleo di Lean (Init)",
+      "link": "https://github.com/leanprover-community/riemann-hypothesis/issues/6#issuecomment-7072697248",
+      "esito_en": "the output of Audit.lean on our build is byte-identical to A. Sutherland's audit.log: the five theorems depend only on propext, Classical.choice and Quot.sound; the 15 axioms in the environment are all in Lean core (Init)"
     },
     {
       "nome": "Confronto degli .olean con il manifest di A. Sutherland",
       "nome_en": "Comparison of the .olean files with A. Sutherland's manifest",
-      "stato": "in corso su tutti i 175.187 moduli",
-      "stato_en": "in progress on all 175,187 modules",
-      "esito": "",
-      "link": ""
+      "stato": "concluso su tutti i 175.187 moduli",
+      "stato_en": "done on all 175,187 modules",
+      "esito": "76.968 file identici byte per byte, compreso Main.olean, e 98.219 diversi. Differiscono tutti e soli i file che contengono il percorso della cartella di build; gli stessi numeri sono stati riportati da un build indipendente",
+      "link": "https://github.com/leanprover-community/riemann-hypothesis/issues/6#issuecomment-7072697248",
+      "esito_en": "76,968 files are byte-identical, including Main.olean, and 98,219 differ. The files that differ are exactly those that embed the build directory path; an independent build reported the same counts"
     },
     {
       "nome": "Ricontrollo con leanchecker (toolchain Lean v4.33.1)",
       "nome_en": "Re-check with leanchecker (Lean v4.33.1 toolchain)",
-      "stato": "in corso",
-      "stato_en": "in progress",
-      "esito": "",
-      "link": ""
+      "stato": "in corso su tutti i moduli del progetto",
+      "stato_en": "in progress on all the modules of the project",
+      "esito": "passato sul solo modulo Main (uscita 0), che ne ricontrolla le dichiarazioni dando per buoni i moduli importati",
+      "link": "",
+      "esito_en": "passed on the Main module alone (exit code 0), which re-checks its declarations taking the imported modules as given"
     }
   ]
 }
