@@ -34,11 +34,11 @@
     {
       "nome": "Ricontrollo con leanchecker (toolchain Lean v4.33.1)",
       "nome_en": "Re-check with leanchecker (Lean v4.33.1 toolchain)",
-      "stato": "in corso su tutti i moduli del progetto",
-      "stato_en": "in progress on all the modules of the project",
-      "esito": "passato sul solo modulo Main (uscita 0), che ne ricontrolla le dichiarazioni dando per buoni i moduli importati",
+      "stato": "passato sul modulo Main, non completato sull'intero progetto",
+      "stato_en": "passed on the Main module, not completed on the whole project",
+      "esito": "su Main uscita 0. Sull'intero progetto il programma tiene in memoria tutti i moduli e ha superato i 256 GB della macchina a metà del caricamento (87.113 moduli su 175.187): è stato interrotto dal sistema, senza segnalare errori di verifica",
       "link": "",
-      "esito_en": "passed on the Main module alone (exit code 0), which re-checks its declarations taking the imported modules as given"
+      "esito_en": "exit code 0 on Main. On the whole project the program keeps every module in memory and exceeded the machine's 256 GB halfway through loading (87,113 modules of 175,187): it was killed by the system, with no verification error reported"
     }
   ]
 }

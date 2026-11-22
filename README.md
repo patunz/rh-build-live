@@ -13,7 +13,7 @@ outcomes will be added here as they close:
 3. a comparison of the resulting `.olean` files with A. Sutherland's manifest
    (partial so far, complete once the build ends).
 
-A re-check with `leanchecker` (from the Lean v4.33.1 toolchain) is in progress.
+A re-check with `leanchecker` (from the Lean v4.33.1 toolchain) passed on `Main`; on the whole project it ran out of memory (256 GB) and was not completed.
 
 The page is in English and Italian (button at the bottom right, or `?lang=it` / `?lang=en`).
 

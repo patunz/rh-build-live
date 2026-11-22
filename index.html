@@ -559,7 +559,7 @@ function renderPanel() {
   } else {
     eyebrow.textContent = T('Il build', 'The build');
     top.append(eyebrow, x);
-    head.append(top, el('h2', '', sys && sys.exit !== '' ? (sys.exit === '0' ? T('Build terminato, controlli in corso', 'Build finished, checks in progress') : T('Build terminato con errori', 'Build finished with errors')) : T('Build in corso', 'Build in progress')));
+    head.append(top, el('h2', '', sys && sys.exit !== '' ? (sys.exit === '0' ? T('Build terminato', 'Build finished') : T('Build terminato con errori', 'Build finished with errors')) : T('Build in corso', 'Build in progress')));
     // a build finito non ci sono più file in compilazione: al loro posto, se c'è, il lavoro del controllore
     defs = [['checks', T('Controlli', 'Checks'), tabChecks], ['trend', T('Andamento', 'Progress'), tabTrend], ['machine', T('Macchina', 'Machine'), tabMachine], ck ? ['ck', T('Controllore', 'Checker'), tabChecker] : ['running', T('In corso', 'Running'), tabRunning]];
   }
@@ -881,13 +881,14 @@ function tabChecker(body) {
   const secs = (s) => dur(s) + T(' di calcolo', ' of computing');
   body.append(el('div', '', T('Dopo il build, leanchecker rilegge i file compilati e ne ricontrolla le dichiarazioni con il nucleo di Lean. Mentre lavora non scrive nulla: qui sotto ci sono solo valori misurati dall\'esterno sul suo processo.', 'After the build, leanchecker reads the compiled files back and re-checks their declarations with the Lean kernel. It prints nothing while it works: below are only values measured from outside on its process.')));
   body.append(rows([
-    [T('Stato', 'Status'), ck.in_corso ? T('in esecuzione da ', 'running for ') + dur(ck.t) : T('terminato', 'finished') + (ck.esito != null ? T(' con codice ', ' with exit code ') + ck.esito : T(', codice non registrato', ', exit code not recorded')) + T(' dopo ', ' after ') + dur(ck.t)],
+    [T('Stato', 'Status'), ck.in_corso ? T('in esecuzione da ', 'running for ') + dur(ck.t) : ck.esito === 137 ? T('interrotto dal sistema per memoria esaurita (codice 137) dopo ', 'killed by the system for running out of memory (exit code 137) after ') + dur(ck.t) : T('terminato', 'finished') + (ck.esito != null ? T(' con codice ', ' with exit code ') + ck.esito : T(', codice non registrato', ', exit code not recorded')) + T(' dopo ', ' after ') + dur(ck.t)],
     [T('Avviato', 'Started'), new Date(ck.avvio * 1000).toLocaleString(LOC, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })],
     [T('Moduli caricati', 'Modules loaded'), nf(ck.caricati) + T(' su ', ' of ') + nf(N)],
     [T('Processore', 'CPU'), secs(ck.cpu_utente + ck.cpu_sistema) + T(', di cui ', ', of which ') + dur(ck.cpu_sistema) + T(' di sistema', ' system')],
-    ['Thread', String(ck.thread)], ['RAM', nf(ck.ram_mb) + ' MB'],
+    ...(ck.in_corso ? [['Thread', String(ck.thread)], ['RAM', nf(ck.ram_mb) + ' MB']] : []),
     [T('Scritto in uscita', 'Written to output'), nf(ck.uscita_byte) + ' byte'],
   ]));
+  if (ck.esito === 137) body.append(el('div', '', T('Non è un errore di verifica: il programma non ha segnalato nessuna dichiarazione sbagliata, è stato fermato prima di finire. Tiene in memoria tutti i moduli che carica, e la macchina ha 256 GB.', 'This is not a verification error: the program reported no wrong declaration, it was stopped before it finished. It keeps every module it loads in memory, and the machine has 256 GB.')));
   if (ckT.length > 1) {
     const pts = ckT.map((s, k) => [ck.avvio - T0 + s, k + 1]).filter((v, k, a) => k === a.length - 1 || k % Math.max(1, Math.floor(a.length / 300)) === 0);
     body.append(el('div', 'sub', T('Moduli caricati nel tempo', 'Modules loaded over time')), chart(pts, '#eef0f7', nf));
@@ -895,10 +896,10 @@ function tabChecker(body) {
   body.append(el('div', 'note', T('"Caricato" vuol dire che il controllore ha aperto il file del modulo, non che lo ha già ricontrollato: il programma non dice a che punto è. Per questo non c\'è una barra di avanzamento.', '"Loaded" means the checker has opened the module file, not that it has already re-checked it: the program does not say how far it has got. That is why there is no progress bar.')));
 }
 async function pollChecker() {
-  const r = await fetch(base + '/ck.json?' + Date.now(), { signal: AbortSignal.timeout(15000) });
+  const r = await (base != null ? fetch(base + '/ck.json?' + Date.now(), { signal: AbortSignal.timeout(15000) }) : fetch('data/ck.json'));
   if (!r.ok) return;
   ck = await r.json();
-  const buf = await (await fetch(base + '/ck?from=' + nCk, { signal: AbortSignal.timeout(30000) })).arrayBuffer(), dv = new DataView(buf), n = Math.floor(buf.byteLength / 8);
+  const buf = await (await (base != null ? fetch(base + '/ck?from=' + nCk, { signal: AbortSignal.timeout(30000) }) : fetch('data/ck.bin'))).arrayBuffer(), dv = new DataView(buf), n = Math.floor(buf.byteLength / 8);
   for (let k = 0; k < n; k++) ckT.push(dv.getFloat32(k * 8 + 4, true));
   nCk += n;
   if (panel === 'build') renderPanel();
@@ -958,7 +959,7 @@ function hud() {
   $('pct').textContent = ((done / N) * 100).toFixed(1).replace('.', DEC) + '%';
   $('files').textContent = nf(done) + T(' file compilati su ', ' files compiled out of ') + nf(N);
   const finished = sys && sys.exit !== '';
-  $('eyebrow').textContent = T('Ricostruzione indipendente dell\'archivio Lean di Alpöge', 'Independent rebuild of Alpöge\u2019s Lean archive') + (!finished ? T(', in corso', ', in progress') : sys.exit === '0' ? T(': build terminato, controlli in corso', ': build finished, checks in progress') : T(': build terminato con errori', ': build finished with errors'));
+  $('eyebrow').textContent = T('Ricostruzione indipendente dell\'archivio Lean di Alpöge', 'Independent rebuild of Alpöge\u2019s Lean archive') + (!finished ? T(', in corso', ', in progress') : sys.exit === '0' ? T(': build terminato', ': build finished') : T(': build terminato con errori', ': build finished with errors'));
   $('sRate').textContent = finished ? T('Build terminato', 'Build finished') : frozen != null ? T('Build in corso al momento dell\'istantanea', 'Build in progress at the time of the snapshot') : nf(r * 60) + T(' file al minuto, ', ' files per minute, ') + run.length + T(' in compilazione adesso', ' compiling now');
   $('sEnd').textContent = finished || frozen != null || eta !== eta ? '' : T('Fine stimata ', 'Estimated end ') + new Date((T0 - skew + now() + eta) * 1000).toLocaleString(LOC, { weekday: 'long', hour: '2-digit', minute: '2-digit' });
   $('sErr').textContent = sys ? (sys.err === 0 ? T('Nessun errore', 'No errors') : sys.err + T(' errori', ' errors')) : '';
@@ -1082,6 +1083,7 @@ async function boot() {
     cw(); setInterval(cw, 10000);
   } else {
     await pollEvents(); await pollNow();
+    if (sys.exit !== '') pollChecker().catch(() => {});
     $('clock').textContent = T('Il pod non è collegato: dati fermi al ', 'The build machine is not connected: data as of ') + new Date(sys.t * 1000).toLocaleString(LOC, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
   }
   setInterval(() => { domain(); hud(); if (panel === 'build') renderPanel(); }, 5000);
