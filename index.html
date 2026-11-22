@@ -175,6 +175,8 @@ let W = 0, H = 0, dpr = 1, x0 = 0, x1f = 0, y0 = 0, y1 = 0, TD = 1800, dockT = 0
 let queue = [], qi = 0, hot = -1, sel = null, panel = null, info = null, decl = 0, firstLoad = true;
 // base: indirizzo del pod (null = istantanea in data/); frozen: istante a cui il tempo della pagina è fermo (l'istantanea, oppure la fine del build); checks: risultati.json
 let base = null, frozen = null, checks = null;
+// ck: ultima misura del processo del controllore (ck.json); ckT: secondi dall'avvio del controllore a cui ha caricato ciascun modulo
+let ck = null, ckT = [], nCk = 0;
 // stmtOn: la sezione Enunciato si accende solo se live.json dice "enunciati": true (serve il permesso dell'autore dell'archivio)
 let stmtOn = false;
 const tab = { build: 'checks', file: 'time', comm: 'over' };
@@ -558,9 +560,10 @@ function renderPanel() {
     eyebrow.textContent = T('Il build', 'The build');
     top.append(eyebrow, x);
     head.append(top, el('h2', '', sys && sys.exit !== '' ? (sys.exit === '0' ? T('Build terminato, controlli in corso', 'Build finished, checks in progress') : T('Build terminato con errori', 'Build finished with errors')) : T('Build in corso', 'Build in progress')));
-    defs = [['checks', T('Controlli', 'Checks'), tabChecks], ['trend', T('Andamento', 'Progress'), tabTrend], ['machine', T('Macchina', 'Machine'), tabMachine], ['running', T('In corso', 'Running'), tabRunning]];
+    // a build finito non ci sono più file in compilazione: al loro posto, se c'è, il lavoro del controllore
+    defs = [['checks', T('Controlli', 'Checks'), tabChecks], ['trend', T('Andamento', 'Progress'), tabTrend], ['machine', T('Macchina', 'Machine'), tabMachine], ck ? ['ck', T('Controllore', 'Checker'), tabChecker] : ['running', T('In corso', 'Running'), tabRunning]];
   }
-  const cur = tab[panel];
+  const cur = panel === 'build' && !defs.some((d) => d[0] === tab.build) ? 'checks' : tab[panel];
   for (const [id, label, fn] of defs) {
     const b = el('button', '', label);
     b.type = 'button'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(id === cur));
@@ -873,6 +876,33 @@ function commProj(body) {
   }
   body.append(ul, el('div', 'note', T('Per i repository la descrizione è quella scritta dai loro autori.', 'For repositories, the description is the one written by their authors.')));
 }
+// il controllore (leanchecker) non stampa nulla mentre lavora: questi sono valori letti da fuori sul suo processo
+function tabChecker(body) {
+  const secs = (s) => dur(s) + T(' di calcolo', ' of computing');
+  body.append(el('div', '', T('Dopo il build, leanchecker rilegge i file compilati e ne ricontrolla le dichiarazioni con il nucleo di Lean. Mentre lavora non scrive nulla: qui sotto ci sono solo valori misurati dall\'esterno sul suo processo.', 'After the build, leanchecker reads the compiled files back and re-checks their declarations with the Lean kernel. It prints nothing while it works: below are only values measured from outside on its process.')));
+  body.append(rows([
+    [T('Stato', 'Status'), ck.in_corso ? T('in esecuzione da ', 'running for ') + dur(ck.t) : T('terminato', 'finished') + (ck.esito != null ? T(' con codice ', ' with exit code ') + ck.esito : T(', codice non registrato', ', exit code not recorded')) + T(' dopo ', ' after ') + dur(ck.t)],
+    [T('Avviato', 'Started'), new Date(ck.avvio * 1000).toLocaleString(LOC, { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })],
+    [T('Moduli caricati', 'Modules loaded'), nf(ck.caricati) + T(' su ', ' of ') + nf(N)],
+    [T('Processore', 'CPU'), secs(ck.cpu_utente + ck.cpu_sistema) + T(', di cui ', ', of which ') + dur(ck.cpu_sistema) + T(' di sistema', ' system')],
+    ['Thread', String(ck.thread)], ['RAM', nf(ck.ram_mb) + ' MB'],
+    [T('Scritto in uscita', 'Written to output'), nf(ck.uscita_byte) + ' byte'],
+  ]));
+  if (ckT.length > 1) {
+    const pts = ckT.map((s, k) => [ck.avvio - T0 + s, k + 1]).filter((v, k, a) => k === a.length - 1 || k % Math.max(1, Math.floor(a.length / 300)) === 0);
+    body.append(el('div', 'sub', T('Moduli caricati nel tempo', 'Modules loaded over time')), chart(pts, '#eef0f7', nf));
+  }
+  body.append(el('div', 'note', T('"Caricato" vuol dire che il controllore ha aperto il file del modulo, non che lo ha già ricontrollato: il programma non dice a che punto è. Per questo non c\'è una barra di avanzamento.', '"Loaded" means the checker has opened the module file, not that it has already re-checked it: the program does not say how far it has got. That is why there is no progress bar.')));
+}
+async function pollChecker() {
+  const r = await fetch(base + '/ck.json?' + Date.now(), { signal: AbortSignal.timeout(15000) });
+  if (!r.ok) return;
+  ck = await r.json();
+  const buf = await (await fetch(base + '/ck?from=' + nCk, { signal: AbortSignal.timeout(30000) })).arrayBuffer(), dv = new DataView(buf), n = Math.floor(buf.byteLength / 8);
+  for (let k = 0; k < n; k++) ckT.push(dv.getFloat32(k * 8 + 4, true));
+  nCk += n;
+  if (panel === 'build') renderPanel();
+}
 function tabTrend(body) {
   const tn = now(), nb = Math.max(1, Math.ceil(tn / 60)), per = new Uint32Array(nb + 1);
   for (const i of order) per[Math.min(nb, Math.floor(E[i] / 60))]++;
@@ -1048,6 +1078,8 @@ async function boot() {
     const ev = guard(pollEvents, T('eventi', 'events')), nw = guard(pollNow, T('file in compilazione', 'files compiling')), sy = guard(pollSys, T('stato', 'status'));
     await ev(); nw();
     setInterval(ev, 8000); setInterval(nw, 3000); setInterval(sy, 10000);
+    const cw = () => { if (sys && sys.exit !== '') pollChecker().catch(() => {}); };
+    cw(); setInterval(cw, 10000);
   } else {
     await pollEvents(); await pollNow();
     $('clock').textContent = T('Il pod non è collegato: dati fermi al ', 'The build machine is not connected: data as of ') + new Date(sys.t * 1000).toLocaleString(LOC, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });

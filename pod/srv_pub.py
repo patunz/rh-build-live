@@ -2,6 +2,7 @@
 # Uso: python3 srv_pub.py [--senza-enunciati] <origine consentita> [altre origini]
 #
 #   /events, /now.json, /sys.json   i tre dati in diretta del build
+#   /ck.json, /ck?from=K            il controllore visto da fuori: stato misurato e moduli caricati (vedi ck.py)
 #   /file?i=N                       gli enunciati dei teoremi del file N, letti dal sorgente
 #
 # Non serve file statici e non accetta caricamenti. Dei sorgenti espone solo gli enunciati
@@ -20,7 +21,7 @@ PER_INDIRIZZO, IN_TUTTO, FINESTRA = 40, 240, 60.0   # richieste di /file al minu
 MAX_ENUNCIATI, MAX_CARATTERI = 60, 6000
 
 RX_LINE = re.compile(
-    r'^[ \t]*(?:(namespace|end)\s+(\S+)'
+    r'^[ \t]*(?:(namespace|end)[ \t]+(\S+)'
     r'|(?:@\[[^\]]*\]\s*)?(?:(?:private|protected|noncomputable|nonrec|public|scoped|local|unsafe)\s+)*'
     r'(theorem|lemma|def|abbrev|structure|class|inductive|instance)\s+([^\s:({\[]+))', re.M)
 _names = []
@@ -114,7 +115,13 @@ class H(http.server.BaseHTTPRequestHandler):
                     f.seek(k * 12)
                     body = f.read()
                 return self.reply(body[:len(body) // 12 * 12], 'application/octet-stream')
-            if u.path in ('/now.json', '/sys.json'):
+            if u.path == '/ck':
+                k = max(0, int(q.get('from', ['0'])[0]))
+                with open(MON + 'ck.bin', 'rb') as f:
+                    f.seek(k * 8)
+                    body = f.read()
+                return self.reply(body[:len(body) // 8 * 8], 'application/octet-stream')
+            if u.path in ('/now.json', '/sys.json', '/ck.json'):
                 return self.reply(open(MON + u.path[1:], 'rb').read(), 'application/json')
             if u.path == '/file' and not ENUNCIATI:
                 return self.reply(b'{"errore": "enunciati non disponibili"}', 'application/json', code=403)
