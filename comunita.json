@@ -108,6 +108,14 @@
           "en": "In the same issue ishaan2006 reports the full comparison from his own build: 76,968 identical and 98,219 different, all with the path inside."
         },
         {
+          "it": "ishaan2006 riporta poi un campione di 300 moduli diversi ricompilati al percorso di Sutherland: 300 su 300 identici al manifest.",
+          "en": "ishaan2006 then reports a sample of 300 differing modules recompiled at Sutherland's path: 300 of 300 identical to the manifest."
+        },
+        {
+          "it": "Il gruppo ha recepito il risultato nelle note di verifica (PR #40 di Deicyde, unita): tra build diversi si confrontano gli export, non gli .olean. La issue è stata chiusa con quella PR.",
+          "en": "The group took the result into its verification notes (PR #40 by Deicyde, merged): different builds are compared through the exports, not the .olean files. The issue was closed by that PR."
+        },
+        {
           "it": "Da fare a build finito: il controllo degli assiomi e il nostro conteggio su tutti i moduli, come seconda conferma.",
           "en": "To do once the build ends: the axiom check and our own count over all modules, as a second confirmation."
         }
@@ -123,6 +131,16 @@
           "en": "Memory mappings in one Lean process halfway through the build",
           "v_it": "73.448",
           "v_en": "73,448"
+        }
+      ],
+      "seguito": [
+        {
+          "it": "Ticobit ha aperto la PR #37, unita: il controllo dei runner ora riporta vm.max_map_count e richiede un minimo. La issue è stata chiusa con quella PR.",
+          "en": "Ticobit opened PR #37, merged: the runner check now reports vm.max_map_count and requires a minimum. The issue was closed by that PR."
+        },
+        {
+          "it": "aapolipponen riporta lo stesso guasto su LUMI, terzo build indipendente a incontrarlo, e spiega dove vanno le mappe: cinque file per ogni modulo importato.",
+          "en": "aapolipponen reports the same failure on LUMI, the third independent build to hit it, and explains where the mappings go: five files per imported module."
         }
       ]
     }
