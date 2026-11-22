@@ -30,10 +30,10 @@
       "link": ""
     },
     {
-      "nome": "Ricontrollo con lean4checker",
-      "nome_en": "Re-check with lean4checker",
-      "stato": "da decidere",
-      "stato_en": "to be decided",
+      "nome": "Ricontrollo con leanchecker (toolchain Lean v4.33.1)",
+      "nome_en": "Re-check with leanchecker (Lean v4.33.1 toolchain)",
+      "stato": "in corso",
+      "stato_en": "in progress",
       "esito": "",
       "link": ""
     }
