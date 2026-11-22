@@ -773,6 +773,7 @@ function commOver(body) {
   if (!commReady(body)) return;
   const it = gh.items, r = gh.repos[comm.repo] || {}, recent = it.filter((i) => Date.now() - Date.parse(i.ua) < 172800000);
   const iss = it.filter((i) => !i.pr), prs = it.filter((i) => i.pr), last = it.reduce((m, i) => (i.ua > m ? i.ua : m), '');
+  if (comm.apertura_it) { const ap = el('div', '', T(comm.apertura_it, comm.apertura_en) + ' '); ap.append(link(T('La dichiarazione', 'The statement'), comm.apertura_url, 'plain'), '.'); ap.style.marginBottom = '12px'; body.append(ap); }
   const intro = el('div', '', T('Il gruppo di verifica lavora su ', 'The verification group works on '));
   intro.append(link(comm.repo, 'https://github.com/' + comm.repo, 'plain'), '.');
   body.append(intro);

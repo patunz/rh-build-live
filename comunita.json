@@ -1,5 +1,8 @@
 {
   "repo": "leanprover-community/riemann-hypothesis",
+  "apertura_it": "Il 21 novembre 2026 le comunità Lean e Mathlib, con il sostegno di Lean FRO e Mathlib Initiative, hanno pubblicato una dichiarazione congiunta che certifica corretti l'enunciato e la dimostrazione dell'ipotesi di Riemann. Da allora il lavoro nel repository della comunità si è spostato dalla verifica alla riscrittura: passaggio a Lean 4.36, rimozione di ciò che la dimostrazione non usa, prove più brevi, prime citazioni bibliografiche. L'archivio pubblicato dall'autore resta al commit 40e56bab.",
+  "apertura_en": "On 21 November 2026 the Lean and Mathlib communities, endorsed by the Lean FRO and the Mathlib Initiative, published a joint statement certifying that the statement and the proof of the Riemann Hypothesis are correct. Since then, work in the community repository has moved from verification to rewriting: the port to Lean 4.36, removal of what the proof does not use, shorter proofs, first bibliographic citations. The archive published by the author remains at commit 40e56bab.",
+  "apertura_url": "https://leanprover-community.github.io/blog/posts/riemann-hypothesis/",
   "filoni": [
     {
       "it": "Riproducibilità degli artefatti",
@@ -123,8 +126,8 @@
     },
     {
       "numero": 29,
-      "it": "Una nota preventiva per chi offre macchine al gruppo: con il valore predefinito di vm.max_map_count (65.530) i moduli più alti del grafo degli import falliscono con un errore fuorviante su un file integro. Propone che il controllo dei runner lo segnali. Sui runner del gruppo il problema non si è visto.",
-      "en": "A preventive note for people offering machines to the group: with the default vm.max_map_count (65,530) the modules highest in the import graph fail with a misleading error on an intact file. It proposes that the runner check report it. The problem has not been seen on the group's runners.",
+      "it": "Una nota preventiva per chi offre macchine al gruppo: con il valore predefinito di vm.max_map_count (65.530) i moduli più alti del grafo degli import falliscono con un errore fuorviante su un file integro. Propone che il controllo dei runner lo segnali. Sui runner del gruppo il problema non si è visto. I manutentori hanno dato seguito con la issue #73 e la PR #86: il valore viene controllato all'avvio di ogni job.",
+      "en": "A preventive note for people offering machines to the group: with the default vm.max_map_count (65,530) the modules highest in the import graph fail with a misleading error on an intact file. It proposes that the runner check report it. The problem has not been seen on the group's runners. The maintainers followed up with issue #73 and PR #86: the value is checked at the start of every job.",
       "numeri": [
         {
           "it": "Mappe di memoria in un processo Lean a metà build",

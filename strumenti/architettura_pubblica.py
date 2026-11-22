@@ -21,6 +21,9 @@ sub("' file, ' + nf(dn) + ' verificati.'", "' file, ' + nf(dn) + ' compilati.'")
 sub("['Verificati', nf(dn)", "['Compilati', nf(dn)")
 sub("Verificati finora ' + nf(nDone)", "Compilati finora ' + nf(nDone)")
 
+# --- la mappa fotografa l'archivio originale: il repository della comunità nel frattempo viene riscritto
+sub('Fai clic su una colonna per aprirla.</div>', 'Fai clic su una colonna per aprirla. La mappa descrive l\'archivio pubblicato il 20 novembre 2026 (commit 40e56bab): il repository della comunità nel frattempo viene riscritto e non coincide più con questa fotografia.</div>')
+
 # --- la traccia dell'autore resta fuori finché Lucio non decide: bottone nascosto, dati tolti da arch.json
 sub('<button type="button" class="ic" id="bTrace" aria-pressed="false">', '<button type="button" class="ic" id="bTrace" aria-pressed="false" hidden>')
 if '[hidden]' not in t:
@@ -189,7 +192,7 @@ sub('<h1>Architettura</h1>', '<h1 id="h1">Architettura</h1>')
 sub("requestAnimationFrame(draw);\nboot();", """document.title = T('Archivio RH di Alpöge: l\\'architettura', 'Alpöge RH archive: the architecture');
 $('eyebrow').textContent = T('Architettura dell\\'archivio Lean di Alpöge', 'Architecture of Alpöge\\u2019s Lean archive');
 $('h1').textContent = T('Architettura', 'Architecture');
-$('lede').textContent = T($('lede').textContent, 'Each column is a theory: one bar per level, as long as the files it has at that height, on the same scale for all. Where there is no bar there are no files. The filled part is already compiled in our build. The ribbons are the imports from one theory to another. Click a column to open it.');
+$('lede').textContent = T($('lede').textContent, 'Each column is a theory: one bar per level, as long as the files it has at that height, on the same scale for all. Where there is no bar there are no files. The filled part is already compiled in our build. The ribbons are the imports from one theory to another. Click a column to open it. This map describes the archive published on 20 November 2026 (commit 40e56bab): the community repository is being rewritten in the meantime and no longer matches this snapshot.');
 $('cv').setAttribute('aria-label', T($('cv').getAttribute('aria-label'), 'Architecture of the archive: one column per theory on the axis of dependency levels, as wide as the files it has at each level, with ribbons for the imports between theories'));
 $('bUp').textContent = T('Tutte le teorie', 'All theories');
 $('status').textContent = T('Caricamento dei dati', 'Loading data');

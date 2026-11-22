@@ -88,7 +88,7 @@ dl.rows dd{margin:0;font-variant-numeric:tabular-nums}
 <div id="head">
 <div class="eyebrow" id="eyebrow">Architettura dell'archivio Lean di Alpöge</div>
 <h1 id="h1">Architettura</h1>
-<div id="lede">Ogni colonna è una teoria: una barra per livello, lunga quanto i file che ha a quell'altezza, con la stessa scala per tutte. Dove non c'è barra non ci sono file. La parte piena è già compilata nel nostro build. I nastri sono gli import da una teoria all'altra. Fai clic su una colonna per aprirla.</div>
+<div id="lede">Ogni colonna è una teoria: una barra per livello, lunga quanto i file che ha a quell'altezza, con la stessa scala per tutte. Dove non c'è barra non ci sono file. La parte piena è già compilata nel nostro build. I nastri sono gli import da una teoria all'altra. Fai clic su una colonna per aprirla. La mappa descrive l'archivio pubblicato il 20 novembre 2026 (commit 40e56bab): il repository della comunità nel frattempo viene riscritto e non coincide più con questa fotografia.</div>
 <div id="crumb" hidden><button type="button" id="bUp">Tutte le teorie</button><b id="crumbName"></b></div>
 </div>
 <aside id="panel" hidden></aside>
@@ -571,7 +571,7 @@ async function boot() {
 document.title = T('Archivio RH di Alpöge: l\'architettura', 'Alpöge RH archive: the architecture');
 $('eyebrow').textContent = T('Architettura dell\'archivio Lean di Alpöge', 'Architecture of Alpöge\u2019s Lean archive');
 $('h1').textContent = T('Architettura', 'Architecture');
-$('lede').textContent = T($('lede').textContent, 'Each column is a theory: one bar per level, as long as the files it has at that height, on the same scale for all. Where there is no bar there are no files. The filled part is already compiled in our build. The ribbons are the imports from one theory to another. Click a column to open it.');
+$('lede').textContent = T($('lede').textContent, 'Each column is a theory: one bar per level, as long as the files it has at that height, on the same scale for all. Where there is no bar there are no files. The filled part is already compiled in our build. The ribbons are the imports from one theory to another. Click a column to open it. This map describes the archive published on 20 November 2026 (commit 40e56bab): the community repository is being rewritten in the meantime and no longer matches this snapshot.');
 $('cv').setAttribute('aria-label', T($('cv').getAttribute('aria-label'), 'Architecture of the archive: one column per theory on the axis of dependency levels, as wide as the files it has at each level, with ribbons for the imports between theories'));
 $('bUp').textContent = T('Tutte le teorie', 'All theories');
 $('status').textContent = T('Caricamento dei dati', 'Loading data');
