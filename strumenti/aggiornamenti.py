@@ -107,5 +107,7 @@ mosso = any(voce[k]['n'] for k in gruppi) or nostre
 nuovo = {'fino': iso(ora), 'stelle': voce['stelle'], 'fork': voce['fork'], 'nostre': adesso,
          'voci': ([voce] if mosso else []) + stato.get('voci', [])}
 nuovo['voci'] = nuovo['voci'][:MAX_VOCI]
-json.dump(nuovo, open(FILE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+# senza movimenti non si scrive nulla: la prossima voce coprirà un intervallo più lungo
+if mosso:
+    json.dump(nuovo, open(FILE, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
 print('da', da, 'a', iso(ora), {k: voce[k]['n'] for k in gruppi}, 'nostre cambiate:', len(nostre), 'voce scritta:', bool(mosso))
