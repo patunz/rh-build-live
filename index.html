@@ -173,7 +173,7 @@ const on = new Array(8).fill(true);
 let W = 0, H = 0, dpr = 1, x0 = 0, x1f = 0, y0 = 0, y1 = 0, TD = 1800, dockT = 0, dockK = 0;
 // disegno progressivo, selezione, scheda
 let queue = [], qi = 0, hot = -1, sel = null, panel = null, info = null, decl = 0, firstLoad = true;
-// base: indirizzo del pod (null = istantanea in data/); frozen: istante a cui è ferma l'istantanea; checks: risultati.json
+// base: indirizzo del pod (null = istantanea in data/); frozen: istante a cui il tempo della pagina è fermo (l'istantanea, oppure la fine del build); checks: risultati.json
 let base = null, frozen = null, checks = null;
 // stmtOn: la sezione Enunciato si accende solo se live.json dice "enunciati": true (serve il permesso dell'autore dell'archivio)
 let stmtOn = false;
@@ -893,7 +893,7 @@ function tabMachine(body) {
   const tn = now(), r = rateNow(), eta = r > 0 ? (N - order.length) / r : NaN, last = order.length ? order[order.length - 1] : -1;
   body.append(rows([
     [T('Stato', 'Status'), sys ? (sys.exit !== '' ? T('terminato con codice ', 'finished with code ') + sys.exit : sys.run ? T('lake in esecuzione', 'lake running') : T('lake fermo', 'lake stopped')) : '…'],
-    [T('Tempo trascorso', 'Elapsed'), dur(tn)], [T('Tempo residuo', 'Remaining'), eta === eta ? dur(eta) + T(' (stima)', ' (estimate)') : '…'],
+    [T('Tempo trascorso', 'Elapsed'), dur(tn)], [T('Tempo residuo', 'Remaining'), sys && sys.exit !== '' ? '—' : eta === eta ? dur(eta) + T(' (stima)', ' (estimate)') : '…'],
     [T('In compilazione', 'Compiling'), run.length + T(' file', ' files')], [T('Errori', 'Errors'), sys ? String(sys.err) : '…'],
     [T('RAM usata', 'RAM used'), sys ? sys.mem + T(' GB di 256', ' GB of 256') : '…'], [T('Carico', 'Load'), sys ? String(sys.load).replace('.', DEC) + T(' su 32 vCPU', ' on 32 vCPUs') : '…'], [T('Disco libero', 'Free disk'), sys ? sys.free + ' GB' : '…'],
     [T('Costo del pod', 'Machine cost'), '$' + ((ct(tn) / 3600) * M.price).toFixed(2) + T(' finora', ' so far')], [T('Costo stimato', 'Estimated cost'), eta === eta ? '$' + (((ct(tn) + eta) / 3600) * M.price).toFixed(0) + T(' a fine build', ' at the end of the build') : '…'],
@@ -1003,6 +1003,8 @@ async function pollEvents() {
     if (!firstLoad) pops.push({ i, t: performance.now() + Math.random() * 600 });
   }
   nEv += n; firstLoad = false;
+  // a build terminato il tempo non scorre più: il presente della pagina è la fine dell'ultimo file
+  if (sys && sys.exit !== '' && order.length) frozen = E[order[order.length - 1]];
   pauses(); domain(); hud();
 }
 async function pollNow() {
