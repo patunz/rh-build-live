@@ -1,11 +1,11 @@
 {
- "fino": "2026-11-22T01:51:43Z",
- "stelle": 409,
- "fork": 85,
+ "fino": "2026-11-22T14:28:38Z",
+ "stelle": 536,
+ "fork": 112,
  "nostre": {
   "6": {
    "aperta": false,
-   "commenti": 10
+   "commenti": 11
   },
   "29": {
    "aperta": false,
@@ -13,6 +13,213 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-22T01:51:43Z",
+   "a": "2026-11-22T14:28:38Z",
+   "issue_aperte": {
+    "n": 4,
+    "elenco": [
+     {
+      "n": 73,
+      "t": "Runner map-count check: two small follow-ups",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/73"
+     },
+     {
+      "n": 77,
+      "t": "Proof guide: why a generator can omit orbit operators",
+      "u": "uos1231234",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/77"
+     },
+     {
+      "n": 96,
+      "t": "A Prova de Riemann Sob Auditoria: Trivialidade Geométrica e Integridade Forma",
+      "u": "lzprograma",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/96"
+     },
+     {
+      "n": 99,
+      "t": "Violação de Monotonicidade: S_λ (λ < 1)",
+      "u": "lzprograma",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/99"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 5,
+    "elenco": [
+     {
+      "n": 2,
+      "t": "Source-level import cone: no module lies outside Main's cone",
+      "u": "joni15",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/2"
+     },
+     {
+      "n": 3,
+      "t": "A reduced version for faster builds, plus a proof map (numbers corrected: safe reduction is about 9%, see comments)",
+      "u": "keithadler",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/3"
+     },
+     {
+      "n": 47,
+      "t": "checks.yml: provenance check and source-mirror claims are stale after PR #8",
+      "u": "RFT-SIRM",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/47"
+     },
+     {
+      "n": 56,
+      "t": "There should be 2 repos: riemann-hypothesis and riemann-hypothesis-apogee",
+      "u": "jamesyc",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/56"
+     },
+     {
+      "n": 59,
+      "t": "Is there a reference for the rank-uniform local Bessel estimate WLoc1 in Theorem B?",
+      "u": "ATS-FinAI",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/59"
+     }
+    ]
+   },
+   "pr_aperte": {
+    "n": 33,
+    "elenco": [
+     {
+      "n": 65,
+      "t": "Simplify explicit typeclass dumps in 4 kernel-used CapelliIdentities files",
+      "u": "thekeunpie-hash",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/65"
+     },
+     {
+      "n": 66,
+      "t": "Bump to Lean and Mathlib v4.36.0",
+      "u": "Vilin97",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/66"
+     },
+     {
+      "n": 67,
+      "t": "Remove proof syntax that was flagged unused by Lean's linters",
+      "u": "james-shore",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/67"
+     },
+     {
+      "n": 68,
+      "t": "Share the rank-induction proof of GL finiteness (9,010 fewer Lean lines)",
+      "u": "antoshashakov",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/68"
+     },
+     {
+      "n": 69,
+      "t": "cleanup/seed ancestor cache",
+      "u": "deancureton",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/69"
+     },
+     {
+      "n": 70,
+      "t": "Simplify explicit typeclass dumps in 5 more CapelliIdentities files",
+      "u": "jasonyandell",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/70"
+     },
+     {
+      "n": 71,
+      "t": "chore: remove 66 backward.* options across 4 kernel-used scheme files",
+      "u": "thekeunpie-hash",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/71"
+     },
+     {
+      "n": 72,
+      "t": "Name the failed prerequisite when runner doctor reports not ready",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/72"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 7,
+    "elenco": [
+     {
+      "n": 60,
+      "t": "Simplify explicit typeclass dump in CapelliIdentities/FixPiIff.lean",
+      "u": "thekeunpie-hash",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/60"
+     },
+     {
+      "n": 64,
+      "t": "Record the source changes since the original submission and fix the provenance check",
+      "u": "Antimatter543",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/64"
+     },
+     {
+      "n": 65,
+      "t": "Simplify explicit typeclass dumps in 4 kernel-used CapelliIdentities files",
+      "u": "thekeunpie-hash",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/65"
+     },
+     {
+      "n": 66,
+      "t": "Bump to Lean and Mathlib v4.36.0",
+      "u": "Vilin97",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/66"
+     },
+     {
+      "n": 68,
+      "t": "Share the rank-induction proof of GL finiteness (9,010 fewer Lean lines)",
+      "u": "antoshashakov",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/68"
+     },
+     {
+      "n": 72,
+      "t": "Name the failed prerequisite when runner doctor reports not ready",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/72"
+     },
+     {
+      "n": 93,
+      "t": "README: drop counts that go stale; link the frozen copy of the published source",
+      "u": "homeowmorphism",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/93"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 2,
+    "elenco": [
+     {
+      "n": 89,
+      "t": "Port current main to Lean and Mathlib 4.36",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/89"
+     },
+     {
+      "n": 100,
+      "t": "Reuse 12 existing kernel-cone proofs and remove 697 duplicate modules (−50,389 lines)",
+      "u": "agulerman",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/100"
+     }
+    ]
+   },
+   "per_filone": [
+    0,
+    5,
+    2,
+    9,
+    21
+   ],
+   "nostre": [
+    {
+     "n": 6,
+     "t": ".olean hashes depend on the build directory (stored linter messages embed the absolute source path)",
+     "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/6",
+     "aperta": false,
+     "commenti": 11,
+     "commenti_prima": 10,
+     "aperta_prima": false
+    }
+   ],
+   "stelle": 536,
+   "fork": 112,
+   "stelle_prima": 409,
+   "fork_prima": 85
+  },
   {
    "da": "2026-11-21T13:50:08Z",
    "a": "2026-11-22T01:50:08Z",
