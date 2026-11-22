@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-22T14:28:38Z",
- "stelle": 536,
- "fork": 112,
+ "fino": "2026-11-22T23:33:40Z",
+ "stelle": 609,
+ "fork": 137,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,245 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-22T14:28:38Z",
+   "a": "2026-11-22T23:33:40Z",
+   "issue_aperte": {
+    "n": 8,
+    "elenco": [
+     {
+      "n": 112,
+      "t": "Offer: a one-day build runner (32–48 vCPU, 128–192 GB). Useful, or more trouble than it is worth?",
+      "u": "jasonyandell",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/112"
+     },
+     {
+      "n": 133,
+      "t": "Review consolidated Lean 4.36 build and bundle structure (codex-03)",
+      "u": "emsi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/133"
+     },
+     {
+      "n": 137,
+      "t": "Eliminate linter warnings",
+      "u": "thorimur",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/137"
+     },
+     {
+      "n": 138,
+      "t": "Consolidate or align exactly-duplicated declarations",
+      "u": "thorimur",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/138"
+     },
+     {
+      "n": 151,
+      "t": "Remove hypothesis fields the proof never reads (field-level dead code)",
+      "u": "righi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/151"
+     },
+     {
+      "n": 178,
+      "t": "Measurements: what automation, deduplication, liveness pruning and hand rewriting each buy on this tree",
+      "u": "PastaPastaPasta",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/178"
+     },
+     {
+      "n": 179,
+      "t": "Rename non-ASCII filenames",
+      "u": "SnirBroshi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/179"
+     },
+     {
+      "n": 180,
+      "t": "Format the code using Lean's upcoming formatter",
+      "u": "SnirBroshi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/180"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 1,
+    "elenco": [
+     {
+      "n": 112,
+      "t": "Offer: a one-day build runner (32–48 vCPU, 128–192 GB). Useful, or more trouble than it is worth?",
+      "u": "jasonyandell",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/112"
+     }
+    ]
+   },
+   "pr_aperte": {
+    "n": 90,
+    "elenco": [
+     {
+      "n": 102,
+      "t": "Reuse the expanded baseline across donor proof leases",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/102"
+     },
+     {
+      "n": 103,
+      "t": "Isolate donor inputs and outputs between proof leases",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/103"
+     },
+     {
+      "n": 104,
+      "t": "Speed up the slowest proofs (stacked on #79)",
+      "u": "Vilin97",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/104"
+     },
+     {
+      "n": 105,
+      "t": "Raise donor proof task limit for stock Lean worker threads",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/105"
+     },
+     {
+      "n": 106,
+      "t": "Accept identical donor proof scopes in different module orders",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/106"
+     },
+     {
+      "n": 107,
+      "t": "Use James agreed first-build memory allocation",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/107"
+     },
+     {
+      "n": 108,
+      "t": "Validate the proof worker task budget consistently",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/108"
+     },
+     {
+      "n": 109,
+      "t": "Restore #68 shared GL finiteness proof on Lean 4.36 (−180 files, −9,730 lines)",
+      "u": "thekeunpie-hash",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/109"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 20,
+    "elenco": [
+     {
+      "n": 101,
+      "t": "Let registered donors build bounded proof shards",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/101"
+     },
+     {
+      "n": 102,
+      "t": "Reuse the expanded baseline across donor proof leases",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/102"
+     },
+     {
+      "n": 103,
+      "t": "Isolate donor inputs and outputs between proof leases",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/103"
+     },
+     {
+      "n": 105,
+      "t": "Raise donor proof task limit for stock Lean worker threads",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/105"
+     },
+     {
+      "n": 106,
+      "t": "Accept identical donor proof scopes in different module orders",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/106"
+     },
+     {
+      "n": 107,
+      "t": "Use James agreed first-build memory allocation",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/107"
+     },
+     {
+      "n": 108,
+      "t": "Validate the proof worker task budget consistently",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/108"
+     },
+     {
+      "n": 111,
+      "t": "README: describe the Lean 4.36 port, its cache and its checking steps",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/111"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 21,
+    "elenco": [
+     {
+      "n": 58,
+      "t": "Collapse 24,027 single-declaration thin re-export wrappers (stacked on #55)",
+      "u": "rohanarun",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/58"
+     },
+     {
+      "n": 61,
+      "t": "Collapse 5,544 more thin re-export wrappers — Wave 2 (stacked on #58)",
+      "u": "rohanarun",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/61"
+     },
+     {
+      "n": 62,
+      "t": "Shorten machine-dumped terms and reuse repeated proofs in 76 modules",
+      "u": "marwuint",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/62"
+     },
+     {
+      "n": 63,
+      "t": "Consolidate 133,202 small sibling modules into 22,831 antichain bundles (−110,371 files, −67.1%)",
+      "u": "rohanarun",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/63"
+     },
+     {
+      "n": 70,
+      "t": "Simplify explicit typeclass dumps in 5 more CapelliIdentities files",
+      "u": "jasonyandell",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/70"
+     },
+     {
+      "n": 71,
+      "t": "chore: remove 66 backward.* options across 4 kernel-used scheme files",
+      "u": "thekeunpie-hash",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/71"
+     },
+     {
+      "n": 74,
+      "t": "Give four duplicated theorems a single defining module",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/74"
+     },
+     {
+      "n": 75,
+      "t": "Share analytic proofs across zeta and Dirichlet L-functions (630 fewer Lean lines)",
+      "u": "YinkaiYu",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/75"
+     }
+    ]
+   },
+   "per_filone": [
+    0,
+    33,
+    10,
+    11,
+    44
+   ],
+   "nostre": [],
+   "stelle": 609,
+   "fork": 137,
+   "stelle_prima": 536,
+   "fork_prima": 112
+  },
   {
    "da": "2026-11-22T01:51:43Z",
    "a": "2026-11-22T14:28:38Z",
