@@ -1084,7 +1084,7 @@ async function boot() {
   } else {
     await pollEvents(); await pollNow();
     if (sys.exit !== '') pollChecker().catch(() => {});
-    $('clock').textContent = T('Il pod non è collegato: dati fermi al ', 'The build machine is not connected: data as of ') + new Date(sys.t * 1000).toLocaleString(LOC, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+    $('clock').textContent = (sys.exit !== '' ? T('Build concluso e macchina spenta: dati finali del ', 'Build over and machine switched off: final data of ') : T('Il pod non è collegato: dati fermi al ', 'The build machine is not connected: data as of ')) + new Date(sys.t * 1000).toLocaleString(LOC, { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
   }
   setInterval(() => { domain(); hud(); if (panel === 'build') renderPanel(); }, 5000);
   fetch('names.txt').then((r) => r.text()).then((t) => { names = t.split('\n'); if (panel) renderPanel(); }).catch(() => {});
