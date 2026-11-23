@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-22T23:33:40Z",
- "stelle": 609,
- "fork": 137,
+ "fino": "2026-11-23T17:56:42Z",
+ "stelle": 803,
+ "fork": 226,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,257 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-22T23:33:40Z",
+   "a": "2026-11-23T17:56:42Z",
+   "issue_aperte": {
+    "n": 8,
+    "elenco": [
+     {
+      "n": 229,
+      "t": "Identify and track technical debt",
+      "u": "thorimur",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/229"
+     },
+     {
+      "n": 234,
+      "t": "Collaboration Proposal: Community Simplification & Modular Coverage Map (Core 1–13 Live −65.4%, Scaling to 92.2% In-Place)",
+      "u": "Osgood001",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/234"
+     },
+     {
+      "n": 250,
+      "t": "Lean phase profiling of RH: 1% pilot and 10% sample",
+      "u": "Vilin97",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/250"
+     },
+     {
+      "n": 286,
+      "t": "Source-level structural anatomy of the live RH cone vs. Mathlib (companion to #250)",
+      "u": "hhh2210",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/286"
+     },
+     {
+      "n": 305,
+      "t": "Build profile of main after #185 (Lean 4.37.0-rc1): where the CPU goes",
+      "u": "yourball",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/305"
+     },
+     {
+      "n": 365,
+      "t": "Reader feedback: a complete Chinese pilot chapter on divisibility and the Riemann hypothesis",
+      "u": "uos1231234",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/365"
+     },
+     {
+      "n": 383,
+      "t": "Documentation / Interface Fidelity Question (40e56ba): Guarded Weil–Deligne compatibility (AwayB/Aw) and OpenLiteratureStatements field reuse",
+      "u": "kakon77777-commits",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/383"
+     },
+     {
+      "n": 403,
+      "t": "Runner offer: arm64, 16 vCPU / 128 GiB / 1 TiB, available for one week",
+      "u": "afsharid",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/403"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 3,
+    "elenco": [
+     {
+      "n": 41,
+      "t": "Audit: Dependency on Mathlib/Classical.choice in src/Statements.lean decouples riemannZeta from dynamical stability",
+      "u": "frintroper",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/41"
+     },
+     {
+      "n": 42,
+      "t": "Audit: Dependency on Mathlib/Classical.choice in src/Challenge.lean decouples riemannZeta from dynamical stability",
+      "u": "frintroper",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/42"
+     },
+     {
+      "n": 133,
+      "t": "Review consolidated Lean 4.36 build and bundle structure (codex-03)",
+      "u": "emsi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/133"
+     }
+    ]
+   },
+   "pr_aperte": {
+    "n": 235,
+    "elenco": [
+     {
+      "n": 200,
+      "t": "Remove duplicate private theorems from DenseThresholdCases (−4,504 lines)",
+      "u": "ashleyholman",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/200"
+     },
+     {
+      "n": 201,
+      "t": "grok: Make the quotient-map step explicit in HasBasisAway.map",
+      "u": "alectionary",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/201"
+     },
+     {
+      "n": 202,
+      "t": "cache get: remove Lake's saved hashes before unpacking",
+      "u": "homeowmorphism",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/202"
+     },
+     {
+      "n": 203,
+      "t": "Enable fresh Lean 4.37 proof leases for PR 185",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/203"
+     },
+     {
+      "n": 204,
+      "t": "grok: speed up two exact elaborations in IsQuasicoherentOfForallExistsAffine.lean (WIP)",
+      "u": "alectionary",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/204"
+     },
+     {
+      "n": 205,
+      "t": "Record proof-job CPU, memory and task usage",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/205"
+     },
+     {
+      "n": 206,
+      "t": "fix: use portable ASCII module paths",
+      "u": "PHTPSN",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/206"
+     },
+     {
+      "n": 207,
+      "t": "grok: drop raised typeclass limits in del_sum/dbar_sum (WIP)",
+      "u": "alectionary",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/207"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 23,
+    "elenco": [
+     {
+      "n": 88,
+      "t": "Add a second Comparator setup, with formal-conjectures' RH and GRH as the challenge",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/88"
+     },
+     {
+      "n": 134,
+      "t": "Speed up the build: remove heartbeat overrides, minimize imports, speed up slow proofs",
+      "u": "Vilin97",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/134"
+     },
+     {
+      "n": 146,
+      "t": "README.md check for typos/inaccuracies/omissions",
+      "u": "homeowmorphism",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/146"
+     },
+     {
+      "n": 154,
+      "t": "Label PRs that touch build configuration, the challenge, CI or the README",
+      "u": "thorimur",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/154"
+     },
+     {
+      "n": 184,
+      "t": "docs: explain values in README",
+      "u": "thorimur",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/184"
+     },
+     {
+      "n": 185,
+      "t": "Integrate proof cleanup and bump to Lean 4.37.0-rc1",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/185"
+     },
+     {
+      "n": 191,
+      "t": "Label PRs by size, from extra small to extra large",
+      "u": "thorimur",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/191"
+     },
+     {
+      "n": 202,
+      "t": "cache get: remove Lake's saved hashes before unpacking",
+      "u": "homeowmorphism",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/202"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 26,
+    "elenco": [
+     {
+      "n": 9,
+      "t": "remove redundant imports and heartbeat overrides",
+      "u": "deancureton",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9"
+     },
+     {
+      "n": 10,
+      "t": "simplify generated proof fallbacks",
+      "u": "deancureton",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/10"
+     },
+     {
+      "n": 33,
+      "t": "replace deprecated proof lemmas",
+      "u": "deancureton",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/33"
+     },
+     {
+      "n": 67,
+      "t": "Remove proof syntax that was flagged unused by Lean's linters",
+      "u": "james-shore",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/67"
+     },
+     {
+      "n": 83,
+      "t": "Zero-free region: replace the 34-file assembly with a self-contained 2,447-token proof (Lean 4.36)",
+      "u": "YinkaiYu",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/83"
+     },
+     {
+      "n": 94,
+      "t": "Reuse the quadratic Hasse norm theorem for the negative-one norm equation",
+      "u": "hhh2210",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/94"
+     },
+     {
+      "n": 204,
+      "t": "grok: speed up two exact elaborations in IsQuasicoherentOfForallExistsAffine.lean (WIP)",
+      "u": "alectionary",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/204"
+     },
+     {
+      "n": 207,
+      "t": "grok: drop raised typeclass limits in del_sum/dbar_sum (WIP)",
+      "u": "alectionary",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/207"
+     }
+    ]
+   },
+   "per_filone": [
+    8,
+    31,
+    25,
+    41,
+    138
+   ],
+   "nostre": [],
+   "stelle": 803,
+   "fork": 226,
+   "stelle_prima": 609,
+   "fork_prima": 137
+  },
   {
    "da": "2026-11-22T14:28:38Z",
    "a": "2026-11-22T23:33:40Z",
