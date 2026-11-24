@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-23T17:56:42Z",
- "stelle": 803,
- "fork": 226,
+ "fino": "2026-11-24T03:56:34Z",
+ "stelle": 890,
+ "fork": 323,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,226 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-23T17:56:42Z",
+   "a": "2026-11-24T03:56:34Z",
+   "issue_aperte": {
+    "n": 6,
+    "elenco": [
+     {
+      "n": 526,
+      "t": "No CI check for `sorry` or new axioms on `main` (a text scan of `90cc2e12` is clean)",
+      "u": "a-ratz",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/526"
+     },
+     {
+      "n": 580,
+      "t": "Coordination offer: relocation-aware replay of remaining PRs after clumping",
+      "u": "timsdsdio",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/580"
+     },
+     {
+      "n": 590,
+      "t": "Module consolidation (#324) roughly doubles the build's critical path: measurements",
+      "u": "yourball",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/590"
+     },
+     {
+      "n": 594,
+      "t": "Reuse the existing self-dual lattice proof in 24 modules",
+      "u": "smithmi47-sudo",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/594"
+     },
+     {
+      "n": 599,
+      "t": "Proposal: remove duplicate and high-priority instances that force file-level `attribute [-instance]` workarounds",
+      "u": "roy7",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/599"
+     },
+     {
+      "n": 615,
+      "t": "Reuse existing compactness, Casimir, and eigenspace lemmas in 2 modules",
+      "u": "smithmi47-sudo",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/615"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 0,
+    "elenco": []
+   },
+   "pr_aperte": {
+    "n": 287,
+    "elenco": [
+     {
+      "n": 443,
+      "t": "Speed up Henselian composition proofs",
+      "u": "Jitheswar",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/443"
+     },
+     {
+      "n": 444,
+      "t": "Drop the redundant `Kernel.isDefEq` pre-checks in local elaborators (about −60 CPU-seconds per build)",
+      "u": "yourball",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/444"
+     },
+     {
+      "n": 445,
+      "t": "Reuse the closed-fibre lemmas for divisors of constants",
+      "u": "tksoftw",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/445"
+     },
+     {
+      "n": 446,
+      "t": "Consolidate 7 remaining unclaimed duplicate public theorems (#138)",
+      "u": "Visio-Vanitas",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/446"
+     },
+     {
+      "n": 447,
+      "t": "refactor: reuse the Euler factor nonvanishing lemma for Dirichlet characters",
+      "u": "s-celles-bot",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/447"
+     },
+     {
+      "n": 448,
+      "t": "Share the empty-subset argument for the local lattice quotient",
+      "u": "CheyLoveday",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/448"
+     },
+     {
+      "n": 449,
+      "t": "Streamline proofs and prune unused private imports across 8 modules (-3,449 lines)",
+      "u": "tomdif",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/449"
+     },
+     {
+      "n": 450,
+      "t": "Streamline proofs and prune unused private imports across 7 modules (-2,698 lines)",
+      "u": "tomdif",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/450"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 64,
+    "elenco": [
+     {
+      "n": 175,
+      "t": "refactor: shorten namespace qualifiers in intersection assembly",
+      "u": "hughperkins",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/175"
+     },
+     {
+      "n": 213,
+      "t": "Reuse quantitative bounds in the far-amplitude proof",
+      "u": "alectionary",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/213"
+     },
+     {
+      "n": 233,
+      "t": "Batch queue: compare queued pull requests, assemble them into a batch, freeze it when it is built",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/233"
+     },
+     {
+      "n": 246,
+      "t": "Speed up the entC_tr proof in InstBack (−60% module build time)",
+      "u": "Sheape",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/246"
+     },
+     {
+      "n": 269,
+      "t": "Avoid repeated mkdir calls during pinned cache restore",
+      "u": "fenghourun",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/269"
+     },
+     {
+      "n": 324,
+      "t": "perf: delete thin wrappers and combine modules into import-graph clumps",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/324"
+     },
+     {
+      "n": 348,
+      "t": "refactor: replace mutual reflexive PrincipalizationCertificate with Bool-indexed inductive (unblocks con-leche/con-ron)",
+      "u": "tudsytoo",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/348"
+     },
+     {
+      "n": 360,
+      "t": "Remove the unused `H.linearMapV436` copies from `SerrePAux` and `FormalTower`",
+      "u": "lovon-spec",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/360"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 149,
+    "elenco": [
+     {
+      "n": 54,
+      "t": "Golf the Riemann hypothesis proof one theorem at a time (3,220 fewer Lean lines)",
+      "u": "DebarghaG",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/54"
+     },
+     {
+      "n": 55,
+      "t": "Remove declarations that are unused in the proof",
+      "u": "james-shore",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/55"
+     },
+     {
+      "n": 69,
+      "t": "cleanup/seed ancestor cache",
+      "u": "deancureton",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/69"
+     },
+     {
+      "n": 78,
+      "t": "Add `docs/references.bib` and cite it from two docstrings",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/78"
+     },
+     {
+      "n": 87,
+      "t": "Shorten checked proofs across 816 Lean modules",
+      "u": "graohene10-spec",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/87"
+     },
+     {
+      "n": 95,
+      "t": "Simplify proofs in GammaFactorNonvanishing and ZeroFreeRegion (−824 lines)",
+      "u": "Osgood001",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/95"
+     },
+     {
+      "n": 109,
+      "t": "Restore #68 shared GL finiteness proof on Lean 4.36 (−180 files, −9,730 lines)",
+      "u": "thekeunpie-hash",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/109"
+     },
+     {
+      "n": 110,
+      "t": "Simplify explicit type dumps in cpR and std_cpR (NonzeroPlacesOverPrimesOfLifts.lean)",
+      "u": "thekeunpie-hash",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/110"
+     }
+    ]
+   },
+   "per_filone": [
+    3,
+    40,
+    27,
+    25,
+    198
+   ],
+   "nostre": [],
+   "stelle": 890,
+   "fork": 323,
+   "stelle_prima": 803,
+   "fork_prima": 226
+  },
   {
    "da": "2026-11-22T23:33:40Z",
    "a": "2026-11-23T17:56:42Z",
