@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-24T03:56:34Z",
- "stelle": 890,
- "fork": 323,
+ "fino": "2026-11-24T17:32:33Z",
+ "stelle": 995,
+ "fork": 368,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,263 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-24T03:56:34Z",
+   "a": "2026-11-24T17:32:33Z",
+   "issue_aperte": {
+    "n": 4,
+    "elenco": [
+     {
+      "n": 1038,
+      "t": "Two Mathlib instance-search slowdowns found while fixing timeouts here: could someone with Mathlib experience check them?",
+      "u": "roy7",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/1038"
+     },
+     {
+      "n": 1079,
+      "t": "Run Mathlib's text based linters",
+      "u": "SnirBroshi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/1079"
+     },
+     {
+      "n": 1087,
+      "t": "Don't allow noisy files",
+      "u": "SnirBroshi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/1087"
+     },
+     {
+      "n": 1304,
+      "t": "Finding unused declarations and modules from the compiled constant graph: a tool, and the places the naive version goes wrong",
+      "u": "Visio-Vanitas",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/1304"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 15,
+    "elenco": [
+     {
+      "n": 73,
+      "t": "Runner map-count check: two small follow-ups",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/73"
+     },
+     {
+      "n": 77,
+      "t": "Proof guide: why a generator can omit orbit operators",
+      "u": "uos1231234",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/77"
+     },
+     {
+      "n": 96,
+      "t": "A Prova de Riemann Sob Auditoria: Trivialidade Geométrica e Integridade Forma",
+      "u": "lzprograma",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/96"
+     },
+     {
+      "n": 99,
+      "t": "Monotonicity violation: S_λ (λ < 1)",
+      "u": "lzprograma",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/99"
+     },
+     {
+      "n": 178,
+      "t": "Measurements: what automation, deduplication, liveness pruning and hand rewriting each buy on this tree",
+      "u": "PastaPastaPasta",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/178"
+     },
+     {
+      "n": 234,
+      "t": "Collaboration Proposal: Community Simplification & Modular Coverage Map (Core 1–13 Live −65.4%, Scaling to 92.2% In-Place)",
+      "u": "Osgood001",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/234"
+     },
+     {
+      "n": 250,
+      "t": "Lean phase profiling of RH: 1% pilot and 10% sample",
+      "u": "Vilin97",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/250"
+     },
+     {
+      "n": 286,
+      "t": "Source-level structural anatomy of the live RH cone vs. Mathlib (companion to #250)",
+      "u": "hhh2210",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/286"
+     }
+    ]
+   },
+   "pr_aperte": {
+    "n": 575,
+    "elenco": [
+     {
+      "n": 736,
+      "t": "Share the exponential identities in the theta quasi-period proofs",
+      "u": "ai-nanachi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/736"
+     },
+     {
+      "n": 737,
+      "t": "Compute the principal logarithmic-derivative constant at one",
+      "u": "ebyrwa",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/737"
+     },
+     {
+      "n": 738,
+      "t": "Reuse Mathlib proofs for submultisets and finite ranks",
+      "u": "ai-nanachi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/738"
+     },
+     {
+      "n": 739,
+      "t": "perf(IwasawaDecomposition): speed up ColsReTo0S by 3.7x (-55.5s CPU, -9 lines)",
+      "u": "dga471",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/739"
+     },
+     {
+      "n": 740,
+      "t": "Simplify the multivariate polynomial evaluation-ideal proof",
+      "u": "ai-nanachi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/740"
+     },
+     {
+      "n": 741,
+      "t": "Remove the duplicate WtInterlaceC copy of WeightsTopGrid (−624 lines)",
+      "u": "592pmp4wyd-dot",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/741"
+     },
+     {
+      "n": 742,
+      "t": "Compose existing maps in continuous group cohomology",
+      "u": "ai-nanachi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/742"
+     },
+     {
+      "n": 743,
+      "t": "Share the archimedean theta-transform smoothness proof (−356 lines net)",
+      "u": "EricHe98",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/743"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 643,
+    "elenco": [
+     {
+      "n": 86,
+      "t": "Report vm.max_map_count at job start, fix the AWS template, clarify doctor output",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/86"
+     },
+     {
+      "n": 141,
+      "t": "Document Hadamard’s determinant inequality",
+      "u": "Robertboy18",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/141"
+     },
+     {
+      "n": 162,
+      "t": "Give the chart equivalence lemmas one import-order-independent interface",
+      "u": "aliromman",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/162"
+     },
+     {
+      "n": 165,
+      "t": "Give 27 duplicated declarations a single home",
+      "u": "mwiederrecht",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/165"
+     },
+     {
+      "n": 167,
+      "t": "Give 50 more duplicated declarations a single home",
+      "u": "mwiederrecht",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/167"
+     },
+     {
+      "n": 170,
+      "t": "refactor: simplify proof scaffolding in eight modules",
+      "u": "hughperkins",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/170"
+     },
+     {
+      "n": 188,
+      "t": "Replace 29 local duplicates of Mathlib theorems with the Mathlib versions (−145 lines)",
+      "u": "zediir",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/188"
+     },
+     {
+      "n": 194,
+      "t": "fix: resolve ~10,000 linter and deprecation warnings",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/194"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 131,
+    "elenco": [
+     {
+      "n": 4,
+      "t": "chore: minimize imports",
+      "u": "thorimur",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/4"
+     },
+     {
+      "n": 44,
+      "t": "Simplify the shared five-theorem proof and reduce its Lean source by 1.54 million lines",
+      "u": "mmmbeer",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/44"
+     },
+     {
+      "n": 120,
+      "t": "Collapse 28,169 thin wrappers and consolidate 93,601 modules into 20,258 bundles (−101,512 files, −67.9%)",
+      "u": "rohanarun",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/120"
+     },
+     {
+      "n": 131,
+      "t": " refactor: simplify FrameLinearAlgebraFirst via coordinate-free centered     frame variance",
+      "u": "tudsytoo",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/131"
+     },
+     {
+      "n": 206,
+      "t": "fix: use portable ASCII module paths",
+      "u": "PHTPSN",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/206"
+     },
+     {
+      "n": 272,
+      "t": "Cite Milne for PoitouTateDuality and Ferrero–Washington for FerreroWashington",
+      "u": "ishaan2006",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/272"
+     },
+     {
+      "n": 273,
+      "t": "Replace 8 local proofs with Mathlib lemmas (Lean v4.37.0-rc1, quick-check ready)",
+      "u": "Visio-Vanitas",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/273"
+     },
+     {
+      "n": 274,
+      "t": "Replace 8 local proofs with Mathlib lemmas (Lean v4.37.0-rc1, quick-check ready)",
+      "u": "Visio-Vanitas",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/274"
+     }
+    ]
+   },
+   "per_filone": [
+    4,
+    30,
+    60,
+    103,
+    382
+   ],
+   "nostre": [],
+   "stelle": 995,
+   "fork": 368,
+   "stelle_prima": 890,
+   "fork_prima": 323
+  },
   {
    "da": "2026-11-23T17:56:42Z",
    "a": "2026-11-24T03:56:34Z",
