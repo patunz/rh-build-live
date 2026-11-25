@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-24T17:32:33Z",
- "stelle": 995,
- "fork": 368,
+ "fino": "2026-11-25T02:19:27Z",
+ "stelle": 1064,
+ "fork": 422,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,214 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-24T17:32:33Z",
+   "a": "2026-11-25T02:19:27Z",
+   "issue_aperte": {
+    "n": 4,
+    "elenco": [
+     {
+      "n": 1720,
+      "t": "Build profile of main after the consolidation (`9282d3a102`): 57 CPU-hours, 22-minute critical chain",
+      "u": "yourball",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/1720"
+     },
+     {
+      "n": 1839,
+      "t": "Slow SMul instance search in TameInertiaCharactersSubsetTameType (Subalgebra.instSMulSubtypeMem tried before Algebra.toSMul)",
+      "u": "592pmp4wyd-dot",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/1839"
+     },
+     {
+      "n": 1878,
+      "t": "Slow unification in ExistsSqZeroLiftRealisingKs (on the critical chain): glueFil's Submodule instances differ from exists_sqZero_lift_of_fil's",
+      "u": "592pmp4wyd-dot",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/1878"
+     },
+     {
+      "n": 1903,
+      "t": "267 modules (34,421 lines) are built but import-unreachable from Main/Statements/Challenge — glob-sweep decision for the PublishedTheorems archive",
+      "u": "ZachSchlosser",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/1903"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 0,
+    "elenco": []
+   },
+   "pr_aperte": {
+    "n": 585,
+    "elenco": [
+     {
+      "n": 1315,
+      "t": "perf(GroundTheory/LocalFields): simplify Lubin-Tate descent and deduplicate sections in Descent",
+      "u": "JoeAzar",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1315"
+     },
+     {
+      "n": 1316,
+      "t": "refactor: drop hypotheses that two theorems ignore",
+      "u": "nielswiegerss-code",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1316"
+     },
+     {
+      "n": 1317,
+      "t": "refactor: remove the length_theorems_all_hold and length_theorems_with_earlier bundles",
+      "u": "ashleyholman",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1317"
+     },
+     {
+      "n": 1318,
+      "t": "refactor: prove strongMultOneC from smooth_multiplicity_one_holds",
+      "u": "ashleyholman",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1318"
+     },
+     {
+      "n": 1319,
+      "t": "chore: remove the unused HodgeLowerBound push-down and Hodge flag proofs",
+      "u": "ashleyholman",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1319"
+     },
+     {
+      "n": 1320,
+      "t": "refactor: reuse existing Iwasawa decomposition proofs",
+      "u": "LizzzMax",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1320"
+     },
+     {
+      "n": 1321,
+      "t": "refactor(Formalism/BranchSandwichDivisors): drop duplicate lemmas from OrthSum",
+      "u": "OskarKinomoto",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1321"
+     },
+     {
+      "n": 1322,
+      "t": "refactor(Formalism/BranchSandwichDivisors): shorten BranchIsometryProofs proofs with Mathlib lemmas",
+      "u": "OskarKinomoto",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1322"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 449,
+    "elenco": [
+     {
+      "n": 242,
+      "t": "Reuse the segment-representation proof and remove 35 unused modules",
+      "u": "maxilism",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/242"
+     },
+     {
+      "n": 350,
+      "t": "refactor(LatticeSlopes): simplify Gram determinant, rank, quotient, and slope proofs",
+      "u": "tudsytoo",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/350"
+     },
+     {
+      "n": 358,
+      "t": "Sharpen the ramified theta-kernel vanishing bound",
+      "u": "RodriguezCF",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/358"
+     },
+     {
+      "n": 418,
+      "t": "Simplify CurveDerivativeDecay via gap-free Casimir-Lipschitz formal-degree bound",
+      "u": "tudsytoo",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/418"
+     },
+     {
+      "n": 431,
+      "t": "refactor: remove the unread CM-literature hypothesis bundle",
+      "u": "righi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/431"
+     },
+     {
+      "n": 449,
+      "t": "Streamline proofs and prune unused private imports across 8 modules (-3,449 lines)",
+      "u": "tomdif",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/449"
+     },
+     {
+      "n": 450,
+      "t": "Streamline proofs and prune unused private imports across 7 modules (-2,698 lines)",
+      "u": "tomdif",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/450"
+     },
+     {
+      "n": 464,
+      "t": "Avoid D7 and PackSigma proof-term blowups in 16 modules",
+      "u": "tanclary",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/464"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 22,
+    "elenco": [
+     {
+      "n": 804,
+      "t": "Remove two same-name duplicate theorems and align the binders of dSW_smooth and mt_mul",
+      "u": "RudiksChess",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/804"
+     },
+     {
+      "n": 1277,
+      "t": "perf(RelativeSerre): pin the sheaf Abelian instance in SheafHOver and SheafHEquiv",
+      "u": "grootstebozewolf",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1277"
+     },
+     {
+      "n": 1338,
+      "t": "refactor(Development/AbelianVarietyTheory): drop the GaloisGeometry copy of five ChartRank modules",
+      "u": "joshuanianji",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1338"
+     },
+     {
+      "n": 1340,
+      "t": "refactor(Development/WeilBound): use the VacuumImageIntertwiner originals in PfDict",
+      "u": "joshuanianji",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1340"
+     },
+     {
+      "n": 1346,
+      "t": "Remove unused lemma and simplify goal1 theorem in FiberEq.lean",
+      "u": "MrBrain295",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1346"
+     },
+     {
+      "n": 1374,
+      "t": "chore: remove five modules that nothing imports",
+      "u": "joshuanianji",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1374"
+     },
+     {
+      "n": 1414,
+      "t": "refactor: reuse Mathlib's PadicInt.prime_p instead of zv_prime",
+      "u": "OskarKinomoto",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1414"
+     },
+     {
+      "n": 1415,
+      "t": "refactor: reuse Mathlib's Int.ideal_span_isMaximal_of_prime instead of project copies",
+      "u": "OskarKinomoto",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1415"
+     }
+    ]
+   },
+   "per_filone": [
+    0,
+    18,
+    65,
+    104,
+    402
+   ],
+   "nostre": [],
+   "stelle": 1064,
+   "fork": 422,
+   "stelle_prima": 995,
+   "fork_prima": 368
+  },
   {
    "da": "2026-11-24T03:56:34Z",
    "a": "2026-11-24T17:32:33Z",
