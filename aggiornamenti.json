@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-25T02:19:27Z",
- "stelle": 1064,
- "fork": 422,
+ "fino": "2026-11-25T17:06:09Z",
+ "stelle": 1171,
+ "fork": 476,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,227 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-25T02:19:27Z",
+   "a": "2026-11-25T17:06:09Z",
+   "issue_aperte": {
+    "n": 5,
+    "elenco": [
+     {
+      "n": 2338,
+      "t": "Lean source profile and elaboration hotspots for d1016afb605a",
+      "u": "Vilin97",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/2338"
+     },
+     {
+      "n": 3493,
+      "t": "Slow kernel check in RowAAtGAtBuilt: chainPeriodRelation_read_for_character_avoiding_primes rebuilds ChainTieS at a different S",
+      "u": "592pmp4wyd-dot",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/3493"
+     },
+     {
+      "n": 3603,
+      "t": "Slow conversion in LayerUpStatement: SerUp.norm_iff closes famTie_imp by a kernel run_tac",
+      "u": "592pmp4wyd-dot",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/3603"
+     },
+     {
+      "n": 3636,
+      "t": "Conclusions that every caller discards",
+      "u": "nielswiegerss-code",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/3636"
+     },
+     {
+      "n": 3638,
+      "t": "No historical compilation time for performance improvement meansurement",
+      "u": "cl3t0",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/3638"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 1,
+    "elenco": [
+     {
+      "n": 2338,
+      "t": "Lean source profile and elaboration hotspots for d1016afb605a",
+      "u": "Vilin97",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/2338"
+     }
+    ]
+   },
+   "pr_aperte": {
+    "n": 983,
+    "elenco": [
+     {
+      "n": 2181,
+      "t": "refactor: simplify Iwasawa bounds and Selmer interfaces",
+      "u": "andersonwu2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2181"
+     },
+     {
+      "n": 2293,
+      "t": "chore: remove 423 declarations that the main theorems do not use (batch 10)",
+      "u": "joshuanianji",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2293"
+     },
+     {
+      "n": 2314,
+      "t": "refactor(Formalism/HermitianCurvature): remove duplicated Ux10 chart and Lie helpers in PhiBoundPartsOfRadicalParametrisation",
+      "u": "JoeAzar",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2314"
+     },
+     {
+      "n": 2328,
+      "t": "refactor(Development/AbelianVarietyTheory/Proofs/DivisorProofs): remove unused Fourier inversion, cell translation, and Gauss rescale helpers",
+      "u": "jennyyyyzhen",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2328"
+     },
+     {
+      "n": 2568,
+      "t": "chore: remove unused declarations from AbelianVarietyTheory/Proofs/DivisorProofs",
+      "u": "ashleyholman",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2568"
+     },
+     {
+      "n": 2613,
+      "t": "refactor(Development/AutomorphicArithmetic): reuse Mathlib and imported proofs across 12 modules",
+      "u": "gmberton",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2613"
+     },
+     {
+      "n": 2618,
+      "t": "refactor: reuse Harris–Taylor character separation under base change",
+      "u": "seanyang0813",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2618"
+     },
+     {
+      "n": 2643,
+      "t": "refactor: reuse boundary linearity in the double-pole proof",
+      "u": "ebyrwa",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2643"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 368,
+    "elenco": [
+     {
+      "n": 1021,
+      "t": "Replace deprecated if/dif lemma names and push_neg",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1021"
+     },
+     {
+      "n": 2568,
+      "t": "chore: remove unused declarations from AbelianVarietyTheory/Proofs/DivisorProofs",
+      "u": "ashleyholman",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2568"
+     },
+     {
+      "n": 2613,
+      "t": "refactor(Development/AutomorphicArithmetic): reuse Mathlib and imported proofs across 12 modules",
+      "u": "gmberton",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2613"
+     },
+     {
+      "n": 2618,
+      "t": "refactor: reuse Harris–Taylor character separation under base change",
+      "u": "seanyang0813",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2618"
+     },
+     {
+      "n": 2655,
+      "t": "refactor: derive Burnside’s theorem from Mathlib Jacobson density",
+      "u": "nepahwin",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2655"
+     },
+     {
+      "n": 2741,
+      "t": "chore: remove unused declarations from AbelianVarietyTheory/Proofs",
+      "u": "ashleyholman",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2741"
+     },
+     {
+      "n": 2765,
+      "t": "chore: remove unused declarations from Formalism/LocalToGlobal",
+      "u": "ashleyholman",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2765"
+     },
+     {
+      "n": 2832,
+      "t": "refactor: use the original instead of 156 theorems with the same statement",
+      "u": "xana92",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2832"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 18,
+    "elenco": [
+     {
+      "n": 1099,
+      "t": "refactor: replace deprecated lemma names (#1021), shorten proofs, prove 1,546 theorems from existing ones and drop unused hypotheses (−68,440 lines)",
+      "u": "marwuint",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1099"
+     },
+     {
+      "n": 1408,
+      "t": "refactor: reuse general denominator clearing in AutLzFinite",
+      "u": "ozzieba",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1408"
+     },
+     {
+      "n": 2314,
+      "t": "refactor(Formalism/HermitianCurvature): remove duplicated Ux10 chart and Lie helpers in PhiBoundPartsOfRadicalParametrisation",
+      "u": "JoeAzar",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2314"
+     },
+     {
+      "n": 2328,
+      "t": "refactor(Development/AbelianVarietyTheory/Proofs/DivisorProofs): remove unused Fourier inversion, cell translation, and Gauss rescale helpers",
+      "u": "jennyyyyzhen",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2328"
+     },
+     {
+      "n": 2703,
+      "t": "refactor(Development/AbelianVarietyTheory): remove 76 unused theorems",
+      "u": "xana92",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2703"
+     },
+     {
+      "n": 2912,
+      "t": "refactor(Formalism/HermitianLattices): drop unused imports",
+      "u": "TitiSkywalker",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2912"
+     },
+     {
+      "n": 2917,
+      "t": "refactor(Formalism/GaussJetBounds/GaussJetProofs): drop unused imports",
+      "u": "TitiSkywalker",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2917"
+     },
+     {
+      "n": 2959,
+      "t": "refactor(DivisorProofs): reuse GSep.TorPt torus torsion proofs in Poinc.Sep.TorPt",
+      "u": "dga471",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2959"
+     }
+    ]
+   },
+   "per_filone": [
+    1,
+    5,
+    140,
+    242,
+    600
+   ],
+   "nostre": [],
+   "stelle": 1171,
+   "fork": 476,
+   "stelle_prima": 1064,
+   "fork_prima": 422
+  },
   {
    "da": "2026-11-24T17:32:33Z",
    "a": "2026-11-25T02:19:27Z",
