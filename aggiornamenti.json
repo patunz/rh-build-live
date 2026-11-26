@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-25T17:06:09Z",
- "stelle": 1171,
- "fork": 476,
+ "fino": "2026-11-26T01:44:45Z",
+ "stelle": 1251,
+ "fork": 490,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,251 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-25T17:06:09Z",
+   "a": "2026-11-26T01:44:45Z",
+   "issue_aperte": {
+    "n": 8,
+    "elenco": [
+     {
+      "n": 4606,
+      "t": "Kernel slowdown from per-file hoisted HasZeroObject (Shv R) proofs (policy question for AGENTS.md)",
+      "u": "constantinemagnus",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/4606"
+     },
+     {
+      "n": 4666,
+      "t": "Declarations that state the same theorem under different names, which name search misses",
+      "u": "DevinWatson",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/4666"
+     },
+     {
+      "n": 5256,
+      "t": "off-topic: is there any interest in doing something similar for other proofs?",
+      "u": "kongeskog",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/5256"
+     },
+     {
+      "n": 5578,
+      "t": "How does lsernau/grh-lean affect this project's direction?",
+      "u": "yidakra",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/5578"
+     },
+     {
+      "n": 5600,
+      "t": "Static scan of the new `main` at `686902ae`: no axiom, no `sorry` under `src/`, no metaprogramming",
+      "u": "a-ratz",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/5600"
+     },
+     {
+      "n": 5603,
+      "t": "MacOS: Exporting the solution runs out of file handles",
+      "u": "mboehme",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/5603"
+     },
+     {
+      "n": 5647,
+      "t": "A sharper dyadic conductor bound for the Bernoulli-unit lemma on alpoge",
+      "u": "Grativy6",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/5647"
+     },
+     {
+      "n": 5778,
+      "t": "Moving `src` to the module system (the follow-up named in #5769): what a trial conversion found",
+      "u": "eumemic",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/5778"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 2,
+    "elenco": [
+     {
+      "n": 151,
+      "t": "Remove hypothesis fields the proof never reads (field-level dead code)",
+      "u": "righi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/151"
+     },
+     {
+      "n": 5256,
+      "t": "off-topic: is there any interest in doing something similar for other proofs?",
+      "u": "kongeskog",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/5256"
+     }
+    ]
+   },
+   "pr_aperte": {
+    "n": 895,
+    "elenco": [
+     {
+      "n": 3975,
+      "t": "refactor(Development/AutomorphicSpectrum/Proofs/BlockDecomposition): use Fin.antitone_iff_succ_le in FiniteUnitaryMultiplication",
+      "u": "weiwensangsang",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/3975"
+     },
+     {
+      "n": 3991,
+      "t": "refactor(Development/AbelianVarietyTheory/Counterexamples/NonGaloisSurvey): use Fin.strictAnti_iff_succ_lt and Fin.strictMono_iff_lt_succ in EmbeddingValuationsAnti",
+      "u": "weiwensangsang",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/3991"
+     },
+     {
+      "n": 3995,
+      "t": "refactor: share the carried eigensystem and label dimension proofs (−99 net)",
+      "u": "EricHe98",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/3995"
+     },
+     {
+      "n": 4058,
+      "t": "refactor(AutomorphicForms): deduplicate product adelic Haar right-invariance",
+      "u": "dga471",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/4058"
+     },
+     {
+      "n": 4088,
+      "t": "chore(Development/AbelianVarietyTheory): prune unused private Mathlib imports in ModuliProofs (L-Z)",
+      "u": "dga471",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/4088"
+     },
+     {
+      "n": 4100,
+      "t": "chore(Development/AbelianVarietyTheory): prune unused private Mathlib imports in DivisorProofs (IsK-Iz)",
+      "u": "dga471",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/4100"
+     },
+     {
+      "n": 4126,
+      "t": "refactor(SemipositiveHeights): delegate FlagBundleSectionForms.proof",
+      "u": "dga471",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/4126"
+     },
+     {
+      "n": 4129,
+      "t": "refactor: share the Satake level-character proof",
+      "u": "CollinYuanjieRen",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/4129"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 28,
+    "elenco": [
+     {
+      "n": 5595,
+      "t": "refactor: remove unused unfoldStageOn_zero",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5595"
+     },
+     {
+      "n": 5597,
+      "t": "refactor: remove unused coe_firstEntry",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5597"
+     },
+     {
+      "n": 5602,
+      "t": "refactor: remove unused triangleModulus_true",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5602"
+     },
+     {
+      "n": 5607,
+      "t": "refactor: remove unused mem_twoWindows",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5607"
+     },
+     {
+      "n": 5611,
+      "t": "refactor: remove unused lineBasis_true",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5611"
+     },
+     {
+      "n": 5619,
+      "t": "refactor: remove unused idOrInvAdjoint_false",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5619"
+     },
+     {
+      "n": 5620,
+      "t": "doc: restore and adapt README",
+      "u": "thorimur",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5620"
+     },
+     {
+      "n": 5623,
+      "t": "refactor(New): remove backward.isDefEq.respectTransparency options",
+      "u": "TmLev",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5623"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 121,
+    "elenco": [
+     {
+      "n": 1595,
+      "t": "refactor: reuse the matrix exponential entry derivative",
+      "u": "Serdnad",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1595"
+     },
+     {
+      "n": 1807,
+      "t": "chore(Formalism/LocalToGlobal/SiegelLatticeTheory/FlagStabilizerTensors/RootLatticeThresholds): remove unused simp arguments",
+      "u": "joshuanianji",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1807"
+     },
+     {
+      "n": 1808,
+      "t": "chore(Development/WeilBound/CoreStatements/PluriharmonicCharts): replace deprecated lemma names",
+      "u": "joshuanianji",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1808"
+     },
+     {
+      "n": 1833,
+      "t": "perf(Development/AbelianVarietyTheory): add a HasZeroObject instance for Shv",
+      "u": "constantinemagnus",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/1833"
+     },
+     {
+      "n": 2196,
+      "t": "refactor(Formalism/LocalToGlobal/JointCharacters): remove the unread SameChr bundle",
+      "u": "lnbrks",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2196"
+     },
+     {
+      "n": 2293,
+      "t": "chore: remove 361 declarations that the main theorems do not use (batch 10)",
+      "u": "joshuanianji",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2293"
+     },
+     {
+      "n": 2651,
+      "t": "refactor: reuse the twisted orbital integral product formula",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2651"
+     },
+     {
+      "n": 2691,
+      "t": "refactor: remove 162 unused theorems",
+      "u": "xana92",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/2691"
+     }
+    ]
+   },
+   "per_filone": [
+    3,
+    10,
+    133,
+    257,
+    500
+   ],
+   "nostre": [],
+   "stelle": 1251,
+   "fork": 490,
+   "stelle_prima": 1171,
+   "fork_prima": 476
+  },
   {
    "da": "2026-11-25T02:19:27Z",
    "a": "2026-11-25T17:06:09Z",
