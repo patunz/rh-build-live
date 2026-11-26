@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-26T01:44:45Z",
- "stelle": 1251,
- "fork": 490,
+ "fino": "2026-11-26T16:46:53Z",
+ "stelle": 1404,
+ "fork": 524,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,227 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-26T01:44:45Z",
+   "a": "2026-11-26T16:46:53Z",
+   "issue_aperte": {
+    "n": 5,
+    "elenco": [
+     {
+      "n": 6793,
+      "t": "Align Galois cohomology with David Loeffler's advice",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/6793"
+     },
+     {
+      "n": 6836,
+      "t": "Places of Ω as absolute values",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/6836"
+     },
+     {
+      "n": 7560,
+      "t": "`main` fails the kernel re-check since #5768: `grind` proofs over ℝ that only check inside a `module`",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/7560"
+     },
+     {
+      "n": 7587,
+      "t": "rh-pr-fork: both hosts stopped taking jobs (aws96 10:53, awsr7a 14:30 UTC)",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/7587"
+     },
+     {
+      "n": 8343,
+      "t": "Changing import lines changes statements without an error: 80 declarations in #6788, 114 in #7455",
+      "u": "eumemic",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/8343"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 1,
+    "elenco": [
+     {
+      "n": 5778,
+      "t": "Moving `src` to the module system (the follow-up named in #5769): what a trial conversion found",
+      "u": "eumemic",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/5778"
+     }
+    ]
+   },
+   "pr_aperte": {
+    "n": 991,
+    "elenco": [
+     {
+      "n": 5827,
+      "t": "refactor(Lib/ClassField/Places/Ideles): use Tau Ceti for finite idele divisor homomorphism",
+      "u": "weiwensangsang",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5827"
+     },
+     {
+      "n": 5828,
+      "t": "Add back the original Comparator challenge and the formal-conjectures setup",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5828"
+     },
+     {
+      "n": 5832,
+      "t": "style: remove deprecation warnings in AuxiliaryPrimeTie",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5832"
+     },
+     {
+      "n": 5875,
+      "t": "perf(Lib/PadicComparison/HodgeTate/Map): speed up proof elaboration",
+      "u": "josephch405",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5875"
+     },
+     {
+      "n": 5882,
+      "t": "refactor: remove set_option from Adeles.Basic",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5882"
+     },
+     {
+      "n": 5943,
+      "t": "perf(Lib/Shimura/ThetaModuli/FamilyFromPoints): speed up proof checking and elaboration",
+      "u": "josephch405",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5943"
+     },
+     {
+      "n": 5949,
+      "t": "refactor: separate second-moment estimates from greedy spanning",
+      "u": "xsoc1",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5949"
+     },
+     {
+      "n": 5952,
+      "t": "Run the Lean formatter of lean4 PR 15218 over src/",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5952"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 557,
+    "elenco": [
+     {
+      "n": 6695,
+      "t": "feat: count cocycle subgroups through their cohomology classes",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6695"
+     },
+     {
+      "n": 6795,
+      "t": "feat: define the cohomology of a discrete module as Mathlib's continuous cohomology",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6795"
+     },
+     {
+      "n": 6922,
+      "t": "feat: state the descent bounds for tied Selmer groups on classes",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6922"
+     },
+     {
+      "n": 6935,
+      "t": "feat: state the Greenberg–Wiles bounds for Selmer classes",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6935"
+     },
+     {
+      "n": 7267,
+      "t": "chore: move Tau Ceti to 6d810e58 on its main branch",
+      "u": "riccardobrasca",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7267"
+     },
+     {
+      "n": 7299,
+      "t": "refactor: reuse the Kisin period matrix factor witness",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7299"
+     },
+     {
+      "n": 7317,
+      "t": "refactor(Lib/GLn): reuse the Harish-Chandra parameter step",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7317"
+     },
+     {
+      "n": 7354,
+      "t": "refactor: drop Weil data from the parahoric eigenspace lemmas",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7354"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 12,
+    "elenco": [
+     {
+      "n": 5832,
+      "t": "style: remove deprecation warnings in AuxiliaryPrimeTie",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5832"
+     },
+     {
+      "n": 6313,
+      "t": "refactor: remove CriticalPair.L_mul_inv, a copy of L_inv_mul",
+      "u": "rohanarun",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6313"
+     },
+     {
+      "n": 6949,
+      "t": "refactor(SeriesPeriod): reuse WeilData.j_ne_zero directly",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6949"
+     },
+     {
+      "n": 7355,
+      "t": "refactor(GramMatrix): import IntegralLattices directly",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7355"
+     },
+     {
+      "n": 7411,
+      "t": "refactor(Lib/GaloisRep/Main): replace casework and kernel decide in QuadraticStep with Kummer sign homomorphisms and CRT",
+      "u": "bohemian-miser",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7411"
+     },
+     {
+      "n": 7413,
+      "t": "refactor(StickelbergerSystems): drop the AttachedRepresentations import",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7413"
+     },
+     {
+      "n": 7460,
+      "t": "refactor(Lib/GaloisRep): structure IsTameExponent and simplify LabelCompatibility",
+      "u": "bohemian-miser",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7460"
+     },
+     {
+      "n": 7559,
+      "t": "CI only: build #7267 (Tau Ceti to 6d810e58) on trusted runners",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7559"
+     }
+    ]
+   },
+   "per_filone": [
+    2,
+    5,
+    143,
+    129,
+    717
+   ],
+   "nostre": [],
+   "stelle": 1404,
+   "fork": 524,
+   "stelle_prima": 1251,
+   "fork_prima": 490
+  },
   {
    "da": "2026-11-25T17:06:09Z",
    "a": "2026-11-26T01:44:45Z",
