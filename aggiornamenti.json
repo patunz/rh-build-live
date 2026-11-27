@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-27T01:40:29Z",
- "stelle": 1463,
- "fork": 536,
+ "fino": "2026-11-27T16:31:50Z",
+ "stelle": 1514,
+ "fork": 546,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,203 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-27T01:40:29Z",
+   "a": "2026-11-27T16:31:50Z",
+   "issue_aperte": {
+    "n": 3,
+    "elenco": [
+     {
+      "n": 9143,
+      "t": "Allow recovery when a published cache record fails clean restore acceptance",
+      "u": "enqiang",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/9143"
+     },
+     {
+      "n": 9222,
+      "t": "Documentation on Why J. L. Nielsen purported invalidity of proof via geometric heights does not work",
+      "u": "Testsr",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/9222"
+     },
+     {
+      "n": 9492,
+      "t": "Command-line length limit exhaustion attack when fetching caches from TauCeti",
+      "u": "mizar",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/9492"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 1,
+    "elenco": [
+     {
+      "n": 179,
+      "t": "Rename non-ASCII filenames",
+      "u": "SnirBroshi",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/179"
+     }
+    ]
+   },
+   "pr_aperte": {
+    "n": 541,
+    "elenco": [
+     {
+      "n": 9116,
+      "t": "refactor(IsotropicSplitting): reuse the inverse action on a frame",
+      "u": "CollinYuanjieRen",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9116"
+     },
+     {
+      "n": 9117,
+      "t": "refactor: use Tau Ceti's Heisenberg model and Weil operators",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9117"
+     },
+     {
+      "n": 9118,
+      "t": "refactor: use TauCeti to integrate the quadratic theta tail bound",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9118"
+     },
+     {
+      "n": 9119,
+      "t": "refactor: share the ramified prime facts in the exponent proofs",
+      "u": "1052326311",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9119"
+     },
+     {
+      "n": 9120,
+      "t": "refactor(New/Derivatives/Vacuum/ShortVectors): prove hV_dvd_M by linear_combination",
+      "u": "ridoy",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9120"
+     },
+     {
+      "n": 9121,
+      "t": "chore: move Tau Ceti to ac8801f6 on its main branch",
+      "u": "riccardobrasca",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9121"
+     },
+     {
+      "n": 9122,
+      "t": "doc: explain how to build after a project cache miss",
+      "u": "1052326311",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9122"
+     },
+     {
+      "n": 9123,
+      "t": "refactor(New/Appendix/DiscreteSeries): use column independence for the position left inverse",
+      "u": "EricHe98",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9123"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 6,
+    "elenco": [
+     {
+      "n": 7776,
+      "t": "refactor: tighten the crystalline defect bound and generalize the loss (+0 lines net)",
+      "u": "EricHe98",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7776"
+     },
+     {
+      "n": 8789,
+      "t": "Use the tested PR base to avoid rebuilding against newer batches",
+      "u": "aviadr1",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8789"
+     },
+     {
+      "n": 9108,
+      "t": "doc: add a contributors list",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9108"
+     },
+     {
+      "n": 9112,
+      "t": "chore: batch ct1, add a contributors list",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9112"
+     },
+     {
+      "n": 9130,
+      "t": "chore: batch m51 of 1 approved small PRs",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9130"
+     },
+     {
+      "n": 9551,
+      "t": "chore: batch ci-8789, take the cache baseline from the tested PR base",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9551"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 67,
+    "elenco": [
+     {
+      "n": 7822,
+      "t": "perf(New/Determinant/Exchange): speed up proofs in RemovingPlanes",
+      "u": "STARDUSTLC666",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7822"
+     },
+     {
+      "n": 8097,
+      "t": "perf(Lib/Weil/Periods): speed up proofs in DescentVanishing",
+      "u": "STARDUSTLC666",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8097"
+     },
+     {
+      "n": 8122,
+      "t": "perf(Lib/Weil/DualPair): speed up proofs in KernelLaws",
+      "u": "STARDUSTLC666",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8122"
+     },
+     {
+      "n": 8145,
+      "t": "perf(Lib/DiscreteSeries/Bessel): speed up proofs in SchurBound",
+      "u": "STARDUSTLC666",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8145"
+     },
+     {
+      "n": 8157,
+      "t": "perf(New/Spanning/RemainingTerms): speed up proofs in Cut",
+      "u": "STARDUSTLC666",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8157"
+     },
+     {
+      "n": 8189,
+      "t": "perf(New/Spanning/Frames): speed up proofs in TopFloor",
+      "u": "STARDUSTLC666",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8189"
+     },
+     {
+      "n": 8203,
+      "t": "perf(Lib/DiscreteSeries/FlenstedJensen): speed up proofs in RightDerivatives",
+      "u": "STARDUSTLC666",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8203"
+     },
+     {
+      "n": 8231,
+      "t": "perf(Lib/DiscreteSeries/Rigidity): speed up proofs in KernelFixes",
+      "u": "STARDUSTLC666",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8231"
+     }
+    ]
+   },
+   "per_filone": [
+    1,
+    15,
+    87,
+    32,
+    409
+   ],
+   "nostre": [],
+   "stelle": 1514,
+   "fork": 546,
+   "stelle_prima": 1463,
+   "fork_prima": 536
+  },
   {
    "da": "2026-11-26T16:46:53Z",
    "a": "2026-11-27T01:40:29Z",
