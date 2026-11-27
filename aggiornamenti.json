@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-26T16:46:53Z",
- "stelle": 1404,
- "fork": 524,
+ "fino": "2026-11-27T01:40:29Z",
+ "stelle": 1463,
+ "fork": 536,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,202 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-26T16:46:53Z",
+   "a": "2026-11-27T01:40:29Z",
+   "issue_aperte": {
+    "n": 2,
+    "elenco": [
+     {
+      "n": 8738,
+      "t": "Independent reproduction on Apple Silicon (M1 Max): con-ron accepted, hashes match MIT",
+      "u": "tsarihan",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/8738"
+     },
+     {
+      "n": 8747,
+      "t": "An independent check of grh-lean at 72fead10 (both editions)",
+      "u": "carlostoledo1891",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/8747"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 0,
+    "elenco": []
+   },
+   "pr_aperte": {
+    "n": 653,
+    "elenco": [
+     {
+      "n": 8349,
+      "t": "refactor(New/Derivatives/Field): simplify proofs",
+      "u": "dilarasoylu",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8349"
+     },
+     {
+      "n": 8350,
+      "t": "refactor: share the real Bessel quotient distribution",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8350"
+     },
+     {
+      "n": 8351,
+      "t": "refactor(Fock): identify the vacuum by pointwise evaluation",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8351"
+     },
+     {
+      "n": 8352,
+      "t": "refactor: use coordinate bounds and products for grid-path turns",
+      "u": "nefelibata5136-code",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8352"
+     },
+     {
+      "n": 8354,
+      "t": "refactor(SplitPrimeReciprocity): cancel the positive cocycle counts explicitly",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8354"
+     },
+     {
+      "n": 8355,
+      "t": "refactor: share the relative length bound in Selmer line arguments",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8355"
+     },
+     {
+      "n": 8356,
+      "t": "refactor(Lib): remove three instances that instance search already finds",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8356"
+     },
+     {
+      "n": 8360,
+      "t": "refactor(Model): show integrality of the entry difference directly",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8360"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 180,
+    "elenco": [
+     {
+      "n": 5638,
+      "t": "doc: update the indexed one-sided prime remainder bound",
+      "u": "Grativy6",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5638"
+     },
+     {
+      "n": 5753,
+      "t": "chore: name the modifier on four bare `@[grind]` tags",
+      "u": "homeowmorphism",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5753"
+     },
+     {
+      "n": 5943,
+      "t": "perf(Lib/Shimura/ThetaModuli/FamilyFromPoints): speed up proof checking and elaboration",
+      "u": "josephch405",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5943"
+     },
+     {
+      "n": 5990,
+      "t": "refactor(Lib/General/Groups/ProfiniteCharacters): use Tau Ceti for card_hom_QZ",
+      "u": "weiwensangsang",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5990"
+     },
+     {
+      "n": 6043,
+      "t": "perf: speed up Lib/PadicComparison/Duality/LineIntegration",
+      "u": "rohanarun",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6043"
+     },
+     {
+      "n": 6063,
+      "t": "doc(GUIDE): trace exceptional-prime colength into Theorem A(b)",
+      "u": "uos1231234",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6063"
+     },
+     {
+      "n": 6416,
+      "t": "refactor(Lib/General/LinearAlgebra/MatrixNormBounds): generalize norm_mulVec_le to SeminormedRing",
+      "u": "AahilShaikh",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6416"
+     },
+     {
+      "n": 6505,
+      "t": "docs: clarify jet normalization and logarithmic size in the guide",
+      "u": "WinglokWong",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6505"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 235,
+    "elenco": [
+     {
+      "n": 5718,
+      "t": "style: remove the module warning in Statements",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5718"
+     },
+     {
+      "n": 5875,
+      "t": "perf(Lib/PadicComparison/HodgeTate/Map): speed up proof elaboration",
+      "u": "josephch405",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5875"
+     },
+     {
+      "n": 5882,
+      "t": "refactor: remove set_option from Adeles.Basic",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/5882"
+     },
+     {
+      "n": 6113,
+      "t": "refactor: use Tau Ceti for the tilt map",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6113"
+     },
+     {
+      "n": 6571,
+      "t": "refactor: remove set_option from GrothendieckSymbol",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6571"
+     },
+     {
+      "n": 6954,
+      "t": "refactor: reuse permutation matrix identities",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/6954"
+     },
+     {
+      "n": 7093,
+      "t": "feat: state the odd-part component and Ш bounds for cohomology classes",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7093"
+     },
+     {
+      "n": 7095,
+      "t": "feat: bound the local classes at a tamely ramified place",
+      "u": "kim-em",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/7095"
+     }
+    ]
+   },
+   "per_filone": [
+    3,
+    9,
+    93,
+    112,
+    438
+   ],
+   "nostre": [],
+   "stelle": 1463,
+   "fork": 536,
+   "stelle_prima": 1404,
+   "fork_prima": 524
+  },
   {
    "da": "2026-11-26T01:44:45Z",
    "a": "2026-11-26T16:46:53Z",
