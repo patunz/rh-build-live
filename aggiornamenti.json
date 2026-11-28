@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-27T16:31:50Z",
- "stelle": 1514,
- "fork": 546,
+ "fino": "2026-11-28T01:24:36Z",
+ "stelle": 1524,
+ "fork": 550,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,105 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-27T16:31:50Z",
+   "a": "2026-11-28T01:24:36Z",
+   "issue_aperte": {
+    "n": 1,
+    "elenco": [
+     {
+      "n": 9690,
+      "t": "Prime-counting consequences of riemannHypothesis: wanted here or elsewhere?",
+      "u": "HaveMindHive",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/9690"
+     }
+    ]
+   },
+   "issue_chiuse": {
+    "n": 0,
+    "elenco": []
+   },
+   "pr_aperte": {
+    "n": 131,
+    "elenco": [
+     {
+      "n": 9660,
+      "t": "refactor(Lib/Adelic): check integrality on double-coset representatives",
+      "u": "riccardobrasca",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9660"
+     },
+     {
+      "n": 9661,
+      "t": "refactor(Lib/General/Topology): prove cyclicity for the original character",
+      "u": "riccardobrasca",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9661"
+     },
+     {
+      "n": 9662,
+      "t": "refactor(Determinant): share the change of basis for equal inverse rows",
+      "u": "CollinYuanjieRen",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9662"
+     },
+     {
+      "n": 9663,
+      "t": "refactor(ClassField): use Tau Ceti for finite quotients in the Kummer index",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9663"
+     },
+     {
+      "n": 9664,
+      "t": "feat(Lib/Adelic): compute the first minimum of an orthogonal sum",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9664"
+     },
+     {
+      "n": 9665,
+      "t": "refactor: choose primitive sublattice bases over any number field",
+      "u": "1052326311",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9665"
+     },
+     {
+      "n": 9666,
+      "t": "refactor: share conjugation of kernel integrals in the triangle adjoint formulas",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9666"
+     },
+     {
+      "n": 9667,
+      "t": "refactor(NumberTheory): use Tau Ceti for integrality over p-adic integers",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9667"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 0,
+    "elenco": []
+   },
+   "pr_chiuse": {
+    "n": 1,
+    "elenco": [
+     {
+      "n": 9694,
+      "t": "feat(LevelCohomology): halve the dyadic conductor bound for Bernoulli units",
+      "u": "yidakra",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9694"
+     }
+    ]
+   },
+   "per_filone": [
+    0,
+    1,
+    23,
+    4,
+    104
+   ],
+   "nostre": [],
+   "stelle": 1524,
+   "fork": 550,
+   "stelle_prima": 1514,
+   "fork_prima": 546
+  },
   {
    "da": "2026-11-27T01:40:29Z",
    "a": "2026-11-27T16:31:50Z",
