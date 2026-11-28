@@ -1,7 +1,7 @@
 {
- "fino": "2026-11-28T01:24:36Z",
- "stelle": 1524,
- "fork": 550,
+ "fino": "2026-11-28T15:25:38Z",
+ "stelle": 1544,
+ "fork": 555,
  "nostre": {
   "6": {
    "aperta": false,
@@ -13,6 +13,196 @@
   }
  },
  "voci": [
+  {
+   "da": "2026-11-28T01:24:36Z",
+   "a": "2026-11-28T15:25:38Z",
+   "issue_aperte": {
+    "n": 0,
+    "elenco": []
+   },
+   "issue_chiuse": {
+    "n": 1,
+    "elenco": [
+     {
+      "n": 7560,
+      "t": "`main` fails the kernel re-check since #5768: `grind` proofs over ℝ that only check inside a `module`",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/issues/7560"
+     }
+    ]
+   },
+   "pr_aperte": {
+    "n": 145,
+    "elenco": [
+     {
+      "n": 9792,
+      "t": "refactor(PowerSeries): share rescaling after substitution",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9792"
+     },
+     {
+      "n": 9793,
+      "t": "refactor: use the endpoint power bound in Mellin integrals",
+      "u": "CollinYuanjieRen",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9793"
+     },
+     {
+      "n": 9794,
+      "t": "chore(New/UpperBound/Seesaw): drop unused `Fintype` arguments of a local instance",
+      "u": "Deicyde",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9794"
+     },
+     {
+      "n": 9795,
+      "t": "perf(Lib/DiscreteSeries/Bruhat): speed up ComplexPlace proofs",
+      "u": "josephch405",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9795"
+     },
+     {
+      "n": 9796,
+      "t": "refactor: share the Frobenius trace limit for attached representations",
+      "u": "CollinYuanjieRen",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9796"
+     },
+     {
+      "n": 9797,
+      "t": "refactor(Geometry): generalize constant functions under base change",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9797"
+     },
+     {
+      "n": 9798,
+      "t": "refactor(ClassField): generalize index multiplication in short exact sequences",
+      "u": "alkor2000",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9798"
+     },
+     {
+      "n": 9799,
+      "t": "perf(New/Spanning/Unfolding): speed up kernel replay of realHomeomorph_mul",
+      "u": "qobilidop",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9799"
+     }
+    ]
+   },
+   "pr_unite": {
+    "n": 12,
+    "elenco": [
+     {
+      "n": 8166,
+      "t": "chore: remove 6 unneeded local instance attributes",
+      "u": "roy7",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8166"
+     },
+     {
+      "n": 8172,
+      "t": "refactor(New/Reduction/Data): remove unused `eventually_exists_data_of_isAdmissibleData`",
+      "u": "pranavgundu",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8172"
+     },
+     {
+      "n": 8245,
+      "t": "perf: speed up Lib/Shimura/ThetaGroup",
+      "u": "rohanarun",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8245"
+     },
+     {
+      "n": 8272,
+      "t": "refactor(New): remove `seal` lines that do not speed up elaboration",
+      "u": "koefoeden",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8272"
+     },
+     {
+      "n": 8274,
+      "t": "refactor(New): remove local attribute and unseal lines that no proof needs",
+      "u": "koefoeden",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8274"
+     },
+     {
+      "n": 8329,
+      "t": "perf(Lib/Weil/Construction): declare the action of G E s on n → 𝔸 E directly",
+      "u": "yidakra",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8329"
+     },
+     {
+      "n": 8358,
+      "t": "fix: make the exponent comparisons checkable by a kernel replay (#7560)",
+      "u": "Dharmavati213",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8358"
+     },
+     {
+      "n": 8398,
+      "t": "refactor(Lib): remove `seal` lines that do not speed up elaboration",
+      "u": "koefoeden",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8398"
+     }
+    ]
+   },
+   "pr_chiuse": {
+    "n": 17,
+    "elenco": [
+     {
+      "n": 8096,
+      "t": "refactor: drop algebraic closedness from local parameter lemmas",
+      "u": "sqrt-of-2",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8096"
+     },
+     {
+      "n": 8632,
+      "t": "refactor(Lib/Cohomology/ProjectiveLine): remove unused pointOrTorus_true",
+      "u": "mwiederrecht",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/8632"
+     },
+     {
+      "n": 9139,
+      "t": "refactor(New/Reduction/Data/Existence): remove unused eventually_exists_data_of_isAdmissibleData",
+      "u": "weiwensangsang",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9139"
+     },
+     {
+      "n": 9153,
+      "t": "refactor(Lib/Shimura/CongruenceRelation/EichlerShimura): extract Frobenius action lemma on the special fibre",
+      "u": "weiwensangsang",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9153"
+     },
+     {
+      "n": 9154,
+      "t": "refactor(Lib/GaloisRep/Hilbert90/UnitaryGroups): extract AdjoinRoot endomorphism and involution lemma",
+      "u": "weiwensangsang",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9154"
+     },
+     {
+      "n": 9722,
+      "t": "Refactor: prove the tower exponent is nonzero directly",
+      "u": "norhh",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9722"
+     },
+     {
+      "n": 9741,
+      "t": "refactor(Reduction): derive the sign of the main amount from the local bounds",
+      "u": "haytmnjwgyge",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9741"
+     },
+     {
+      "n": 9752,
+      "t": "perf(TangentBound): replace heavy simp/aesop proofs with explicit rewrites",
+      "u": "josephch405",
+      "url": "https://github.com/leanprover-community/riemann-hypothesis/pull/9752"
+     }
+    ]
+   },
+   "per_filone": [
+    0,
+    2,
+    17,
+    5,
+    121
+   ],
+   "nostre": [],
+   "stelle": 1544,
+   "fork": 555,
+   "stelle_prima": 1524,
+   "fork_prima": 550
+  },
   {
    "da": "2026-11-27T16:31:50Z",
    "a": "2026-11-28T01:24:36Z",
